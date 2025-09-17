@@ -8,8 +8,9 @@
 <body>
     <div id="content"></div>
     <script>
-        // 获取 URL 路径
+        // 获取 URL 路径并提取最后一级
         const path = window.location.pathname;
+        const pathKey = path.split('/').filter(Boolean).pop() || '';
 
         // 加载 rex.json 文件
         fetch('/rex.json')
@@ -20,13 +21,9 @@
                 return response.json();
             })
             .then(data => {
-                // 根据路径执行重定向或显示内容
-                if (path === '/1' && data[0]) {
-                    window.location.replace(data[0]); // https://www.google.com
-                } else if (path === '/2' && data[1]) {
-                    window.location.replace(data[1]); // https://www.baidu.com
-                } else if (path === '/3' && data[2]) {
-                    window.location.replace(data[2]); // https://www.bing.com
+                // 检查路径最后一级是否匹配 rex.json 中的键
+                if (data[pathKey]) {
+                    window.location.replace(data[pathKey]); // 重定向到对应的 URL
                 } else {
                     document.getElementById('content').textContent = 'hello, rexapi.';
                 }
