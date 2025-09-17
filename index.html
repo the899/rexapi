@@ -11,14 +11,25 @@
         // 获取 URL 路径
         const path = window.location.pathname;
 
-        // 根据路径执行重定向或显示内容
-        if (path === '/1') {
-            window.location.replace('https://www.google.com');
-        } else if (path === '/2') {
-            window.location.replace('https://www.baidu.com');
-        } else {
-            document.getElementById('content').textContent = 'hello, rexapi.';
-        }
+        // 加载 rex.json 文件
+        fetch('/rex.json')
+            .then(response => response.json())
+            .then(data => {
+                // 根据路径执行重定向或显示内容
+                if (path === '/1') {
+                    window.location.replace(data[0]); // https://www.google.com
+                } else if (path === '/2') {
+                    window.location.replace(data[1]); // https://www.baidu.com
+                } else if (path === '/3') {
+                    window.location.replace(data[2]); // https://www.bing.com
+                } else {
+                    document.getElementById('content').textContent = 'hello, rexapi.';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading rex.json:', error);
+                document.getElementById('content').textContent = 'Error loading configuration';
+            });
     </script>
 </body>
 </html>
