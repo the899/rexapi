@@ -8,20 +8,17 @@
 <body>
     <div id="content"></div>
     <script>
-        // Get query parameters from the URL
+        // 获取 URL 中的查询参数
         const urlParams = new URLSearchParams(window.location.search);
         const p = urlParams.get('p');
 
-        // Get the content div
-        const contentDiv = document.getElementById('content');
-
-        // Set content based on query parameter
+        // 根据查询参数执行重定向或显示内容
         if (p === '1') {
-            contentDiv.textContent = '你好，1';
+            window.location.replace('https://www.google.com');
         } else if (p === '2') {
-            contentDiv.textContent = '你好，2';
+            window.location.replace('https://www.baidu.com');
         } else {
-            contentDiv.textContent = 'hello, rexapi.';
+            document.getElementById('content').textContent = 'hello, rexapi.';
         }
     </script>
 </body>
