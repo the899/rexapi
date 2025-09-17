@@ -8,15 +8,14 @@
 <body>
     <div id="content"></div>
     <script>
-        // 获取 URL 中的查询参数
-        const urlParams = new URLSearchParams(window.location.search);
-        const p = urlParams.get('p');
+        // 获取 URL 路径
+        const path = window.location.pathname;
 
-        // 根据查询参数执行重定向或显示内容
-        if (p === '1') {
-            window.location.replace('http://home.jundie.top:81/top98.json');
-        } else if (p === '2') {
-            window.location.replace('http://www.饭太硬.com/tv');
+        // 根据路径执行重定向或显示内容
+        if (path === '/1') {
+            window.location.replace('https://www.google.com');
+        } else if (path === '/2') {
+            window.location.replace('https://www.baidu.com');
         } else {
             document.getElementById('content').textContent = 'hello, rexapi.';
         }
