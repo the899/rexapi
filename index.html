@@ -13,14 +13,19 @@
 
         // 加载 rex.json 文件
         fetch('/rex.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load rex.json');
+                }
+                return response.json();
+            })
             .then(data => {
                 // 根据路径执行重定向或显示内容
-                if (path === '/1') {
+                if (path === '/1' && data[0]) {
                     window.location.replace(data[0]); // https://www.google.com
-                } else if (path === '/2') {
+                } else if (path === '/2' && data[1]) {
                     window.location.replace(data[1]); // https://www.baidu.com
-                } else if (path === '/3') {
+                } else if (path === '/3' && data[2]) {
                     window.location.replace(data[2]); // https://www.bing.com
                 } else {
                     document.getElementById('content').textContent = 'hello, rexapi.';
