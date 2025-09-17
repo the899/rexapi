@@ -1,1 +1,28 @@
-hello, rexapi.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rex API</title>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        // Get query parameters from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const p = urlParams.get('p');
+
+        // Get the content div
+        const contentDiv = document.getElementById('content');
+
+        // Set content based on query parameter
+        if (p === '1') {
+            contentDiv.textContent = '你好，1';
+        } else if (p === '2') {
+            contentDiv.textContent = '你好，2';
+        } else {
+            contentDiv.textContent = 'hello, rexapi.';
+        }
+    </script>
+</body>
+</html>
