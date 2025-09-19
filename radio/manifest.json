@@ -1,11 +1,11 @@
 {
-    "name": "Rex Radio",
-    "short_name": "Radio",
-    "description": "A simple radio PWA",
+    "name": "经典旋律",
+    "short_name": "经典旋律",
     "start_url": "/radio/",
     "display": "standalone",
     "background_color": "#1a1a1a",
     "theme_color": "#1a1a1a",
+    "lang": "zh-CN",
     "icons": [
         {
             "src": "/radio/icon.png",
