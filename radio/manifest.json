@@ -1,10 +1,11 @@
 {
     "name": "Rex Radio",
-    "short_name": "RexRadio",
-    "start_url": "/radio/index.html",
+    "short_name": "Radio",
+    "description": "A simple radio PWA",
+    "start_url": "/radio/",
     "display": "standalone",
     "background_color": "#1a1a1a",
-    "theme_color": "#007bff",
+    "theme_color": "#1a1a1a",
     "icons": [
         {
             "src": "/radio/icon.png",
