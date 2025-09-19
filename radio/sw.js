@@ -31,10 +31,28 @@ self.addEventListener('activate', event => {
 });
 
 // 拦截网络请求并提供缓存内容
+// self.addEventListener('fetch', event => {
+//     event.respondWith(
+//         caches.match(event.request)
+//             .then(response => {
+//                 return response || fetch(event.request);
+//             })
+//     );
+// });
+
+// 拦截网络请求并提供缓存内容
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
+                if (response && response.redirected) {
+                    // 重建响应以剥离重定向标志（Safari 兼容）
+                    return new Response(response.body, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        headers: response.headers
+                    });
+                }
                 return response || fetch(event.request);
             })
     );
