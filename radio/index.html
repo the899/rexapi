@@ -132,24 +132,52 @@
         }
 
         .error-message {
-            color: #ff4d4d;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 1.3rem;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
+            background-color: #ff4d4d;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 1000;
+            max-width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        .error-message:hover {
+            background-color: #e64444;
         }
 
-        @keyframes wave {
-            0% { transform: translate(-50%, -50%) scaleY(1); }
-            50% { transform: translate(-50%, -50%) scaleY(0.5); }
-            100% { transform: translate(-50%, -50%) scaleY(1); }
+        .pwa-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            background-color: #007bff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            z-index: 1000;
+            max-width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .pwa-prompt:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         @media (max-width: 600px) {
@@ -162,8 +190,9 @@
             .radio-card span {
                 font-size: 1.2rem;
             }
-            .error-message {
+            .error-message, .pwa-prompt {
                 font-size: 1rem;
+                padding: 10px 20px;
             }
         }
     </style>
@@ -186,28 +215,60 @@
         const player = document.getElementById('radio-player');
         let currentCard = null;
         let retryTimeout = null;
+        let retryCount = 0; // 重试计数
+        const maxRetries = 5; // 最大重试次数
         let isUserPaused = false; // 区分用户主动暂停和自动暂停
         let playCheckInterval = null; // 持续检查播放状态
+        let hasUserInteracted = false; // 会话级别交互状态
 
-        // 清除错误提示
-        function clearErrorMessage() {
-            const existingMessage = document.querySelector('.error-message');
-            if (existingMessage) existingMessage.remove();
+        // 清除提示
+        function clearPrompt(className) {
+            const existingPrompt = document.querySelector(`.${className}`);
+            if (existingPrompt) existingPrompt.remove();
         }
 
-        // 显示错误提示
+        // 显示错误提示，10秒后自动隐藏
         function showErrorMessage(message) {
-            clearErrorMessage();
+            clearPrompt('error-message');
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
             errorDiv.textContent = message;
-            radioGrid.insertAdjacentElement('beforebegin', errorDiv);
+            document.body.appendChild(errorDiv);
+            errorDiv.addEventListener('click', () => errorDiv.remove());
+            setTimeout(() => {
+                if (errorDiv.parentNode) errorDiv.remove();
+            }, 10000);
+        }
+
+        // 显示 PWA 安装提示
+        function showPWAPrompt() {
+            if ('standalone' in navigator && !navigator.standalone && !localStorage.getItem('pwaPromptDismissed')) {
+                clearPrompt('pwa-prompt');
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'pwa-prompt';
+                promptDiv.textContent = '添加到主屏幕以获得自动播放体验';
+                document.body.appendChild(promptDiv);
+                promptDiv.addEventListener('click', () => {
+                    promptDiv.remove();
+                    localStorage.setItem('pwaPromptDismissed', 'true');
+                    showErrorMessage('请使用浏览器“分享”按钮添加到主屏幕');
+                });
+                setTimeout(() => {
+                    if (promptDiv.parentNode) promptDiv.remove();
+                }, 15000);
+            }
         }
 
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
             if (playCheckInterval) clearInterval(playCheckInterval);
+            if (retryCount >= maxRetries) {
+                card.dataset.status = 'error';
+                console.log('Max retries reached, stopping');
+                showErrorMessage('无法播放，请检查网络或稍后重试');
+                return;
+            }
             card.dataset.status = 'connecting'; // 显示连接中动画
             console.log('Set status to connecting for card:', card.querySelector('span').textContent);
             player.src = streamUrl;
@@ -215,7 +276,8 @@
                 card.dataset.status = 'playing';
                 console.log('Already playing, set to playing');
                 isUserPaused = false;
-                clearErrorMessage();
+                retryCount = 0;
+                clearPrompt('error-message');
                 return;
             }
             player.play().then(() => {
@@ -225,28 +287,59 @@
                         card.dataset.status = 'playing';
                         console.log('Play confirmed, set to playing');
                         isUserPaused = false;
+                        localStorage.setItem('lastStatus', 'playing');
+                        retryCount = 0;
                         clearInterval(playCheckInterval);
                         if (retryTimeout) clearTimeout(retryTimeout);
-                        clearErrorMessage();
+                        clearPrompt('error-message');
                     }
                 }, 500);
             }).catch(err => {
                 console.log('播放失败，重试中：', err);
                 card.dataset.status = 'error';
                 console.log('Play failed, set to error');
-                showErrorMessage('无法自动播放，请点击频道开始播放');
-                retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+                retryCount++;
+                if (!hasUserInteracted) {
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
+                }
+                if (retryCount < maxRetries) {
+                    retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+                } else {
+                    console.log('Max retries reached, stopping');
+                    showErrorMessage('无法播放，请检查网络或稍后重试');
+                }
             });
-            // 延迟检查状态
+            // 延迟检查状态，改为 5 秒
             setTimeout(() => {
                 if (player.paused && card.dataset.status === 'connecting') {
                     card.dataset.status = 'error';
-                    console.log('Still paused after 3s, set to error');
-                    showErrorMessage('无法自动播放，请点击频道开始播放');
-                    retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+                    console.log('Still paused after 5s, set to error');
+                    retryCount++;
+                    if (!hasUserInteracted) {
+                        showErrorMessage('无法自动播放，请点击频道开始播放');
+                    }
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                        showErrorMessage('无法播放，请检查网络或稍后重试');
+                    }
                 }
-            }, 3000);
+            }, 5000);
         }
+
+        // 检测用户交互
+        function handleUserInteraction() {
+            if (!hasUserInteracted && currentCard && currentCard.dataset.status === 'error') {
+                hasUserInteracted = true;
+                console.log('User interacted, retrying play');
+                retryCount = 0; // 重置重试计数
+                retryPlay(currentCard, currentCard.dataset.stream);
+            }
+        }
+        document.addEventListener('click', handleUserInteraction, { once: true });
+        document.addEventListener('touchstart', handleUserInteraction, { once: true });
+        document.addEventListener('keydown', handleUserInteraction, { once: true });
 
         // 动态加载频道
         fetch('/radio/config.json')
@@ -275,9 +368,11 @@
                                 player.pause();
                                 card.dataset.status = 'paused';
                                 isUserPaused = true; // 标记为用户主动暂停
-                                clearErrorMessage();
+                                localStorage.setItem('lastStatus', 'paused');
+                                clearPrompt('error-message');
                             } else {
                                 isUserPaused = false; // 重置暂停标志
+                                retryCount = 0; // 重置重试计数
                                 retryPlay(card, streamUrl); // 重新播放
                             }
                         } else {
@@ -289,10 +384,13 @@
                             card.classList.add('selected');
                             currentCard = card;
                             localStorage.setItem('lastStream', streamUrl);
-                            localStorage.setItem('lastStatus', 'playing'); // 保存播放状态
+                            localStorage.setItem('lastStatus', 'playing');
                             isUserPaused = false; // 重置暂停标志
+                            retryCount = 0; // 重置重试计数
                             retryPlay(card, streamUrl); // 开始播放
                         }
+                        // 标记用户交互
+                        hasUserInteracted = true;
                     });
                 });
 
@@ -306,6 +404,7 @@
                         currentCard = savedCard;
                         isUserPaused = false; // 确保恢复时不视为用户暂停
                         retryPlay(savedCard, savedStream); // 尝试连接并播放
+                        showPWAPrompt(); // 显示 PWA 提示
                     }
                 }
                 // 首次加载无 savedStream，所有卡牌保持未选中，不自动播放
@@ -325,6 +424,7 @@
             navigator.mediaSession.setActionHandler('play', () => {
                 if (currentCard) {
                     isUserPaused = false; // 重置暂停标志
+                    retryCount = 0; // 重置重试计数
                     retryPlay(currentCard, currentCard.dataset.stream);
                 }
             });
@@ -333,8 +433,8 @@
                     player.pause();
                     currentCard.dataset.status = 'paused';
                     isUserPaused = true; // 标记为用户主动暂停
-                    localStorage.setItem('lastStatus', 'paused'); // 保存暂停状态
-                    clearErrorMessage();
+                    localStorage.setItem('lastStatus', 'paused');
+                    clearPrompt('error-message');
                 }
             });
         }
@@ -348,13 +448,14 @@
         });
         player.addEventListener('playing', () => {
             if (currentCard && player.src && !player.paused && player.currentTime > 0) {
-                currentCard.dataset.status = 'playing';
+                card.dataset.status = 'playing';
                 console.log('Audio playing, set to playing');
                 isUserPaused = false;
                 localStorage.setItem('lastStatus', 'playing');
+                retryCount = 0;
                 if (retryTimeout) clearTimeout(retryTimeout);
                 if (playCheckInterval) clearInterval(playCheckInterval);
-                clearErrorMessage();
+                clearPrompt('error-message');
             }
         });
         player.addEventListener('pause', () => {
@@ -368,24 +469,48 @@
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'error';
                 console.log('Audio error, set to error');
-                showErrorMessage('无法自动播放，请点击频道开始播放');
-                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                retryCount++;
+                if (!hasUserInteracted) {
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
+                }
+                if (retryCount < maxRetries) {
+                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                } else {
+                    console.log('Max retries reached, stopping');
+                    showErrorMessage('无法播放，请检查网络或稍后重试');
+                }
             }
         });
         player.addEventListener('stalled', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'error';
                 console.log('Audio stalled, set to error');
-                showErrorMessage('音频加载失败，请点击频道重试');
-                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                retryCount++;
+                if (!hasUserInteracted) {
+                    showErrorMessage('音频加载失败，请点击频道重试');
+                }
+                if (retryCount < maxRetries) {
+                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                } else {
+                    console.log('Max retries reached, stopping');
+                    showErrorMessage('无法播放，请检查网络或稍后重试');
+                }
             }
         });
         player.addEventListener('suspend', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'error';
                 console.log('Audio suspended, set to error');
-                showErrorMessage('音频加载失败，请点击频道重试');
-                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                retryCount++;
+                if (!hasUserInteracted) {
+                    showErrorMessage('音频加载失败，请点击频道重试');
+                }
+                if (retryCount < maxRetries) {
+                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                } else {
+                    console.log('Max retries reached, stopping');
+                    showErrorMessage('无法播放，请检查网络或稍后重试');
+                }
             }
         });
     </script>
