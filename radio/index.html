@@ -175,6 +175,19 @@
         const cards = document.querySelectorAll('.radio-card');
         const player = document.getElementById('radio-player');
         let currentCard = null;
+        let retryTimeout = null;
+
+        // 自动重试函数
+        function retryPlay(card, streamUrl) {
+            if (retryTimeout) clearTimeout(retryTimeout);
+            card.dataset.status = 'connecting';
+            player.src = streamUrl;
+            player.play().catch(err => {
+                console.log('播放失败，重试中：', err);
+                card.dataset.status = 'error';
+                retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+            });
+        }
 
         // 恢复上次选中的频道
         const savedStream = localStorage.getItem('lastStream');
@@ -183,12 +196,8 @@
             if (savedCard) {
                 savedCard.classList.add('selected');
                 savedCard.dataset.status = 'connecting';
-                player.src = savedStream;
-                player.play().catch(err => {
-                    console.log('自动播放失败：', err);
-                    savedCard.dataset.status = 'error';
-                });
                 currentCard = savedCard;
+                retryPlay(savedCard, savedStream);
             }
         }
 
@@ -201,11 +210,7 @@
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 if (currentCard) {
-                    currentCard.dataset.status = 'connecting';
-                    player.play().catch(err => {
-                        console.log('播放失败：', err);
-                        currentCard.dataset.status = 'error';
-                    });
+                    retryPlay(currentCard, currentCard.dataset.stream);
                 }
             });
             navigator.mediaSession.setActionHandler('pause', () => {
@@ -225,6 +230,7 @@
         player.addEventListener('playing', () => {
             if (currentCard) {
                 currentCard.dataset.status = 'playing';
+                if (retryTimeout) clearTimeout(retryTimeout);
             }
         });
         player.addEventListener('pause', () => {
@@ -235,6 +241,7 @@
         player.addEventListener('error', () => {
             if (currentCard) {
                 currentCard.dataset.status = 'error';
+                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
             }
         });
 
@@ -243,28 +250,29 @@
             card.addEventListener('click', () => {
                 const streamUrl = card.dataset.stream;
 
-                if (currentCard === card && !player.paused) {
-                    // 再次点击当前卡牌，暂停播放
-                    player.pause();
-                    card.dataset.status = 'paused';
-                    card.classList.remove('selected');
-                    currentCard = null;
-                    localStorage.removeItem('lastStream');
+                if (currentCard === card) {
+                    // 点击当前卡牌，切换播放/暂停
+                    if (!player.paused) {
+                        player.pause();
+                        card.dataset.status = 'paused';
+                        card.classList.remove('selected');
+                        currentCard = null;
+                        localStorage.removeItem('lastStream');
+                    } else {
+                        card.dataset.status = 'connecting';
+                        retryPlay(card, streamUrl);
+                    }
                 } else {
-                    // 点击新卡牌或恢复播放
+                    // 点击新卡牌
                     cards.forEach(c => {
                         c.classList.remove('selected');
                         c.dataset.status = '';
                     });
                     card.classList.add('selected');
                     card.dataset.status = 'connecting';
-                    player.src = streamUrl;
-                    player.play().catch(err => {
-                        console.log('播放失败：', err);
-                        card.dataset.status = 'error';
-                    });
                     currentCard = card;
                     localStorage.setItem('lastStream', streamUrl);
+                    retryPlay(card, streamUrl);
                 }
             });
         });
