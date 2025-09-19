@@ -45,22 +45,51 @@
     <title>Radio PWA</title>
     <link rel="manifest" href="/radio/manifest.json">
     <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-color: #007bff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
         }
+
         h1 {
-            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <h1>欢迎使用 Radio PWA！</h1>
+    <p>这是一个现代化的深色模式广播应用，敬请期待更多功能！</p>
     <script>
         // 注册 Service Worker，指定子目录路径
         if ('serviceWorker' in navigator) {
