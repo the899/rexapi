@@ -196,25 +196,34 @@
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
             if (playCheckInterval) clearInterval(playCheckInterval);
+
+            // 检查当前是否正在播放且流地址相同
+            if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
+                card.dataset.status = 'playing';
+                console.log('Already playing, maintaining playing status for card:', card.querySelector('span').textContent);
+                isUserPaused = false;
+                retryCount = 0;
+                return;
+            }
+
             if (retryCount >= maxRetries) {
                 card.dataset.status = 'error';
                 console.log('Max retries reached, stopping');
                 return;
             }
+
             card.dataset.status = 'connecting'; // 显示连接中动画
             console.log('Set status to connecting for card:', card.querySelector('span').textContent);
-            player.src = streamUrl;
-            if (!player.paused && player.currentTime > 0) {
-                card.dataset.status = 'playing';
-                console.log('Already playing, set to playing');
-                isUserPaused = false;
-                retryCount = 0;
-                return;
+
+            // 仅当流地址不同时重新设置 src
+            if (player.src !== streamUrl) {
+                player.src = streamUrl;
             }
+
             player.play().then(() => {
                 // 启动检查播放状态
                 playCheckInterval = setInterval(() => {
-                    if (!player.paused && player.currentTime > 0) {
+                    if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
                         card.dataset.status = 'playing';
                         console.log('Play confirmed, set to playing');
                         isUserPaused = false;
@@ -229,7 +238,6 @@
                 card.dataset.status = 'error';
                 console.log('Play failed, set to error');
                 retryCount++;
-                // PWA 模式下重试间隔为 5 秒，非 PWA 保持 3 秒
                 const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                 if (retryCount < maxRetries) {
                     retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
@@ -237,13 +245,13 @@
                     console.log('Max retries reached, stopping');
                 }
             });
-            // 延迟检查状态，5 秒
+
+            // 延迟检查状态，延长至 10 秒
             setTimeout(() => {
-                if (player.paused && card.dataset.status === 'connecting') {
+                if (player.paused && card.dataset.status === 'connecting' && player.readyState < 2) {
                     card.dataset.status = 'error';
-                    console.log('Still paused after 5s, set to error');
+                    console.log('Still paused after 10s with insufficient readyState, set to error');
                     retryCount++;
-                    // PWA 模式下重试间隔为 5 秒，非 PWA 保持 3 秒
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
@@ -251,7 +259,7 @@
                         console.log('Max retries reached, stopping');
                     }
                 }
-            }, 5000);
+            }, 10000);
         }
 
         // 检测用户交互
@@ -370,7 +378,7 @@
             }
         });
         player.addEventListener('playing', () => {
-            if (currentCard && player.src && !player.paused && player.currentTime > 0) {
+            if (currentCard && player.src && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
                 currentCard.dataset.status = 'playing';
                 console.log('Audio playing, set to playing');
                 isUserPaused = false;
@@ -389,40 +397,49 @@
         });
         player.addEventListener('error', () => {
             if (currentCard && player.src) {
-                currentCard.dataset.status = 'error';
-                console.log('Audio error, set to error');
-                retryCount++;
-                const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
-                if (retryCount < maxRetries) {
-                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
-                } else {
-                    console.log('Max retries reached, stopping');
+                // 仅当音频未播放且无足够数据时设为 error
+                if (player.paused && player.readyState < 2) {
+                    currentCard.dataset.status = 'error';
+                    console.log('Audio error, set to error');
+                    retryCount++;
+                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                    }
                 }
             }
         });
         player.addEventListener('stalled', () => {
             if (currentCard && player.src) {
-                currentCard.dataset.status = 'error';
-                console.log('Audio stalled, set to error');
-                retryCount++;
-                const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
-                if (retryCount < maxRetries) {
-                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
-                } else {
-                    console.log('Max retries reached, stopping');
+                // 仅当音频未播放且无足够数据时设为 error
+                if (player.paused && player.readyState < 2) {
+                    currentCard.dataset.status = 'error';
+                    console.log('Audio stalled, set to error');
+                    retryCount++;
+                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                    }
                 }
             }
         });
         player.addEventListener('suspend', () => {
             if (currentCard && player.src) {
-                currentCard.dataset.status = 'error';
-                console.log('Audio suspended, set to error');
-                retryCount++;
-                const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
-                if (retryCount < maxRetries) {
-                    retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
-                } else {
-                    console.log('Max retries reached, stopping');
+                // 仅当音频未播放且无足够数据时设为 error
+                if (player.paused && player.readyState < 2) {
+                    currentCard.dataset.status = 'error';
+                    console.log('Audio suspended, set to error');
+                    retryCount++;
+                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                    }
                 }
             }
         });
