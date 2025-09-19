@@ -81,6 +81,19 @@
             z-index: 2;
         }
 
+        .radio-card.selected::after {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(
+                to right,
+                #007bff 12px,
+                transparent 12px 18px,
+                #007bff 18px 30px,
+                transparent 30px
+            );
+        }
+
         .radio-card[data-status="connecting"]::after {
             display: block;
             width: 40px;
@@ -88,6 +101,7 @@
             border: 4px solid #007bff;
             border-top-color: transparent;
             border-radius: 50%;
+            background: none;
             animation: spin 1s linear infinite;
         }
 
@@ -153,37 +167,46 @@
             background-color: #e64444;
         }
 
-        .pwa-prompt {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #fff;
-            font-size: 1.1rem;
-            text-align: center;
-            background-color: rgba(0, 123, 255, 0.9);
-            padding: 12px 25px;
-            border-radius: 10px;
-            z-index: 1000;
-            max-width: 90%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        .pwa-prompt:hover {
-            background-color: rgba(0, 86, 179, 0.9);
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        @keyframes pulse {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.05); }
-            100% { transform: translateX(-50%) scale(1); }
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes wave {
+            0% {
+                background: linear-gradient(
+                    to right,
+                    #007bff 10px,
+                    transparent 10px 15px,
+                    #007bff 15px 25px,
+                    transparent 25px 30px,
+                    #007bff 30px
+                );
+            }
+            50% {
+                background: linear-gradient(
+                    to right,
+                    #007bff 5px,
+                    transparent 5px 10px,
+                    #007bff 10px 20px,
+                    transparent 20px 25px,
+                    #007bff 25px
+                );
+            }
+            100% {
+                background: linear-gradient(
+                    to right,
+                    #007bff 10px,
+                    transparent 10px 15px,
+                    #007bff 15px 25px,
+                    transparent 25px 30px,
+                    #007bff 30px
+                );
+            }
         }
 
         @media (max-width: 600px) {
@@ -196,7 +219,7 @@
             .radio-card span {
                 font-size: 1.2rem;
             }
-            .error-message, .pwa-prompt {
+            .error-message {
                 font-size: 1rem;
                 padding: 10px 20px;
             }
@@ -233,7 +256,7 @@
             if (existingPrompt) existingPrompt.remove();
         }
 
-        // 显示错误提示，10秒后自动隐藏
+        // 显示错误提示，3秒后自动隐藏
         function showErrorMessage(message) {
             clearPrompt('error-message');
             const errorDiv = document.createElement('div');
@@ -250,26 +273,7 @@
             });
             setTimeout(() => {
                 if (errorDiv.parentNode) errorDiv.remove();
-            }, 10000);
-        }
-
-        // 显示 PWA 安装提示
-        function showPWAPrompt() {
-            if ('standalone' in navigator && !navigator.standalone && !localStorage.getItem('pwaPromptDismissed')) {
-                clearPrompt('pwa-prompt');
-                const promptDiv = document.createElement('div');
-                promptDiv.className = 'pwa-prompt';
-                promptDiv.textContent = '添加到主屏幕以获得自动播放体验';
-                document.body.appendChild(promptDiv);
-                promptDiv.addEventListener('click', () => {
-                    promptDiv.remove();
-                    localStorage.setItem('pwaPromptDismissed', 'true');
-                    showErrorMessage('请使用浏览器“分享”按钮添加到主屏幕');
-                });
-                setTimeout(() => {
-                    if (promptDiv.parentNode) promptDiv.remove();
-                }, 15000);
-            }
+            }, 3000);
         }
 
         // 自动重试函数
@@ -313,7 +317,7 @@
                 console.log('Play failed, set to error');
                 retryCount++;
                 if (!hasUserInteracted) {
-                    showErrorMessage('无法自动播放，请点击提示或频道开始播放');
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
                 }
                 // PWA 模式下重试间隔为 5 秒，非 PWA 保持 3 秒
                 const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
@@ -331,7 +335,7 @@
                     console.log('Still paused after 5s, set to error');
                     retryCount++;
                     if (!hasUserInteracted) {
-                        showErrorMessage('无法自动播放，请点击提示或频道开始播放');
+                        showErrorMessage('无法自动播放，请点击频道开始播放');
                     }
                     // PWA 模式下重试间隔为 5 秒，非 PWA 保持 3 秒
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
@@ -421,7 +425,6 @@
                         currentCard = savedCard;
                         isUserPaused = false; // 确保恢复时不视为用户暂停
                         retryPlay(savedCard, savedStream); // 尝试连接并播放
-                        showPWAPrompt(); // 显示 PWA 提示
                     }
                 }
                 // 首次加载无 savedStream，所有卡牌保持未选中，不自动播放
@@ -488,7 +491,7 @@
                 console.log('Audio error, set to error');
                 retryCount++;
                 if (!hasUserInteracted) {
-                    showErrorMessage('无法自动播放，请点击提示或频道开始播放');
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
                 }
                 const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                 if (retryCount < maxRetries) {
@@ -505,7 +508,7 @@
                 console.log('Audio stalled, set to error');
                 retryCount++;
                 if (!hasUserInteracted) {
-                    showErrorMessage('音频加载失败，请点击提示或频道重试');
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
                 }
                 const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                 if (retryCount < maxRetries) {
@@ -522,7 +525,7 @@
                 console.log('Audio suspended, set to error');
                 retryCount++;
                 if (!hasUserInteracted) {
-                    showErrorMessage('音频加载失败，请点击提示或频道重试');
+                    showErrorMessage('无法自动播放，请点击频道开始播放');
                 }
                 const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                 if (retryCount < maxRetries) {
