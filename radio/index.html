@@ -51,9 +51,9 @@
 
         .radio-card span {
             color: var(--text-color);
-            font-size: 2rem; /* 修改为 2rem */
+            font-size: 1.8rem; /* 修改为 1.8rem */
             text-align: center;
-            padding: 10px; /* 恢复 padding */
+            padding: 10px;
             word-break: break-all;
             line-height: 1.2; /* 优化文字显示 */
             z-index: 1;
@@ -149,6 +149,9 @@
             }
             .radio-grid {
                 gap: 15px;
+            }
+            .radio-card span {
+                font-size: 1.44rem; /* 移动端按最初方案缩小为 1.8rem * 0.8 */
             }
         }
     </style>
@@ -288,7 +291,7 @@
         player.addEventListener('error', () => {
             if (currentCard) {
                 currentCard.dataset.status = 'error';
-                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+                retryTimeout = setTimeout(() => retryPlay(card, currentCard.dataset.stream), 3000);
             }
         });
     </script>
