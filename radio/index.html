@@ -117,7 +117,7 @@
                 transparent 25px 30px,
                 #007bff 30px
             );
-            animation: wave 1s ease-in-out infinite;
+            animation: pulse 1s ease-in-out infinite;
         }
 
         .radio-card[data-status="paused"]::after {
@@ -176,37 +176,10 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        @keyframes wave {
-            0% {
-                background: linear-gradient(
-                    to right,
-                    #007bff 10px,
-                    transparent 10px 15px,
-                    #007bff 15px 25px,
-                    transparent 25px 30px,
-                    #007bff 30px
-                );
-            }
-            50% {
-                background: linear-gradient(
-                    to right,
-                    #007bff 5px,
-                    transparent 5px 10px,
-                    #007bff 10px 20px,
-                    transparent 20px 25px,
-                    #007bff 25px
-                );
-            }
-            100% {
-                background: linear-gradient(
-                    to right,
-                    #007bff 10px,
-                    transparent 10px 15px,
-                    #007bff 15px 25px,
-                    transparent 25px 30px,
-                    #007bff 30px
-                );
-            }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
 
         @media (max-width: 600px) {
