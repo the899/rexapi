@@ -202,7 +202,7 @@
             });
         }
 
-        // 恢复上次选中的频道并自动播放
+        // 恢复上次选中的频道并自动播放（仅非首次加载）
         window.addEventListener('load', () => {
             const savedStream = localStorage.getItem('lastStream');
             if (savedStream) {
@@ -214,6 +214,7 @@
                     retryPlay(savedCard, savedStream);
                 }
             }
+            // 首次加载无 savedStream，所有卡牌保持未选中，不自动播放
         });
 
         // Media Session API 实现后台播放
