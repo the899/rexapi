@@ -145,20 +145,14 @@
             display: none;
         }
 
-        .reset-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #1a1a1a;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        .reset-button:hover {
-            background-color: #333;
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
 
         @media (max-width: 600px) {
@@ -171,40 +165,13 @@
             .radio-card span {
                 font-size: 1.2rem;
             }
-            .reset-button {
-                font-size: 1rem;
-                padding: 8px 16px;
-            }
-        }
-
-        @keyframes spin {
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="radio-grid"></div>
-    <button class="reset-button" onclick="resetApp()">重置应用</button>
     <audio id="radio-player"></audio>
     <script>
-        // 重置应用函数
-        function resetApp() {
-            localStorage.clear();
-            caches.delete('radio-cache-v6').then(() => {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    regs.forEach(reg => reg.unregister());
-                    console.log('Service Worker 注销成功');
-                }).catch(err => console.log('Service Worker 注销失败：', err));
-                location.reload();
-            }).catch(err => console.log('缓存删除失败：', err));
-        }
-
         // 注册 Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -448,7 +415,7 @@
             if (currentCard && player.src) {
                 // 仅当音频未播放且无足够数据时设为 error
                 if (player.paused && player.readyState < 2) {
-                    currentCard.dataset.status = 'error';
+                    card.dataset.status = 'error';
                     console.log('Audio stalled, set to error');
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
