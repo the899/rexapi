@@ -177,18 +177,19 @@
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
-            card.dataset.status = 'connecting';
+            card.dataset.status = 'connecting'; // 显示连接中动画
             player.src = streamUrl;
             // 检查是否已在播放
             if (!player.paused) {
-                card.dataset.status = 'playing';
+                card.dataset.status = 'playing'; // 显示播放动画
                 return;
             }
             player.play().then(() => {
-                card.dataset.status = 'playing';
+                card.dataset.status = 'playing'; // 成功播放，显示音波动画
+                if (retryTimeout) clearTimeout(retryTimeout);
             }).catch(err => {
                 console.log('播放失败，重试中：', err);
-                card.dataset.status = 'error';
+                card.dataset.status = 'error'; // 显示错误图标
                 retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
             });
         }
@@ -218,11 +219,9 @@
                             // 点击当前卡牌，切换播放/暂停
                             if (!player.paused) {
                                 player.pause();
-                                card.dataset.status = 'paused';
-                                // 保持 selected 类，不变暗、不缩小
+                                card.dataset.status = 'paused'; // 显示暂停图标
                             } else {
-                                card.dataset.status = 'connecting';
-                                retryPlay(card, streamUrl);
+                                retryPlay(card, streamUrl); // 重新播放
                             }
                         } else {
                             // 点击新卡牌
@@ -231,22 +230,21 @@
                                 c.dataset.status = '';
                             });
                             card.classList.add('selected');
-                            card.dataset.status = 'connecting';
                             currentCard = card;
                             localStorage.setItem('lastStream', streamUrl);
-                            retryPlay(card, streamUrl);
+                            retryPlay(card, streamUrl); // 开始播放
                         }
                     });
                 });
 
-                // 恢复上次选中的频道并自动播放
+                // 恢复上次选中的频道
                 const savedStream = localStorage.getItem('lastStream');
                 if (savedStream) {
                     const savedCard = Array.from(cards).find(card => card.dataset.stream === savedStream);
                     if (savedCard) {
-                        savedCard.classList.add('selected');
+                        savedCard.classList.add('selected'); // 显示选中状态
                         currentCard = savedCard;
-                        retryPlay(savedCard, savedStream);
+                        retryPlay(savedCard, savedStream); // 尝试连接并播放
                     }
                 }
                 // 首次加载无 savedStream，所有卡牌保持未选中，不自动播放
@@ -269,8 +267,8 @@
                 }
             });
             navigator.mediaSession.setActionHandler('pause', () => {
-                player.pause();
                 if (currentCard) {
+                    player.pause();
                     currentCard.dataset.status = 'paused';
                 }
             });
@@ -278,12 +276,12 @@
 
         // 音频状态监听
         player.addEventListener('waiting', () => {
-            if (currentCard) {
+            if (currentCard && player.src) {
                 currentCard.dataset.status = 'connecting';
             }
         });
         player.addEventListener('playing', () => {
-            if (currentCard) {
+            if (currentCard && player.src) {
                 currentCard.dataset.status = 'playing';
                 if (retryTimeout) clearTimeout(retryTimeout);
             }
