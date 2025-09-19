@@ -173,25 +173,39 @@
         const player = document.getElementById('radio-player');
         let currentCard = null;
         let retryTimeout = null;
+        let isUserPaused = false; // 区分用户主动暂停和自动暂停
 
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
             card.dataset.status = 'connecting'; // 显示连接中动画
+            console.log('Set status to connecting for card:', card.querySelector('span').textContent);
             player.src = streamUrl;
-            // 检查是否已在播放
             if (!player.paused) {
-                card.dataset.status = 'playing'; // 显示播放动画
+                card.dataset.status = 'playing';
+                console.log('Already playing, set to playing');
+                isUserPaused = false;
                 return;
             }
             player.play().then(() => {
                 card.dataset.status = 'playing'; // 成功播放，显示音波动画
+                console.log('Play succeeded, set to playing');
+                isUserPaused = false;
                 if (retryTimeout) clearTimeout(retryTimeout);
             }).catch(err => {
                 console.log('播放失败，重试中：', err);
                 card.dataset.status = 'error'; // 显示错误图标
+                console.log('Play failed, set to error');
                 retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
             });
+            // 延迟检查状态
+            setTimeout(() => {
+                if (player.paused && card.dataset.status === 'connecting') {
+                    card.dataset.status = 'error';
+                    console.log('Still paused after 1s, set to error');
+                    retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+                }
+            }, 1000);
         }
 
         // 动态加载频道
@@ -219,8 +233,10 @@
                             // 点击当前卡牌，切换播放/暂停
                             if (!player.paused) {
                                 player.pause();
-                                card.dataset.status = 'paused'; // 显示暂停图标
+                                card.dataset.status = 'paused';
+                                isUserPaused = true; // 标记为用户主动暂停
                             } else {
+                                isUserPaused = false; // 重置暂停标志
                                 retryPlay(card, streamUrl); // 重新播放
                             }
                         } else {
@@ -232,6 +248,7 @@
                             card.classList.add('selected');
                             currentCard = card;
                             localStorage.setItem('lastStream', streamUrl);
+                            isUserPaused = false; // 重置暂停标志
                             retryPlay(card, streamUrl); // 开始播放
                         }
                     });
@@ -244,6 +261,7 @@
                     if (savedCard) {
                         savedCard.classList.add('selected'); // 显示选中状态
                         currentCard = savedCard;
+                        isUserPaused = false; // 确保恢复时不视为用户暂停
                         retryPlay(savedCard, savedStream); // 尝试连接并播放
                     }
                 }
@@ -263,6 +281,7 @@
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 if (currentCard) {
+                    isUserPaused = false; // 重置暂停标志
                     retryPlay(currentCard, currentCard.dataset.stream);
                 }
             });
@@ -270,6 +289,7 @@
                 if (currentCard) {
                     player.pause();
                     currentCard.dataset.status = 'paused';
+                    isUserPaused = true; // 标记为用户主动暂停
                 }
             });
         }
@@ -278,22 +298,27 @@
         player.addEventListener('waiting', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'connecting';
+                console.log('Audio waiting, set to connecting');
             }
         });
         player.addEventListener('playing', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'playing';
+                console.log('Audio playing, set to playing');
+                isUserPaused = false;
                 if (retryTimeout) clearTimeout(retryTimeout);
             }
         });
         player.addEventListener('pause', () => {
-            if (currentCard && player.src) {
+            if (currentCard && player.src && isUserPaused) {
                 currentCard.dataset.status = 'paused';
+                console.log('Audio paused by user, set to paused');
             }
         });
         player.addEventListener('error', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'error';
+                console.log('Audio error, set to error');
                 retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
             }
         });
