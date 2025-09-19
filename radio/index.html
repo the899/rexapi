@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -16,7 +17,8 @@
             --card-size-mobile: 120px;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             min-width: 360px;
@@ -99,13 +101,11 @@
             display: block;
             width: 40px;
             height: 40px;
-            background: linear-gradient(
-                to right,
-                #007bff 12px,
-                transparent 12px 18px,
-                #007bff 18px 30px,
-                transparent 30px
-            );
+            background: linear-gradient(to right,
+                    #007bff 12px,
+                    transparent 12px 18px,
+                    #007bff 18px 30px,
+                    transparent 30px);
         }
 
         .radio-card[data-status="connecting"]::after {
@@ -119,25 +119,26 @@
             animation: spin 1s linear infinite;
         }
 
-        .radio-card[data-status="playing"]::after {
+        /* .radio-card[data-status="playing"]::after {
             display: block;
             width: 60px;
             height: 60px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23007bff"><path d="M8 5v14l11-7z"/></svg>') no-repeat center;
             background-size: contain;
+        } */
+        .radio-card[data-status="playing"]::after {
+            display: none;
         }
 
         .radio-card[data-status="paused"]::after {
             display: block;
             width: 32px;
             height: 32px;
-            background: linear-gradient(
-                to right,
-                #007bff 12px,
-                transparent 12px 18px,
-                #007bff 18px 30px,
-                transparent 30px
-            );
+            background: linear-gradient(to right,
+                    #007bff 12px,
+                    transparent 12px 18px,
+                    #007bff 18px 30px,
+                    transparent 30px);
         }
 
         .radio-card[data-status="error"]::after {
@@ -156,13 +157,16 @@
             :root {
                 --card-size: var(--card-size-mobile);
             }
+
             .radio-grid {
                 gap: 15px;
             }
+
             .radio-card {
                 min-width: 60px;
                 min-height: 60px;
             }
+
             .radio-card span {
                 font-size: max(0.4rem, 1.2rem);
             }
@@ -183,10 +187,13 @@
         }
 
         @keyframes spin {
-            to { transform: translate(-50%, -50%) rotate(360deg); }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="radio-grid"></div>
     <audio id="radio-player"></audio>
@@ -482,4 +489,5 @@
         });
     </script>
 </body>
+
 </html>
