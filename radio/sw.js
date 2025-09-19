@@ -1,43 +1,20 @@
 const CACHE_NAME = 'radio-cache-v1';
 
-// 动态生成缓存列表
-async function getCacheUrls() {
-    try {
-        const response = await fetch('/radio/config.json');
-        const channels = await response.json();
-        const channelCount = Object.keys(channels).length;
-        const urlsToCache = [
-            '/radio/',
-            '/radio/index.html',
-            '/radio/manifest.json',
-            '/radio/config.json',
-            '/radio/icon.png'
-        ];
-        for (let i = 1; i <= channelCount; i++) {
-            urlsToCache.push(`/radio/images/poster${i}.png`);
-        }
-        return urlsToCache;
-    } catch (err) {
-        console.error('无法加载 config.json，缓存默认资源：', err);
-        return [
-            '/radio/',
-            '/radio/index.html',
-            '/radio/manifest.json',
-            '/radio/config.json',
-            '/radio/icon.png'
-        ];
-    }
-}
+const urlsToCache = [
+    '/radio/',
+    '/radio/index.html',
+    '/radio/manifest.json',
+    '/radio/config.json',
+    '/radio/icon.png'
+];
 
 // 安装 Service Worker 并缓存资源
 self.addEventListener('install', event => {
     event.waitUntil(
-        getCacheUrls().then(urlsToCache => {
-            return caches.open(CACHE_NAME)
-                .then(cache => {
-                    return cache.addAll(urlsToCache);
-                });
-        })
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
     );
 });
 
