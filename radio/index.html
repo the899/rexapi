@@ -62,8 +62,62 @@
             z-index: 10;
         }
 
+        /* 状态动画 */
+        .radio-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .radio-card[data-status="connecting"]::after {
+            display: block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #007bff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .radio-card[data-status="playing"]::after {
+            display: block;
+            width: 40px;
+            height: 20px;
+            background: linear-gradient(
+                to right,
+                #007bff 10px,
+                transparent 10px 15px,
+                #007bff 15px 25px,
+                transparent 25px 30px,
+                #007bff 30px
+            );
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .radio-card[data-status="error"]::after {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>') no-repeat center;
+            background-size: contain;
+        }
+
         audio {
             display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes wave {
+            0% { transform: translate(-50%, -50%) scaleY(1); }
+            50% { transform: translate(-50%, -50%) scaleY(0.5); }
+            100% { transform: translate(-50%, -50%) scaleY(1); }
         }
 
         @media (max-width: 600px) {
@@ -128,8 +182,12 @@
             const savedCard = Array.from(cards).find(card => card.dataset.stream === savedStream);
             if (savedCard) {
                 savedCard.classList.add('selected');
+                savedCard.dataset.status = 'connecting';
                 player.src = savedStream;
-                player.play().catch(err => console.log('自动播放失败：', err));
+                player.play().catch(err => {
+                    console.log('自动播放失败：', err);
+                    savedCard.dataset.status = 'error';
+                });
                 currentCard = savedCard;
             }
         }
@@ -143,13 +201,42 @@
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 if (currentCard) {
-                    player.play().catch(err => console.log('播放失败：', err));
+                    currentCard.dataset.status = 'connecting';
+                    player.play().catch(err => {
+                        console.log('播放失败：', err);
+                        currentCard.dataset.status = 'error';
+                    });
                 }
             });
             navigator.mediaSession.setActionHandler('pause', () => {
                 player.pause();
+                if (currentCard) {
+                    currentCard.dataset.status = 'paused';
+                }
             });
         }
+
+        // 音频状态监听
+        player.addEventListener('waiting', () => {
+            if (currentCard) {
+                currentCard.dataset.status = 'connecting';
+            }
+        });
+        player.addEventListener('playing', () => {
+            if (currentCard) {
+                currentCard.dataset.status = 'playing';
+            }
+        });
+        player.addEventListener('pause', () => {
+            if (currentCard) {
+                currentCard.dataset.status = 'paused';
+            }
+        });
+        player.addEventListener('error', () => {
+            if (currentCard) {
+                currentCard.dataset.status = 'error';
+            }
+        });
 
         // 卡牌点击事件
         cards.forEach(card => {
@@ -159,15 +246,23 @@
                 if (currentCard === card && !player.paused) {
                     // 再次点击当前卡牌，暂停播放
                     player.pause();
+                    card.dataset.status = 'paused';
                     card.classList.remove('selected');
                     currentCard = null;
                     localStorage.removeItem('lastStream');
                 } else {
                     // 点击新卡牌或恢复播放
-                    cards.forEach(c => c.classList.remove('selected'));
+                    cards.forEach(c => {
+                        c.classList.remove('selected');
+                        c.dataset.status = '';
+                    });
                     card.classList.add('selected');
+                    card.dataset.status = 'connecting';
                     player.src = streamUrl;
-                    player.play().catch(err => console.log('播放失败：', err));
+                    player.play().catch(err => {
+                        console.log('播放失败：', err);
+                        card.dataset.status = 'error';
+                    });
                     currentCard = card;
                     localStorage.setItem('lastStream', streamUrl);
                 }
