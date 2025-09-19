@@ -3,7 +3,16 @@ const urlsToCache = [
     '/radio/',
     '/radio/index.html',
     '/radio/manifest.json',
-    '/radio/icon.png'
+    '/radio/icon.png',
+    '/radio/images/poster1.png',
+    '/radio/images/poster2.png',
+    '/radio/images/poster3.png',
+    '/radio/images/poster4.png',
+    '/radio/images/poster5.png',
+    '/radio/images/poster6.png',
+    '/radio/images/poster7.png',
+    '/radio/images/poster8.png',
+    '/radio/images/poster9.png'
 ];
 
 // 安装 Service Worker 并缓存资源
