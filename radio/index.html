@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-device-width, initial-scale=1.0">
     <title>Rex Radio</title>
     <link rel="manifest" href="/radio/manifest.json">
     <style>
@@ -131,6 +131,13 @@
             display: none;
         }
 
+        .error-message {
+            color: #ff4d4d;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
         @keyframes spin {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -174,10 +181,27 @@
         let currentCard = null;
         let retryTimeout = null;
         let isUserPaused = false; // 区分用户主动暂停和自动暂停
+        let playCheckInterval = null; // 持续检查播放状态
+
+        // 清除错误提示
+        function clearErrorMessage() {
+            const existingMessage = document.querySelector('.error-message');
+            if (existingMessage) existingMessage.remove();
+        }
+
+        // 显示错误提示
+        function showErrorMessage(message) {
+            clearErrorMessage();
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            radioGrid.insertAdjacentElement('beforebegin', errorDiv);
+        }
 
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
+            if (playCheckInterval) clearInterval(playCheckInterval);
             card.dataset.status = 'connecting'; // 显示连接中动画
             console.log('Set status to connecting for card:', card.querySelector('span').textContent);
             player.src = streamUrl;
@@ -188,24 +212,33 @@
                 return;
             }
             player.play().then(() => {
-                card.dataset.status = 'playing'; // 成功播放，显示音波动画
-                console.log('Play succeeded, set to playing');
-                isUserPaused = false;
-                if (retryTimeout) clearTimeout(retryTimeout);
+                // 启动检查播放状态
+                playCheckInterval = setInterval(() => {
+                    if (!player.paused && player.currentTime > 0) {
+                        card.dataset.status = 'playing';
+                        console.log('Play confirmed, set to playing');
+                        isUserPaused = false;
+                        clearInterval(playCheckInterval);
+                        if (retryTimeout) clearTimeout(retryTimeout);
+                        clearErrorMessage();
+                    }
+                }, 500);
             }).catch(err => {
                 console.log('播放失败，重试中：', err);
-                card.dataset.status = 'error'; // 显示错误图标
+                card.dataset.status = 'error';
                 console.log('Play failed, set to error');
+                showErrorMessage('无法播放，请点击频道重试');
                 retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
             });
             // 延迟检查状态
             setTimeout(() => {
                 if (player.paused && card.dataset.status === 'connecting') {
                     card.dataset.status = 'error';
-                    console.log('Still paused after 1s, set to error');
+                    console.log('Still paused after 2s, set to error');
+                    showErrorMessage('无法播放，请点击频道重试');
                     retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
                 }
-            }, 1000);
+            }, 2000);
         }
 
         // 动态加载频道
@@ -235,6 +268,7 @@
                                 player.pause();
                                 card.dataset.status = 'paused';
                                 isUserPaused = true; // 标记为用户主动暂停
+                                clearErrorMessage();
                             } else {
                                 isUserPaused = false; // 重置暂停标志
                                 retryPlay(card, streamUrl); // 重新播放
@@ -290,6 +324,7 @@
                     player.pause();
                     currentCard.dataset.status = 'paused';
                     isUserPaused = true; // 标记为用户主动暂停
+                    clearErrorMessage();
                 }
             });
         }
@@ -302,11 +337,13 @@
             }
         });
         player.addEventListener('playing', () => {
-            if (currentCard && player.src) {
+            if (currentCard && player.src && !player.paused && player.currentTime > 0) {
                 currentCard.dataset.status = 'playing';
                 console.log('Audio playing, set to playing');
                 isUserPaused = false;
                 if (retryTimeout) clearTimeout(retryTimeout);
+                if (playCheckInterval) clearInterval(playCheckInterval);
+                clearErrorMessage();
             }
         });
         player.addEventListener('pause', () => {
@@ -319,6 +356,7 @@
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'error';
                 console.log('Audio error, set to error');
+                showErrorMessage('无法播放，请点击频道重试');
                 retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
             }
         });
