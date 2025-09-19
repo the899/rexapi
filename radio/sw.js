@@ -1,28 +1,43 @@
 const CACHE_NAME = 'radio-cache-v1';
-const urlsToCache = [
-    '/radio/',
-    '/radio/index.html',
-    '/radio/manifest.json',
-    '/radio/config.json',
-    '/radio/icon.png',
-    '/radio/images/poster1.png',
-    '/radio/images/poster2.png',
-    '/radio/images/poster3.png',
-    '/radio/images/poster4.png',
-    '/radio/images/poster5.png',
-    '/radio/images/poster6.png',
-    '/radio/images/poster7.png',
-    '/radio/images/poster8.png',
-    '/radio/images/poster9.png'
-];
+
+// 动态生成缓存列表
+async function getCacheUrls() {
+    try {
+        const response = await fetch('/radio/config.json');
+        const channels = await response.json();
+        const channelCount = Object.keys(channels).length;
+        const urlsToCache = [
+            '/radio/',
+            '/radio/index.html',
+            '/radio/manifest.json',
+            '/radio/config.json',
+            '/radio/icon.png'
+        ];
+        for (let i = 1; i <= channelCount; i++) {
+            urlsToCache.push(`/radio/images/poster${i}.png`);
+        }
+        return urlsToCache;
+    } catch (err) {
+        console.error('无法加载 config.json，缓存默认资源：', err);
+        return [
+            '/radio/',
+            '/radio/index.html',
+            '/radio/manifest.json',
+            '/radio/config.json',
+            '/radio/icon.png'
+        ];
+    }
+}
 
 // 安装 Service Worker 并缓存资源
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(urlsToCache);
-            })
+        getCacheUrls().then(urlsToCache => {
+            return caches.open(CACHE_NAME)
+                .then(cache => {
+                    return cache.addAll(urlsToCache);
+                });
+        })
     );
 });
 

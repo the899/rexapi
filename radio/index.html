@@ -39,17 +39,23 @@
             width: var(--card-size);
             height: var(--card-size);
             background-color: #333;
-            border-radius: 10px;
+            border-radius: 30px; /* 模仿苹果风格圆角 */
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease, filter 0.3s ease;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .radio-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .radio-card span {
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
+            word-break: break-all;
+            z-index: 1;
         }
 
         .radio-card:not(.selected) {
@@ -70,6 +76,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             display: none;
+            z-index: 2; /* 确保动画覆盖文字 */
         }
 
         .radio-card[data-status="connecting"]::after {
@@ -140,6 +147,9 @@
             .radio-grid {
                 gap: 15px;
             }
+            .radio-card span {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -179,17 +189,13 @@
             .then(response => response.json())
             .then(channels => {
                 const channelNames = Object.keys(channels);
-                channelNames.forEach((name, index) => {
+                channelNames.forEach((name) => {
                     const card = document.createElement('div');
                     card.className = 'radio-card';
                     card.dataset.stream = channels[name];
-                    const img = document.createElement('img');
-                    img.src = `/radio/images/poster${index + 1}.png`;
-                    img.alt = name;
-                    img.onerror = () => {
-                        img.src = `https://placehold.co/300x300/333/fff/png?text=Poster+${index + 1}`;
-                    };
-                    card.appendChild(img);
+                    const span = document.createElement('span');
+                    span.textContent = name;
+                    card.appendChild(span);
                     radioGrid.appendChild(card);
                 });
 
