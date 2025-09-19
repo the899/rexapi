@@ -3,6 +3,7 @@ const urlsToCache = [
     '/radio/',
     '/radio/index.html',
     '/radio/manifest.json',
+    '/radio/config.json',
     '/radio/icon.png',
     '/radio/images/poster1.png',
     '/radio/images/poster2.png',
