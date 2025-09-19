@@ -202,17 +202,19 @@
             });
         }
 
-        // 恢复上次选中的频道
-        const savedStream = localStorage.getItem('lastStream');
-        if (savedStream) {
-            const savedCard = Array.from(cards).find(card => card.dataset.stream === savedStream);
-            if (savedCard) {
-                savedCard.classList.add('selected');
-                savedCard.dataset.status = 'connecting';
-                currentCard = savedCard;
-                retryPlay(savedCard, savedStream);
+        // 恢复上次选中的频道并自动播放
+        window.addEventListener('load', () => {
+            const savedStream = localStorage.getItem('lastStream');
+            if (savedStream) {
+                const savedCard = Array.from(cards).find(card => card.dataset.stream === savedStream);
+                if (savedCard) {
+                    savedCard.classList.add('selected');
+                    savedCard.dataset.status = 'connecting';
+                    currentCard = savedCard;
+                    retryPlay(savedCard, savedStream);
+                }
             }
-        }
+        });
 
         // Media Session API 实现后台播放
         if ('mediaSession' in navigator) {
