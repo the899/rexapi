@@ -268,9 +268,7 @@
                     if (!player.paused) {
                         player.pause();
                         card.dataset.status = 'paused';
-                        card.classList.remove('selected');
-                        currentCard = null;
-                        localStorage.removeItem('lastStream');
+                        // 保持 selected 类，不变暗、不缩小
                     } else {
                         card.dataset.status = 'connecting';
                         retryPlay(card, streamUrl);
