@@ -140,3 +140,163 @@
             0% { transform: translate(-50%, -50%) scaleY(1); }
             50% { transform: translate(-50%, -50%) scaleY(0.5); }
             100% { transform: translate(-50%, -50%) scaleY(1); }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --card-size: 120px;
+            }
+            .radio-grid {
+                gap: 15px;
+            }
+            .radio-card span {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="radio-grid"></div>
+    <audio id="radio-player"></audio>
+    <script>
+        // 注册 Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/radio/sw.js')
+                    .then(reg => console.log('Service Worker 注册成功'))
+                    .catch(err => console.log('Service Worker 注册失败：', err));
+            });
+        }
+
+        // 卡牌交互和音频播放
+        const radioGrid = document.querySelector('.radio-grid');
+        const player = document.getElementById('radio-player');
+        let currentCard = null;
+        let retryTimeout = null;
+
+        // 自动重试函数
+        function retryPlay(card, streamUrl) {
+            if (retryTimeout) clearTimeout(retryTimeout);
+            card.dataset.status = 'connecting'; // 显示连接中动画
+            player.src = streamUrl;
+            // 检查是否已在播放
+            if (!player.paused) {
+                card.dataset.status = 'playing'; // 显示播放动画
+                return;
+            }
+            player.play().then(() => {
+                card.dataset.status = 'playing'; // 成功播放，显示音波动画
+                if (retryTimeout) clearTimeout(retryTimeout);
+            }).catch(err => {
+                console.log('播放失败，重试中：', err);
+                card.dataset.status = 'error'; // 显示错误图标
+                retryTimeout = setTimeout(() => retryPlay(card, streamUrl), 3000);
+            });
+        }
+
+        // 动态加载频道
+        fetch('/radio/config.json')
+            .then(response => response.json())
+            .then(channels => {
+                const channelNames = Object.keys(channels);
+                channelNames.forEach((name) => {
+                    const card = document.createElement('div');
+                    card.className = 'radio-card';
+                    card.dataset.stream = channels[name];
+                    const span = document.createElement('span');
+                    span.textContent = name;
+                    card.appendChild(span);
+                    radioGrid.appendChild(card);
+                });
+
+                // 卡牌点击事件
+                const cards = document.querySelectorAll('.radio-card');
+                cards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        const streamUrl = card.dataset.stream;
+
+                        if (currentCard === card) {
+                            // 点击当前卡牌，切换播放/暂停
+                            if (!player.paused) {
+                                player.pause();
+                                card.dataset.status = 'paused'; // 显示暂停图标
+                            } else {
+                                retryPlay(card, streamUrl); // 重新播放
+                            }
+                        } else {
+                            // 点击新卡牌
+                            cards.forEach(c => {
+                                c.classList.remove('selected');
+                                c.dataset.status = '';
+                            });
+                            card.classList.add('selected');
+                            currentCard = card;
+                            localStorage.setItem('lastStream', streamUrl);
+                            retryPlay(card, streamUrl); // 开始播放
+                        }
+                    });
+                });
+
+                // 恢复上次选中的频道
+                const savedStream = localStorage.getItem('lastStream');
+                if (savedStream) {
+                    const savedCard = Array.from(cards).find(card => card.dataset.stream === savedStream);
+                    if (savedCard) {
+                        savedCard.classList.add('selected'); // 显示选中状态
+                        currentCard = savedCard;
+                        retryPlay(savedCard, savedStream); // 尝试连接并播放
+                    }
+                }
+                // 首次加载无 savedStream，所有卡牌保持未选中，不自动播放
+            })
+            .catch(err => {
+                console.error('加载 config.json 失败：', err);
+                radioGrid.innerHTML = '<p>无法加载频道，请检查网络或 config.json</p>';
+            });
+
+        // Media Session API 实现后台播放
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: 'Rex Radio',
+                artist: 'CRI',
+                album: 'Online Radio'
+            });
+            navigator.mediaSession.setActionHandler('play', () => {
+                if (currentCard) {
+                    retryPlay(currentCard, currentCard.dataset.stream);
+                }
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                if (currentCard) {
+                    player.pause();
+                    currentCard.dataset.status = 'paused';
+                }
+            });
+        }
+
+        // 音频状态监听
+        player.addEventListener('waiting', () => {
+            if (currentCard && player.src) {
+                currentCard.dataset.status = 'connecting';
+            }
+        });
+        player.addEventListener('playing', () => {
+            if (currentCard && player.src) {
+                currentCard.dataset.status = 'playing';
+                if (retryTimeout) clearTimeout(retryTimeout);
+            }
+        });
+        player.addEventListener('pause', () => {
+            if (currentCard && player.src) {
+                currentCard.dataset.status = 'paused';
+            }
+        });
+        player.addEventListener('error', () => {
+            if (currentCard && player.src) {
+                currentCard.dataset.status = 'error';
+                retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), 3000);
+            }
+        });
+    </script>
+</body>
+</html>
