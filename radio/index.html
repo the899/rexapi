@@ -13,19 +13,24 @@
             --text-color: #e0e0e0;
             --accent-color: #007bff;
             --card-size: 150px;
+            --card-size-mobile: 120px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-width: 360px;
+            min-height: 640px;
+            background-color: var(--bg-color);
         }
 
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            min-height: 100dvh; /* 动态视口高度，支持 iOS */
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px;
+            min-height: 100dvh;
+            color: var(--text-color);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
             padding-top: env(safe-area-inset-top);
@@ -38,13 +43,15 @@
             gap: 20px;
             max-width: 1000px;
             width: 100%;
-            padding: 0 20px;
+            margin: auto;
             justify-items: center;
         }
 
         .radio-card {
             width: var(--card-size);
             height: var(--card-size);
+            min-width: 75px;
+            min-height: 75px;
             background-color: #1a1a1a;
             border-radius: 30px;
             overflow: hidden;
@@ -58,7 +65,7 @@
 
         .radio-card span {
             color: var(--text-color);
-            font-size: 1.5rem;
+            font-size: max(0.5rem, 1.5rem);
             text-align: center;
             padding: 10px;
             word-break: break-all;
@@ -152,6 +159,36 @@
             display: none;
         }
 
+        @media (max-width: 600px) {
+            :root {
+                --card-size: var(--card-size-mobile);
+            }
+            .radio-grid {
+                gap: 15px;
+            }
+            .radio-card {
+                min-width: 60px;
+                min-height: 60px;
+            }
+            .radio-card span {
+                font-size: max(0.4rem, 1.2rem);
+            }
+        }
+
+        @media (orientation: landscape) {
+            .radio-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (orientation: portrait) {
+            .radio-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 20px;
+            }
+        }
+
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
@@ -161,24 +198,30 @@
             50% { transform: translate(-50%, -50%) scale(1.2); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
-
-        @media (max-width: 600px) {
-            :root {
-                --card-size: 120px;
-            }
-            .radio-grid {
-                gap: 15px;
-            }
-            .radio-card span {
-                font-size: 1.2rem;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="radio-grid"></div>
     <audio id="radio-player"></audio>
     <script>
+        // 确保最小窗口尺寸
+        function ensureMinimumWindowSize() {
+            const minWidth = 360;
+            const minHeight = 640;
+            if (window.innerWidth < minWidth || window.innerHeight < minHeight) {
+                window.resizeTo(
+                    Math.max(window.outerWidth + (minWidth - window.innerWidth), minWidth),
+                    Math.max(window.outerHeight + (minHeight - window.innerHeight), minHeight)
+                );
+            }
+        }
+
+        // 在非 PWA 模式下检查窗口尺寸
+        if (!('standalone' in navigator && navigator.standalone)) {
+            window.addEventListener('resize', ensureMinimumWindowSize);
+            window.addEventListener('load', ensureMinimumWindowSize);
+        }
+
         // 注册 Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
