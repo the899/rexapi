@@ -4,8 +4,7 @@ const urlsToCache = [
     '/radio/index.html',
     '/radio/config.json',
     '/radio/manifest.json',
-    '/radio/icon.png',
-    'https://cdn.jsdelivr.net/npm/hls.js@latest'
+    '/radio/icon.png'
 ];
 
 // 安装 Service Worker，缓存关键资源
@@ -33,25 +32,14 @@ self.addEventListener('activate', event => {
 
 // 拦截网络请求，优先从缓存返回，处理重定向
 self.addEventListener('fetch', event => {
-    const requestUrl = event.request.url;
-    // 跳过 M3U8 流及其分片的缓存，使用网络优先
-    if (requestUrl.endsWith('.m3u8') || requestUrl.endsWith('.ts')) {
-        event.respondWith(
-            fetch(event.request, { cache: 'no-store' }).catch(() => {
-                return new Response('网络不可用，无法加载流媒体', {
-                    status: 503,
-                    statusText: 'Service Unavailable'
-                });
-            })
-        );
-        return;
-    }
     event.respondWith(
         caches.match(event.request)
             .then(response => {
                 if (response) {
+                    // 检查缓存响应是否包含重定向
                     if (response.redirected) {
                         console.log('Service Worker: 检测到缓存重定向，重建响应');
+                        // 重建响应以剥离重定向标志，兼容 Safari PWA
                         return new Response(response.body, {
                             status: response.status,
                             statusText: response.statusText,
@@ -61,8 +49,10 @@ self.addEventListener('fetch', event => {
                     console.log('Service Worker: 从缓存返回', event.request.url);
                     return response;
                 }
-                return fetch(event.request, { cache: 'no-store' })
+                // 若缓存未命中，发起网络请求
+                return fetch(event.request)
                     .then(networkResponse => {
+                        // 缓存新响应（仅对 GET 请求）
                         if (networkResponse.ok && event.request.method === 'GET') {
                             return caches.open(CACHE_NAME)
                                 .then(cache => {
@@ -75,6 +65,7 @@ self.addEventListener('fetch', event => {
             })
             .catch(err => {
                 console.error('Service Worker: 获取资源失败', err);
+                // 返回离线提示（可选）
                 return new Response('网络不可用，请检查连接', {
                     status: 503,
                     statusText: 'Service Unavailable'
