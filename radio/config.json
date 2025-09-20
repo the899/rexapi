@@ -1,11 +1,12 @@
 {
     "热播调频": "http://sk.cri.cn/887.m3u8",
-    "热播华语": "https://streaming.live365.com/a57743",
     "轻松调频": "http://sk.cri.cn/915.m3u8",
-    "年代965": "https://lhttp.qtfm.cn/live/5022038/64k.mp3",
-    "亚洲音乐": "https://lhttp.qingting.fm/live/4581/64k.mp3", 
-    "亚洲经典": "https://lhttp.qingting.fm/live/5021912/64k.mp3", 
-    "亚洲天空": "https://lhttp.qingting.fm/live/20071/64k.mp3", 
-    "亚洲调频": "https://lhttp.qtfm.cn/live/15318341/64k.mp3",
-    "清晨音乐": "https://lhttp.qtfm.cn/live/4915/64k.mp3"
+    "上海沸点": "https://live.ximalaya.com/radio-first-page-app/live/1236/64.m3u8?transcode=ts",
+    "热播华语": "https://live.ximalaya.com/radio-first-page-app/live/95/64.m3u8?transcode=ts",
+    "年代965": "https://live.ximalaya.com/radio-first-page-app/live/2314/64.m3u8?transcode=ts",
+    "亚洲音乐": "https://live.ximalaya.com/radio-first-page-app/live/764/64.m3u8?transcode=ts", 
+    "亚洲经典": "https://live.ximalaya.com/radio-first-page-app/live/1005/64.m3u8?transcode=ts", 
+    "亚洲天空": "https://live.ximalaya.com/radio-first-page-app/live/1912/64.m3u8?transcode=ts", 
+    "亚洲调频": "https://live.ximalaya.com/radio-first-page-app/live/1427/64.m3u8?transcode=ts",
+    "清晨音乐": "https://live.ximalaya.com/radio-first-page-app/live/1011/64.m3u8?transcode=ts"
 }
