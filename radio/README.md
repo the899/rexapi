@@ -6,3 +6,6 @@
 新闻加载,http://sk.cri.cn/am846.m3u8
 新闻装入,http://sk.cri.cn/am1008.m3u8
 怀旧金曲,https://lhttp.qingting.fm/live/5022038/64k.mp3
+
+https://tingfm.com/radio/1267?lang=zh_CN
+https://streaming.live365.com/a57743

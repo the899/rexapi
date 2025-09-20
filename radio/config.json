@@ -1,12 +1,11 @@
 {
-    "热点调频": "http://sk.cri.cn/887.m3u8",
+    "热播调频": "http://sk.cri.cn/887.m3u8",
+    "热播华语": "https://streaming.live365.com/a57743",
     "轻松调频": "http://sk.cri.cn/915.m3u8",
-    "怀旧金曲": "https://lhttp.qingting.fm/live/5022038/64k.mp3",
-    "环球资讯": "http://sk.cri.cn/905.m3u8",
-    "环球中文": "http://sk.cri.cn/hyhq.m3u8",
-    "南海之声": "http://sk.cri.cn/nhzs.m3u8",
-    "央广新闻": "http://sk.cri.cn/am846.m3u8",
-    "国际新闻": "http://sk.cri.cn/am1008.m3u8",
-    "华语经典": "http://ls.qingting.fm/live/3412131.m3u8?bitrate=64",
-    "音乐之声": "https://lhttp.qingting.fm/live/5022405/64k.mp3"
+    "年代965": "https://lhttp.qtfm.cn/live/5022038/64k.mp3",
+    "亚洲音乐": "https://lhttp.qingting.fm/live/4581/64k.mp3", 
+    "亚洲经典": "https://lhttp.qingting.fm/live/5021912/64k.mp3", 
+    "亚洲天空": "https://lhttp.qingting.fm/live/20071/64k.mp3", 
+    "亚洲调频": "https://lhttp.qtfm.cn/live/15318341/64k.mp3",
+    "清晨音乐": "https://lhttp.qtfm.cn/live/4915/64k.mp3"
 }
