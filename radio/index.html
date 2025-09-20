@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -8,6 +7,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>听音悦台</title>
     <link rel="manifest" href="/radio/manifest.json">
+    <!-- 引入 hls.js 以支持 M3U8 流兼容性 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bg-color: #1a1a1a;
@@ -39,6 +40,7 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
+        /* ID: radio-grid - 电台卡片网格容器 */
         .radio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -142,6 +144,7 @@
             background-size: contain;
         }
 
+        /* ID: radio-player - 音频播放器元素 */
         audio {
             display: none;
         }
@@ -188,7 +191,9 @@
 </head>
 
 <body>
-    <div class="radio-grid"></div>
+    <!-- ID: radio-grid - 电台卡片网格容器 -->
+    <div class="radio-grid" id="radio-grid"></div>
+    <!-- ID: radio-player - 音频播放器元素 -->
     <audio id="radio-player"></audio>
     <script>
         // 确保最小窗口尺寸
@@ -219,8 +224,8 @@
         }
 
         // 卡牌交互和音频播放
-        const radioGrid = document.querySelector('.radio-grid');
-        const player = document.getElementById('radio-player');
+        const radioGrid = document.querySelector('#radio-grid'); // ID: radio-grid
+        const player = document.getElementById('radio-player'); // ID: radio-player
         let currentCard = null;
         let retryTimeout = null;
         let retryCount = 0; // 重试计数
@@ -228,11 +233,16 @@
         let isUserPaused = false; // 区分用户主动暂停和自动暂停
         let playCheckInterval = null; // 持续检查播放状态
         let hasUserInteracted = false; // 会话级别交互状态
+        let hls = null; // hls.js 实例
 
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
             if (playCheckInterval) clearInterval(playCheckInterval);
+            if (hls) {
+                hls.destroy(); // 清理之前的 hls.js 实例
+                hls = null;
+            }
 
             // 检查当前是否正在播放且流地址相同
             if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
@@ -252,36 +262,81 @@
             card.dataset.status = 'connecting'; // 显示连接中动画
             console.log('Set status to connecting for card:', card.querySelector('span').textContent);
 
-            // 仅当流地址不同时重新设置 src
-            if (player.src !== streamUrl) {
-                player.src = streamUrl;
-            }
-
-            player.play().then(() => {
-                // 启动检查播放状态
-                playCheckInterval = setInterval(() => {
-                    if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
-                        card.dataset.status = 'playing';
-                        console.log('Play confirmed, set to playing');
-                        isUserPaused = false;
-                        localStorage.setItem('lastStatus', 'playing');
-                        retryCount = 0;
-                        clearInterval(playCheckInterval);
-                        if (retryTimeout) clearTimeout(retryTimeout);
+            // 使用 hls.js 处理 M3U8 流
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(player);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    player.play().then(() => {
+                        playCheckInterval = setInterval(() => {
+                            if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
+                                card.dataset.status = 'playing';
+                                console.log('Play confirmed, set to playing');
+                                isUserPaused = false;
+                                localStorage.setItem('lastStatus', 'playing');
+                                retryCount = 0;
+                                clearInterval(playCheckInterval);
+                                if (retryTimeout) clearTimeout(retryTimeout);
+                            }
+                        }, 500);
+                    }).catch(err => {
+                        console.log('播放失败，重试中：', err);
+                        card.dataset.status = 'error';
+                        retryCount++;
+                        const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                        if (retryCount < maxRetries) {
+                            retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
+                        } else {
+                            console.log('Max retries reached, stopping');
+                        }
+                    });
+                });
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        card.dataset.status = 'error';
+                        console.log('HLS fatal error, set to error:', data);
+                        retryCount++;
+                        const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                        if (retryCount < maxRetries) {
+                            retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
+                        } else {
+                            console.log('Max retries reached, stopping');
+                        }
                     }
-                }, 500);
-            }).catch(err => {
-                console.log('播放失败，重试中：', err);
-                card.dataset.status = 'error';
-                console.log('Play failed, set to error');
-                retryCount++;
-                const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
-                if (retryCount < maxRetries) {
-                    retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
-                } else {
-                    console.log('Max retries reached, stopping');
+                });
+            } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+                // 原生支持 HLS 的浏览器（如 Safari）
+                if (player.src !== streamUrl) {
+                    player.src = streamUrl;
                 }
-            });
+                player.play().then(() => {
+                    playCheckInterval = setInterval(() => {
+                        if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
+                            card.dataset.status = 'playing';
+                            console.log('Play confirmed, set to playing');
+                            isUserPaused = false;
+                            localStorage.setItem('lastStatus', 'playing');
+                            retryCount = 0;
+                            clearInterval(playCheckInterval);
+                            if (retryTimeout) clearTimeout(retryTimeout);
+                        }
+                    }, 500);
+                }).catch(err => {
+                    console.log('播放失败，重试中：', err);
+                    card.dataset.status = 'error';
+                    retryCount++;
+                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                    }
+                });
+            } else {
+                card.dataset.status = 'error';
+                console.log('浏览器不支持 HLS 播放');
+            }
 
             // 延迟检查状态，延长至 10 秒
             setTimeout(() => {
@@ -340,6 +395,10 @@
                                 card.dataset.status = 'paused';
                                 isUserPaused = true; // 标记为用户主动暂停
                                 localStorage.setItem('lastStatus', 'paused');
+                                if (hls) {
+                                    hls.destroy();
+                                    hls = null;
+                                }
                             } else {
                                 isUserPaused = false; // 重置暂停标志
                                 retryCount = 0; // 重置重试计数
@@ -386,9 +445,9 @@
         // Media Session API 实现后台播放
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: '经典旋律',
+                title: '听音悦台',
                 artist: '轻松调频电台',
-                album: '经典旋律轻松调频'
+                album: '听音悦台轻松调频'
             });
             navigator.mediaSession.setActionHandler('play', () => {
                 if (currentCard) {
@@ -403,6 +462,10 @@
                     currentCard.dataset.status = 'paused';
                     isUserPaused = true; // 标记为用户主动暂停
                     localStorage.setItem('lastStatus', 'paused');
+                    if (hls) {
+                        hls.destroy();
+                        hls = null;
+                    }
                 }
             });
         }
@@ -452,7 +515,7 @@
             if (currentCard && player.src) {
                 // 仅当音频未播放且无足够数据时设为 error
                 if (player.paused && player.readyState < 2) {
-                    card.dataset.status = 'error';
+                    currentCard.dataset.status = 'error';
                     console.log('Audio stalled, set to error');
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
@@ -482,5 +545,4 @@
         });
     </script>
 </body>
-
 </html>
