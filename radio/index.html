@@ -235,6 +235,9 @@
         let hasUserInteracted = false; // 会话级别交互状态
         let hls = null; // hls.js 实例
 
+        // 检测是否为 Safari 浏览器
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
         // 自动重试函数
         function retryPlay(card, streamUrl) {
             if (retryTimeout) clearTimeout(retryTimeout);
@@ -262,9 +265,43 @@
             card.dataset.status = 'connecting'; // 显示连接中动画
             console.log('Set status to connecting for card:', card.querySelector('span').textContent);
 
-            // 使用 hls.js 处理 M3U8 流
-            if (Hls.isSupported()) {
-                hls = new Hls();
+            // 在 Safari 上优先使用原生 HLS 播放
+            if (isSafari && player.canPlayType('application/vnd.apple.mpegurl')) {
+                if (player.src !== streamUrl) {
+                    player.src = streamUrl;
+                }
+                player.play().then(() => {
+                    playCheckInterval = setInterval(() => {
+                        if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
+                            card.dataset.status = 'playing';
+                            console.log('Play confirmed, set to playing');
+                            isUserPaused = false;
+                            localStorage.setItem('lastStatus', 'playing');
+                            retryCount = 0;
+                            clearInterval(playCheckInterval);
+                            if (retryTimeout) clearTimeout(retryTimeout);
+                        }
+                    }, 500);
+                }).catch(err => {
+                    console.log('播放失败，重试中：', err);
+                    card.dataset.status = 'error';
+                    retryCount++;
+                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+                    if (retryCount < maxRetries) {
+                        retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
+                    } else {
+                        console.log('Max retries reached, stopping');
+                    }
+                });
+            } else if (Hls.isSupported()) {
+                // 非 Safari 浏览器或不支持原生 HLS 的情况下使用 hls.js
+                hls = new Hls({
+                    enableWorker: true, // 启用 Web Worker 提高性能
+                    maxBufferLength: 30, // 增加缓冲区长度
+                    xhrSetup: (xhr, url) => {
+                        xhr.withCredentials = true; // 支持跨域请求
+                    }
+                });
                 hls.loadSource(streamUrl);
                 hls.attachMedia(player);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -293,6 +330,7 @@
                     });
                 });
                 hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.log('HLS error:', data);
                     if (data.fatal) {
                         card.dataset.status = 'error';
                         console.log('HLS fatal error, set to error:', data);
@@ -303,34 +341,6 @@
                         } else {
                             console.log('Max retries reached, stopping');
                         }
-                    }
-                });
-            } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
-                // 原生支持 HLS 的浏览器（如 Safari）
-                if (player.src !== streamUrl) {
-                    player.src = streamUrl;
-                }
-                player.play().then(() => {
-                    playCheckInterval = setInterval(() => {
-                        if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
-                            card.dataset.status = 'playing';
-                            console.log('Play confirmed, set to playing');
-                            isUserPaused = false;
-                            localStorage.setItem('lastStatus', 'playing');
-                            retryCount = 0;
-                            clearInterval(playCheckInterval);
-                            if (retryTimeout) clearTimeout(retryTimeout);
-                        }
-                    }, 500);
-                }).catch(err => {
-                    console.log('播放失败，重试中：', err);
-                    card.dataset.status = 'error';
-                    retryCount++;
-                    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
-                    if (retryCount < maxRetries) {
-                        retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
-                    } else {
-                        console.log('Max retries reached, stopping');
                     }
                 });
             } else {
