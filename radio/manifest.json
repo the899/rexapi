@@ -1,6 +1,6 @@
 {
-    "name": "经典旋律",
-    "short_name": "经典旋律",
+    "name": "听音悦台",
+    "short_name": "听音悦台",
     "start_url": "/radio/",
     "display": "standalone",
     "background_color": "#1a1a1a",
