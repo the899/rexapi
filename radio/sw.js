@@ -34,10 +34,10 @@ self.addEventListener('activate', event => {
 // 拦截网络请求，优先从缓存返回，处理重定向
 self.addEventListener('fetch', event => {
     const requestUrl = event.request.url;
-    // 跳过 M3U8 流的缓存，使用网络优先
-    if (requestUrl.endsWith('.m3u8')) {
+    // 跳过 M3U8 流及其分片的缓存，使用网络优先
+    if (requestUrl.endsWith('.m3u8') || requestUrl.endsWith('.ts')) {
         event.respondWith(
-            fetch(event.request).catch(() => {
+            fetch(event.request, { cache: 'no-store' }).catch(() => {
                 return new Response('网络不可用，无法加载流媒体', {
                     status: 503,
                     statusText: 'Service Unavailable'
@@ -61,7 +61,7 @@ self.addEventListener('fetch', event => {
                     console.log('Service Worker: 从缓存返回', event.request.url);
                     return response;
                 }
-                return fetch(event.request)
+                return fetch(event.request, { cache: 'no-store' })
                     .then(networkResponse => {
                         if (networkResponse.ok && event.request.method === 'GET') {
                             return caches.open(CACHE_NAME)

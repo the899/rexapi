@@ -258,23 +258,26 @@
 
             if (retryCount >= maxRetries) {
                 card.dataset.status = 'error';
-                console.log('Max retries reached, stopping');
+                console.log('Max retries reached, stopping for:', card.querySelector('span').textContent);
                 return;
             }
 
             card.dataset.status = 'connecting'; // 显示连接中动画
-            console.log('Set status to connecting for card:', card.querySelector('span').textContent);
+            console.log('Set status to connecting for card:', card.querySelector('span').textContent, 'URL:', streamUrl);
+
+            // 规范化 URL 为 HTTPS（处理混合内容问题）
+            const normalizedUrl = streamUrl.startsWith('http://') ? streamUrl.replace('http://', 'https://') : streamUrl;
 
             // 在 Safari 上优先使用原生 HLS 播放
             if (isSafari && player.canPlayType('application/vnd.apple.mpegurl')) {
-                if (player.src !== streamUrl) {
-                    player.src = streamUrl;
+                if (player.src !== normalizedUrl) {
+                    player.src = normalizedUrl;
                 }
                 player.play().then(() => {
                     playCheckInterval = setInterval(() => {
                         if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
                             card.dataset.status = 'playing';
-                            console.log('Play confirmed, set to playing');
+                            console.log('Play confirmed, set to playing for:', card.querySelector('span').textContent);
                             isUserPaused = false;
                             localStorage.setItem('lastStatus', 'playing');
                             retryCount = 0;
@@ -283,33 +286,39 @@
                         }
                     }, 500);
                 }).catch(err => {
-                    console.log('播放失败，重试中：', err);
+                    console.log('播放失败，重试中：', err, 'URL:', normalizedUrl);
                     card.dataset.status = 'error';
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
                     } else {
-                        console.log('Max retries reached, stopping');
+                        console.log('Max retries reached, stopping for:', card.querySelector('span').textContent);
                     }
                 });
             } else if (Hls.isSupported()) {
                 // 非 Safari 浏览器或不支持原生 HLS 的情况下使用 hls.js
                 hls = new Hls({
                     enableWorker: true, // 启用 Web Worker 提高性能
-                    maxBufferLength: 30, // 增加缓冲区长度
+                    maxBufferLength: 60, // 增加缓冲区长度
+                    maxMaxBufferLength: 120, // 最大缓冲区长度
+                    manifestLoadingTimeOut: 10000, // 增加清单加载超时
+                    levelLoadingTimeOut: 10000, // 增加分片加载超时
+                    fragLoadingTimeOut: 20000, // 增加片段加载超时
                     xhrSetup: (xhr, url) => {
                         xhr.withCredentials = true; // 支持跨域请求
-                    }
+                        xhr.setRequestHeader('Accept', '*/*'); // 确保接受所有内容类型
+                    },
+                    debug: true // 启用调试日志以捕获详细错误
                 });
-                hls.loadSource(streamUrl);
+                hls.loadSource(normalizedUrl);
                 hls.attachMedia(player);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     player.play().then(() => {
                         playCheckInterval = setInterval(() => {
                             if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
                                 card.dataset.status = 'playing';
-                                console.log('Play confirmed, set to playing');
+                                console.log('Play confirmed, set to playing for:', card.querySelector('span').textContent);
                                 isUserPaused = false;
                                 localStorage.setItem('lastStatus', 'playing');
                                 retryCount = 0;
@@ -318,19 +327,19 @@
                             }
                         }, 500);
                     }).catch(err => {
-                        console.log('播放失败，重试中：', err);
+                        console.log('播放失败，重试中：', err, 'URL:', normalizedUrl);
                         card.dataset.status = 'error';
                         retryCount++;
                         const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                         if (retryCount < maxRetries) {
                             retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
                         } else {
-                            console.log('Max retries reached, stopping');
+                            console.log('Max retries reached, stopping for:', card.querySelector('span').textContent);
                         }
                     });
                 });
                 hls.on(Hls.Events.ERROR, (event, data) => {
-                    console.log('HLS error:', data);
+                    console.log('HLS error for:', card.querySelector('span').textContent, 'Details:', data);
                     if (data.fatal) {
                         card.dataset.status = 'error';
                         console.log('HLS fatal error, set to error:', data);
@@ -339,36 +348,36 @@
                         if (retryCount < maxRetries) {
                             retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
                         } else {
-                            console.log('Max retries reached, stopping');
+                            console.log('Max retries reached, stopping for:', card.querySelector('span').textContent);
                         }
                     }
                 });
             } else {
                 card.dataset.status = 'error';
-                console.log('浏览器不支持 HLS 播放');
+                console.log('浏览器不支持 HLS 播放 for:', card.querySelector('span').textContent);
             }
 
-            // 延迟检查状态，延长至 10 秒
+            // 延迟检查状态，延长至 15 秒
             setTimeout(() => {
                 if (player.paused && card.dataset.status === 'connecting' && player.readyState < 2) {
                     card.dataset.status = 'error';
-                    console.log('Still paused after 10s with insufficient readyState, set to error');
+                    console.log('Still paused after 15s with insufficient readyState, set to error for:', card.querySelector('span').textContent);
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
                     } else {
-                        console.log('Max retries reached, stopping');
+                        console.log('Max retries reached, stopping for:', card.querySelector('span').textContent);
                     }
                 }
-            }, 10000);
+            }, 15000);
         }
 
         // 检测用户交互
         function handleUserInteraction() {
             if (!hasUserInteracted && currentCard && currentCard.dataset.status === 'error') {
                 hasUserInteracted = true;
-                console.log('User interacted, retrying play');
+                console.log('User interacted, retrying play for:', currentCard.querySelector('span').textContent);
                 retryCount = 0; // 重置重试计数
                 retryPlay(currentCard, currentCard.dataset.stream);
             }
@@ -484,13 +493,13 @@
         player.addEventListener('waiting', () => {
             if (currentCard && player.src) {
                 currentCard.dataset.status = 'connecting';
-                console.log('Audio waiting, set to connecting');
+                console.log('Audio waiting, set to connecting for:', currentCard.querySelector('span').textContent);
             }
         });
         player.addEventListener('playing', () => {
             if (currentCard && player.src && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
                 currentCard.dataset.status = 'playing';
-                console.log('Audio playing, set to playing');
+                console.log('Audio playing, set to playing for:', currentCard.querySelector('span').textContent);
                 isUserPaused = false;
                 localStorage.setItem('lastStatus', 'playing');
                 retryCount = 0;
@@ -501,7 +510,7 @@
         player.addEventListener('pause', () => {
             if (currentCard && player.src && isUserPaused) {
                 currentCard.dataset.status = 'paused';
-                console.log('Audio paused by user, set to paused');
+                console.log('Audio paused by user, set to paused for:', currentCard.querySelector('span').textContent);
                 localStorage.setItem('lastStatus', 'paused');
             }
         });
@@ -510,13 +519,13 @@
                 // 仅当音频未播放且无足够数据时设为 error
                 if (player.paused && player.readyState < 2) {
                     currentCard.dataset.status = 'error';
-                    console.log('Audio error, set to error');
+                    console.log('Audio error, set to error for:', currentCard.querySelector('span').textContent);
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
                     } else {
-                        console.log('Max retries reached, stopping');
+                        console.log('Max retries reached, stopping for:', currentCard.querySelector('span').textContent);
                     }
                 }
             }
@@ -526,13 +535,13 @@
                 // 仅当音频未播放且无足够数据时设为 error
                 if (player.paused && player.readyState < 2) {
                     currentCard.dataset.status = 'error';
-                    console.log('Audio stalled, set to error');
+                    console.log('Audio stalled, set to error for:', currentCard.querySelector('span').textContent);
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
                     } else {
-                        console.log('Max retries reached, stopping');
+                        console.log('Max retries reached, stopping for:', currentCard.querySelector('span').textContent);
                     }
                 }
             }
@@ -542,13 +551,13 @@
                 // 仅当音频未播放且无足够数据时设为 error
                 if (player.paused && player.readyState < 2) {
                     currentCard.dataset.status = 'error';
-                    console.log('Audio suspended, set to error');
+                    console.log('Audio suspended, set to error for:', currentCard.querySelector('span').textContent);
                     retryCount++;
                     const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
                     if (retryCount < maxRetries) {
                         retryTimeout = setTimeout(() => retryPlay(currentCard, currentCard.dataset.stream), retryInterval);
                     } else {
-                        console.log('Max retries reached, stopping');
+                        console.log('Max retries reached, stopping for:', currentCard.querySelector('span').textContent);
                     }
                 }
             }
