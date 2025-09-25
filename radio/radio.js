@@ -23,7 +23,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
         try {
             radioGrid.innerHTML = ''; // 清空网格
             // 加载 radio.json，禁用缓存
-            const response = await fetch('config.json', { cache: 'no-cache' });
+            const response = await fetch('https://www.a1b2.cc/radio.json', { cache: 'no-cache' });
             if (!response.ok) {
                 throw new Error(`HTTP 错误，状态码：${response.status}`);
             }
@@ -292,7 +292,7 @@ player.addEventListener('error', () => {
 player.addEventListener('stalled', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            currentCard.dataset.status = 'error'; // 设置错误状态
+            card.dataset.status = 'error'; // 设置错误状态
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
@@ -304,7 +304,7 @@ player.addEventListener('stalled', () => {
 player.addEventListener('suspend', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            currentCard.dataset.status = 'error'; // 设置错误状态
+            card.dataset.status = 'error'; // 设置错误状态
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {

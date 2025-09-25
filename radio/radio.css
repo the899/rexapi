@@ -4,25 +4,26 @@
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
     --card-size: 150px; /* 卡牌默认尺寸 */
-    --card-size-mobile: 120px; /* 移动端卡牌尺寸 */
+    --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
 }
 
-/* 设置页面基础样式，移除默认边距，防止溢出，适配全屏 */
+/* 设置页面基础样式，移除默认边距，启用纵向滚动 */
 html, body {
     margin: 0;
     padding: 0;
     min-width: 360px; /* 最小宽度，适配小屏设备 */
     min-height: 100vh; /* 最小高度，确保全屏 */
     background-color: var(--bg-color); /* 深色背景 */
-    overflow: hidden; /* 移除蓝色边框，覆盖系统栏 */
+    overflow-x: hidden; /* 禁止横向滚动，移除蓝色边框 */
+    overflow-y: auto; /* 启用纵向滚动 */
 }
 
-/* 设置 body 样式，居中显示，适配安全区域 */
+/* 设置 body 样式，从顶部开始，适配安全区域 */
 body {
     font-family: system-ui, sans-serif; /* 使用系统字体 */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* 从顶部对齐，允许滚动 */
     min-height: 100dvh; /* 动态视口高度，适配设备 */
     color: var(--text-color); /* 文字颜色 */
     background-color: var(--bg-color); /* 确保背景一致 */
@@ -47,6 +48,7 @@ body {
     padding-right: calc(16px + env(safe-area-inset-right, 0)); /* 适配右侧安全区域 */
     padding-top: calc(16px + env(safe-area-inset-top, 0)); /* 适配顶部安全区域 */
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0)); /* 适配底部安全区域 */
+    min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0)); /* 最小高度，适配视口 */
 }
 
 /* 卡牌样式，定义大小、圆角、交互效果 */
@@ -153,7 +155,7 @@ audio {
         --card-size: var(--card-size-mobile); /* 使用移动端卡牌尺寸 */
     }
     .radio-grid {
-        gap: 15px; /* 减小间距 */
+        gap: 12px; /* 减小间距 */
         padding: 12px; /* 减小内边距 */
         padding-left: calc(12px + env(safe-area-inset-left, 0));
         padding-right: calc(12px + env(safe-area-inset-right, 0));
@@ -165,7 +167,7 @@ audio {
         min-height: 60px; /* 移动端最小高度 */
     }
     .radio-card span {
-        font-size: max(0.4rem, 1.2rem); /* 移动端文字大小 */
+        font-size: max(0.4rem, 1rem); /* 移动端文字大小 */
     }
 }
 
@@ -180,8 +182,8 @@ audio {
 /* 竖屏适配 */
 @media (orientation: portrait) {
     .radio-grid {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 竖屏列宽 */
-        gap: 20px; /* 竖屏间距 */
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 竖屏列宽，优化卡牌布局 */
+        gap: 12px; /* 竖屏间距 */
     }
 }
 

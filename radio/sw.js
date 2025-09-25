@@ -1,5 +1,5 @@
 // 定义缓存名称
-const CACHE_NAME = 'radio-cache-v6';
+const CACHE_NAME = 'radio-cache-v8';
 // 定义需要缓存的资源
 const urlsToCache = [
     '/radio/',
