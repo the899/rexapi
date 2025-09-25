@@ -7,7 +7,7 @@
     --card-size-ios: 130px; /* iOS 卡牌尺寸，单独定义便于修改 */
     --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
     --text-size-pc: 1.3rem; /* PC 端文字大小 */
-    --text-size-ios: 1.3rem; /* iOS 文字大小，单独定义便于修改 */
+    --text-size-ios: 1.4rem; /* iOS 文字大小，单独定义便于修改 */
     --text-size-mobile: 1rem; /* 移动端文字大小 */
     --safe-area-inset: 16px; /* Apple 设计规范间距 */
 }
