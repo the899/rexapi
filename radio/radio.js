@@ -21,11 +21,12 @@ function scrollToCardRow(targetCard) {
     const cardRect = targetCard.getBoundingClientRect();
     // 动态获取卡牌尺寸
     const rootStyles = getComputedStyle(document.documentElement);
-    const cardSize = parseFloat(rootStyles.getPropertyValue('--card-size').trim()) || 130;
+    const isMacOS = window.matchMedia('(min-width: 1024px)').matches;
+    const cardSize = parseFloat(rootStyles.getPropertyValue(isMacOS ? '--card-size-macos' : '--card-size-iphone').trim()) || 130;
     const gridStyles = getComputedStyle(radioGrid);
     const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || 12;
 
-    // 判断是否为 iPhone 13（竖屏或横屏）
+    // 判断是否为 iPhone 13（竖屏或横屏）或 macOS
     const isIphonePortrait = window.matchMedia('(min-width: 375px) and (max-width: 414px) and (orientation: portrait)').matches;
     const isIphoneLandscape = window.matchMedia('(min-width: 667px) and (max-width: 844px) and (orientation: landscape)').matches;
 
