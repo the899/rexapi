@@ -4,66 +4,63 @@
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
     --card-size: 130px; /* 统一卡牌尺寸 */
-    --card-size-default: 100px; /* 其他设备默认卡牌尺寸 */
     --text-size: 1.3rem; /* 统一文字大小 */
     --safe-area-inset: 16px; /* Apple 设计规范间距 */
+    --grid-gap: 12px; /* 卡牌间距 */
 }
 
 /* 设置页面基础样式，移除默认边距，允许垂直滚动 */
 html, body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* 统一边距计算 */
-    min-width: 360px; /* 最小宽度，适配小屏设备 */
-    min-height: 100vh; /* 最小高度，确保全屏 */
-    background-color: var(--bg-color); /* 深色背景 */
-    overflow-x: hidden; /* 禁止水平滚动 */
-    overflow-y: auto; /* 允许垂直滚动 */
+    box-sizing: border-box;
+    min-width: 360px;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* 设置 body 样式，水平居中，适配安全区域 */
 body {
-    font-family: system-ui, sans-serif; /* 使用系统字体 */
+    font-family: system-ui, -apple-system, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* 从顶部对齐 */
-    min-height: 100dvh; /* 动态视口高度 */
-    color: var(--text-color); /* 文字颜色 */
-    background-color: var(--bg-color); /* 确保背景一致 */
-    padding-left: env(safe-area-inset-left, var(--safe-area-inset));
-    padding-right: env(safe-area-inset-right, var(--safe-area-inset));
-    padding-top: env(safe-area-inset-top, var(--safe-area-inset));
-    padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset));
+    align-items: flex-start;
+    min-height: 100dvh;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: env(safe-area-inset-top, var(--safe-area-inset))
+            env(safe-area-inset-right, var(--safe-area-inset))
+            env(safe-area-inset-bottom, var(--safe-area-inset))
+            env(safe-area-inset-left, var(--safe-area-inset));
 }
 
 /* 频道卡牌网格容器，水平居中 */
 .radio-grid {
     display: grid;
-    gap: 12px; /* 卡牌间距 */
-    max-width: 1200px; /* 最大宽度，适配大屏 */
+    gap: var(--grid-gap);
     width: 100%;
-    margin: 0 auto; /* 水平居中 */
-    justify-items: center; /* 卡牌居中 */
-    background-color: var(--bg-color); /* 网格背景 */
-    padding: var(--safe-area-inset);
-    padding-left: calc(var(--safe-area-inset) + env(safe-area-inset-left, 0));
-    padding-right: calc(var(--safe-area-inset) + env(safe-area-inset-right, 0));
-    padding-top: calc(var(--safe-area-inset) + env(safe-area-inset-top, 0));
-    padding-bottom: calc(var(--safe-area-inset) + env(safe-area-inset-bottom, 0));
+    justify-items: center;
+    background-color: var(--bg-color);
+    padding: env(safe-area-inset-top, var(--safe-area-inset))
+            env(safe-area-inset-right, var(--safe-area-inset))
+            env(safe-area-inset-bottom, var(--safe-area-inset))
+            env(safe-area-inset-left, var(--safe-area-inset));
     min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
 }
 
 /* 卡牌样式，定义统一尺寸、圆角、交互效果 */
 .radio-card {
-    width: var(--card-size-default); /* 默认尺寸 */
-    height: var(--card-size-default); /* 默认尺寸 */
-    min-width: 100px; /* 最小宽度 */
-    min-height: 100px; /* 最小高度 */
-    background-color: var(--bg-color); /* 默认背景 */
-    border-radius: 30px; /* 圆角 */
-    overflow: hidden; /* 防止内容溢出 */
-    cursor: pointer; /* 鼠标指针 */
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* 动画效果 */
+    width: var(--card-size);
+    height: var(--card-size);
+    min-width: 130px;
+    min-height: 130px;
+    background-color: var(--bg-color);
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     display: flex;
     align-items: center;
@@ -72,13 +69,13 @@ body {
 
 /* 卡牌内文字样式 */
 .radio-card span {
-    color: var(--text-color); /* 文字颜色 */
-    font-size: var(--text-size); /* 1.3rem */
+    color: var(--text-color);
+    font-size: var(--text-size);
     text-align: center;
     padding: 10px;
-    word-break: break-all; /* 长文字换行 */
-    line-height: 1.2; /* 行高 */
-    z-index: 1; /* 确保文字在图标上方 */
+    word-break: break-all;
+    line-height: 1.2;
+    z-index: 1;
 }
 
 /* 未选中卡牌样式 */
@@ -88,11 +85,10 @@ body {
 
 /* 选中卡牌样式，添加阴影 */
 .radio-card.selected {
-    background-color: #333; /* 选中背景色 */
-    transform: scale(1.1); /* 放大 1.1 倍 */
-    filter: brightness(1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* 阴影 */
-    z-index: 10; /* 提升层级 */
+    background-color: #333;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
 /* 卡牌状态图标基础样式 */
@@ -102,8 +98,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: none; /* 默认隐藏 */
-    z-index: 2; /* 在文字上方 */
+    display: none;
+    z-index: 2;
 }
 
 /* 暂停状态：显示双竖线图标 */
@@ -117,7 +113,7 @@ body {
         transparent 12px 18px,
         #007bff 18px 30px,
         transparent 30px
-    ); /* 蓝色双竖线 */
+    );
 }
 
 /* 连接中状态：显示旋转加载图标 */
@@ -125,11 +121,10 @@ body {
     display: block;
     width: 40px;
     height: 40px;
-    border: 4px solid #007bff; /* 蓝色边框 */
-    border-top-color: transparent; /* 顶部透明，模拟旋转 */
+    border: 4px solid #007bff;
+    border-top-color: transparent;
     border-radius: 50%;
-    background: none;
-    animation: spin 1s linear infinite; /* 旋转动画 */
+    animation: spin 1s linear infinite;
 }
 
 /* 错误状态：显示红色感叹号图标 */
@@ -151,97 +146,33 @@ audio {
     display: none;
 }
 
-/* 移动端适配：屏幕宽度小于 600px（非 iPhone 13/macOS） */
-@media (max-width: 600px) {
-    .radio-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自适应列 */
-        gap: 12px; /* 间距 */
-        padding: var(--safe-area-inset);
-        padding-left: calc(var(--safe-area-inset) + env(safe-area-inset-left, 0));
-        padding-right: calc(var(--safe-area-inset) + env(safe-area-inset-right, 0));
-        padding-top: calc(var(--safe-area-inset) + env(safe-area-inset-top, 0));
-        padding-bottom: calc(var(--safe-area-inset) + env(safe-area-inset-bottom, 0));
-    }
-    .radio-card {
-        width: var(--card-size-default); /* 100px */
-        height: var(--card-size-default); /* 100px */
-        min-width: 100px;
-        min-height: 100px;
-    }
-    .radio-card span {
-        font-size: var(--text-size); /* 1.3rem */
-    }
-}
-
 /* iPhone 13 竖屏适配：2 列 5 行布局 */
 @media (min-width: 375px) and (max-width: 414px) and (orientation: portrait) {
     .radio-grid {
-        grid-template-columns: repeat(2, 130px); /* 固定 2 列，精确 130px */
-        grid-template-rows: repeat(5, 130px); /* 固定 5 行，精确 130px */
-        gap: 12px; /* 卡牌间距 */
-        padding: var(--safe-area-inset);
-        padding-left: calc(var(--safe-area-inset) + env(safe-area-inset-left, 0));
-        padding-right: calc(var(--safe-area-inset) + env(safe-area-inset-right, 0));
-        padding-top: calc(var(--safe-area-inset) + env(safe-area-inset-top, 0));
-        padding-bottom: calc(var(--safe-area-inset) + env(safe-area-inset-bottom, 0));
-    }
-    .radio-card {
-        width: var(--card-size); /* 130px */
-        height: var(--card-size); /* 130px */
-        min-width: 130px;
-        min-height: 130px;
-    }
-    .radio-card span {
-        font-size: var(--text-size); /* 1.3rem */
+        grid-template-columns: repeat(2, 130px);
+        grid-template-rows: repeat(5, 130px);
+        gap: var(--grid-gap);
     }
 }
 
 /* iPhone 13 横屏适配：5 列 2 行布局 */
 @media (min-width: 667px) and (max-width: 844px) and (orientation: landscape) {
     .radio-grid {
-        grid-template-columns: repeat(5, 130px); /* 固定 5 列，精确 130px */
-        grid-template-rows: repeat(2, 130px); /* 固定 2 行，精确 130px */
-        gap: 12px; /* 卡牌间距 */
-        padding: var(--safe-area-inset);
-        padding-left: calc(var(--safe-area-inset) + env(safe-area-inset-left, 0));
-        padding-right: calc(var(--safe-area-inset) + env(safe-area-inset-right, 0));
-        padding-top: calc(var(--safe-area-inset) + env(safe-area-inset-top, 0));
-        padding-bottom: calc(var(--safe-area-inset) + env(safe-area-inset-bottom, 0));
-    }
-    .radio-card {
-        width: var(--card-size); /* 130px */
-        height: var(--card-size); /* 130px */
-        min-width: 130px;
-        min-height: 130px;
-    }
-    .radio-card span {
-        font-size: var(--text-size); /* 1.3rem */
+        grid-template-columns: repeat(5, 130px);
+        grid-template-rows: repeat(2, 130px);
+        gap: var(--grid-gap);
     }
 }
 
-/* macOS 适配：动态列数，垂直无限制 */
-@media (min-width: 1024px) {
+/* macOS 及其他设备适配：动态列数 */
+@media (min-width: 360px) {
     .radio-grid {
-        grid-template-columns: repeat(auto-fit, 130px); /* 动态列数，精确 130px */
-        gap: 16px; /* 稍大间距 */
-        padding: var(--safe-area-inset);
-        padding-left: calc(var(--safe-area-inset) + env(safe-area-inset-left, 0));
-        padding-right: calc(var(--safe-area-inset) + env(safe-area-inset-right, 0));
-        padding-top: calc(var(--safe-area-inset) + env(safe-area-inset-top, 0));
-        padding-bottom: calc(var(--safe-area-inset) + env(safe-area-inset-bottom, 0));
-    }
-    .radio-card {
-        width: var(--card-size); /* 130px */
-        height: var(--card-size); /* 130px */
-        min-width: 130px;
-        min-height: 130px;
-    }
-    .radio-card span {
-        font-size: var(--text-size); /* 1.3rem */
+        grid-template-columns: repeat(auto-fit, 130px);
+        gap: var(--grid-gap);
     }
 }
 
-/* 旋转动画，用于连接中状态 */
+/* 旋转动画 */
 @keyframes spin {
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
