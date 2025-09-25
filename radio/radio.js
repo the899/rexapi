@@ -16,6 +16,20 @@ let isUserPaused = false;
 let playCheckInterval = null;
 let scrollTimeout = null;
 
+// 动态设置网格最大宽度以确保居中
+function setGridMaxWidth() {
+    const rootStyles = getComputedStyle(document.documentElement);
+    const isPC = window.matchMedia('(min-width: 1024px)').matches;
+    const isIOS = window.matchMedia('(-webkit-device-pixel-ratio)').matches;
+    const cardSize = parseFloat(rootStyles.getPropertyValue(
+        isPC ? '--card-size-pc' : isIOS ? '--card-size-ios' : '--card-size-mobile'
+    ).trim()) || 100;
+    const windowWidth = window.innerWidth;
+    const columns = Math.floor(windowWidth / cardSize);
+    const maxWidth = columns * cardSize;
+    radioGrid.style.maxWidth = `${maxWidth}px`;
+}
+
 // 滚动到卡牌所在行的屏幕中间
 function scrollToCardRow(targetCard) {
     if (scrollTimeout) clearTimeout(scrollTimeout);
@@ -43,8 +57,9 @@ function scrollToCardRow(targetCard) {
     }, 100);
 }
 
-// 动态调整滚动位置
+// 动态调整滚动位置和网格宽度
 window.addEventListener('resize', () => {
+    setGridMaxWidth();
     if (currentCard) scrollToCardRow(currentCard);
 });
 
@@ -72,6 +87,8 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
             resetCard.dataset.reset = 'true';
             resetCard.innerHTML = '<span>重置应用</span>';
             radioGrid.appendChild(resetCard);
+
+            setGridMaxWidth();
 
             document.querySelectorAll('.radio-card').forEach(card => {
                 card.addEventListener('click', () => {
@@ -122,6 +139,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                 resetCard.dataset.reset = 'true';
                 resetCard.innerHTML = '<span>重置应用</span>';
                 radioGrid.appendChild(resetCard);
+                setGridMaxWidth();
                 resetCard.addEventListener('click', () => {
                     if (confirm('确定要重置应用吗？这将清除所有缓存和播放状态，并加载最新频道列表。')) {
                         resetApp();
