@@ -10,7 +10,6 @@
     --text-size-ios: 1.2rem; /* iOS 文字大小 */
     --text-size-mobile: 1rem; /* 移动端文字大小 */
     --safe-area-inset: 16px; /* Apple 设计规范间距 */
-    --grid-gap: 12px; /* 卡牌间距 */
 }
 
 /* 设置页面基础样式，移除默认边距，允许垂直滚动 */
@@ -43,14 +42,13 @@ body {
 /* 频道卡牌网格容器，水平居中 */
 .radio-grid {
     display: grid;
-    gap: var(--grid-gap);
     width: 100%;
     justify-items: center;
     background-color: var(--bg-color);
-    padding: env(safe-area-inset-top, var(--safe-area-inset))
-            env(safe-area-inset-right, var(--safe-area-inset))
-            env(safe-area-inset-bottom, var(--safe-area-inset))
-            env(safe-area-inset-left, var(--safe-area-inset));
+    padding-top: var(--safe-area-inset);
+    padding-left: env(safe-area-inset-left, var(--safe-area-inset));
+    padding-right: env(safe-area-inset-right, var(--safe-area-inset));
+    padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset));
     min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
 }
 
@@ -154,7 +152,6 @@ audio {
 @media (-webkit-device-pixel-ratio) {
     .radio-grid {
         grid-template-columns: repeat(auto-fit, var(--card-size-ios));
-        gap: var(--grid-gap);
     }
     .radio-card {
         width: var(--card-size-ios);
@@ -171,7 +168,6 @@ audio {
 @media (min-width: 1024px) {
     .radio-grid {
         grid-template-columns: repeat(auto-fit, var(--card-size-pc));
-        gap: var(--grid-gap);
     }
     .radio-card {
         width: var(--card-size-pc);

@@ -26,10 +26,8 @@ function scrollToCardRow(targetCard) {
         const cardSize = parseFloat(rootStyles.getPropertyValue(
             isPC ? '--card-size-pc' : isIOS ? '--card-size-ios' : '--card-size-mobile'
         ).trim()) || 100;
-        const gridGap = parseFloat(rootStyles.getPropertyValue('--grid-gap').trim()) || 12;
         const cardTop = targetCard.offsetTop;
-        const itemHeight = cardSize + gridGap;
-        const rowTop = Math.floor(cardTop / itemHeight) * itemHeight;
+        const rowTop = Math.floor(cardTop / cardSize) * cardSize;
         const rowCenter = rowTop + (cardSize / 2);
         const safeAreaTop = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
         const safeAreaBottom = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
@@ -244,7 +242,7 @@ player.addEventListener('waiting', () => {
 });
 player.addEventListener('playing', () => {
     if (currentCard && player.src && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
-        currentCard.dataset.status = 'playing';
+        targetCard.dataset.status = 'playing';
         isUserPaused = false;
         localStorage.setItem('lastStatus', 'playing');
         retryCount = 0;
