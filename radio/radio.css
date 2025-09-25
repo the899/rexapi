@@ -3,8 +3,10 @@
     --bg-color: #1a1a1a; /* 背景色：深色 */
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
-    --card-size: 150px; /* 卡牌默认尺寸 */
+    --card-size: 150px; /* 卡牌默认尺寸（桌面端） */
     --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
+    --card-size-iphone: 180px; /* iPhone 13 卡牌尺寸 */
+    --text-size-iphone: max(0.6rem, 1.2rem); /* iPhone 13 文字大小 */
 }
 
 /* 设置页面基础样式，移除默认边距，启用纵向滚动 */
@@ -36,7 +38,7 @@ body {
 /* 频道卡牌网格容器，自动调整列数 */
 .radio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 自适应列，卡牌最小 160px */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自适应列，卡牌最小 120px */
     gap: 20px; /* 卡牌间距 */
     max-width: 1000px; /* 最大宽度 */
     width: 100%;
@@ -149,7 +151,7 @@ audio {
     display: none;
 }
 
-/* 移动端适配：屏幕宽度小于 600px */
+/* 移动端适配：屏幕宽度小于 600px（非 iPhone 13 特定样式） */
 @media (max-width: 600px) {
     :root {
         --card-size: var(--card-size-mobile); /* 使用移动端卡牌尺寸 */
@@ -171,18 +173,63 @@ audio {
     }
 }
 
-/* 横屏适配 */
-@media (orientation: landscape) {
+/* iPhone 13 竖屏适配：2 列布局，放大卡牌和文字 */
+@media (min-width: 375px) and (max-width: 414px) and (orientation: portrait) {
+    .radio-grid {
+        grid-template-columns: repeat(2, 1fr); /* 固定 2 列 */
+        gap: 16px; /* 卡牌间距 */
+        padding: 16px;
+        padding-left: calc(16px + env(safe-area-inset-left, 0));
+        padding-right: calc(16px + env(safe-area-inset-right, 0));
+        padding-top: calc(16px + env(safe-area-inset-top, 0));
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    }
+    .radio-card {
+        width: var(--card-size-iphone); /* 180px */
+        height: var(--card-size-iphone); /* 180px */
+        min-width: 120px; /* 最小宽度 */
+        min-height: 120px; /* 最小高度 */
+    }
+    .radio-card span {
+        font-size: var(--text-size-iphone); /* max(0.6rem, 1.2rem) */
+    }
+}
+
+/* iPhone 13 横屏适配：2 行布局，放大卡牌和文字 */
+@media (min-width: 667px) and (max-width: 844px) and (orientation: landscape) {
+    .radio-grid {
+        grid-template-rows: repeat(2, minmax(180px, 1fr)); /* 固定 2 行 */
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 列数自适应 */
+        gap: 16px; /* 卡牌间距 */
+        padding: 16px;
+        padding-left: calc(16px + env(safe-area-inset-left, 0));
+        padding-right: calc(16px + env(safe-area-inset-right, 0));
+        padding-top: calc(16px + env(safe-area-inset-top, 0));
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    }
+    .radio-card {
+        width: var(--card-size-iphone); /* 180px */
+        height: var(--card-size-iphone); /* 180px */
+        min-width: 120px; /* 最小宽度 */
+        min-height: 120px; /* 最小高度 */
+    }
+    .radio-card span {
+        font-size: var(--text-size-iphone); /* max(0.6rem, 1.2rem) */
+    }
+}
+
+/* 横屏适配（非 iPhone 13） */
+@media (orientation: landscape) and (max-width: 600px) {
     .radio-grid {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 横屏列宽 */
         gap: 15px; /* 横屏间距 */
     }
 }
 
-/* 竖屏适配 */
-@media (orientation: portrait) {
+/* 竖屏适配（非 iPhone 13） */
+@media (orientation: portrait) and (max-width: 600px) {
     .radio-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 竖屏列宽，优化卡牌布局 */
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 竖屏列宽 */
         gap: 12px; /* 竖屏间距 */
     }
 }

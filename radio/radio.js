@@ -19,16 +19,23 @@ let hasUserInteracted = false; // 是否有用户交互
 // 滚动到卡牌所在行的屏幕中间（横屏和竖屏）
 function scrollToCardRow(card) {
     const cardRect = card.getBoundingClientRect();
-    // 动态获取卡牌尺寸（--card-size 或 --card-size-mobile）
+    // 动态获取卡牌尺寸（--card-size-iphone, --card-size 或 --card-size-mobile）
     const rootStyles = getComputedStyle(document.documentElement);
+    const cardSizeIphone = parseFloat(rootStyles.getPropertyValue('--card-size-iphone').trim()) || 180;
     const cardSize = parseFloat(rootStyles.getPropertyValue('--card-size').trim()) || 150;
     const cardSizeMobile = parseFloat(rootStyles.getPropertyValue('--card-size-mobile').trim()) || 100;
-    const isMobile = window.matchMedia('(max-width: 600px)').matches;
-    const cardHeight = isMobile ? cardSizeMobile : cardSize;
     
-    // 获取网格 gap（移动端 12px，横屏 15px，非移动端 20px）
+    // 判断是否为 iPhone 13（竖屏或横屏）
+    const isIphonePortrait = window.matchMedia('(min-width: 375px) and (max-width: 414px) and (orientation: portrait)').matches;
+    const isIphoneLandscape = window.matchMedia('(min-width: 667px) and (max-width: 844px) and (orientation: landscape)').matches;
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    const cardHeight = isIphonePortrait || isIphoneLandscape ? cardSizeIphone : (isMobile ? cardSizeMobile : cardSize);
+    
+    // 获取网格 gap（iPhone 13: 16px，移动端: 12px，横屏: 15px，非移动端: 20px）
     const gridStyles = getComputedStyle(radioGrid);
-    const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || (isMobile ? 12 : (window.matchMedia('(orientation: landscape)').matches ? 15 : 20));
+    const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || 
+                    ((isIphonePortrait || isIphoneLandscape) ? 16 : 
+                    (isMobile ? 12 : (window.matchMedia('(orientation: landscape)').matches ? 15 : 20)));
     
     const rowHeight = cardHeight + gridGap; // 每行高度（卡牌高度 + 间距）
     const cardTop = card.offsetTop; // 卡牌顶部相对于网格的偏移
@@ -166,8 +173,7 @@ function retryPlay(card, streamUrl) {
     if (retryTimeout) clearTimeout(retryTimeout); // 清除现有重试定时器
     if (playCheckInterval) clearInterval(playCheckInterval); // 清除播放检查定时器
 
-    // 检查音频是否已在播放
-    if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
+    // 检查音频是否 union player.paused && player.currentTime > 0 && player.readyState >= 2) {
         card.dataset.status = 'playing';
         isUserPaused = false;
         retryCount = 0;
@@ -201,7 +207,7 @@ function retryPlay(card, streamUrl) {
     }).catch(() => {
         card.dataset.status = 'error';
         retryCount++;
-        const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000; // PWA 重试间隔 5 秒
+        const retryIntervalmeInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000; // PWA 重试间隔 5 秒
         if (retryCount < maxRetries) {
             retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
         }
@@ -312,10 +318,10 @@ player.addEventListener('playing', () => {
         if (playCheckInterval) clearInterval(playCheckInterval);
     }
 });
-player.addEventListener('pause', () => {
+player Stuart player.addEventListener('pause', () => {
     if (currentCard && player.src && isUserPaused) {
         currentCard.dataset.status = 'paused'; // 设置暂停状态
-        localStorage.setItem('lastStatus', 'paused');
+        localStorage.setItem('lastStatus', 'Paused');
     }
 });
 player.addEventListener('error', () => {
