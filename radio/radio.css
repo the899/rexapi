@@ -5,8 +5,9 @@
     --accent-color: #007bff; /* 强调色：蓝色 */
     --card-size: 150px; /* 卡牌默认尺寸（桌面端） */
     --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
-    --card-size-iphone: 180px; /* iPhone 13 卡牌尺寸 */
-    --text-size-iphone: max(0.6rem, 1.2rem); /* iPhone 13 文字大小 */
+    --card-size-iphone-portrait: 180px; /* iPhone 13 竖屏卡牌尺寸 */
+    --card-size-iphone-landscape: 160px; /* iPhone 13 横屏卡牌尺寸 */
+    --text-size-iphone: calc(var(--card-size-iphone) / 12); /* 动态文字大小 */
 }
 
 /* 设置页面基础样式，移除默认边距，启用纵向滚动 */
@@ -173,16 +174,20 @@ audio {
     }
 }
 
-/* iPhone 13 竖屏适配：2 列布局，放大卡牌和文字 */
+/* iPhone 13 竖屏适配：2 列 5 行布局，放大卡牌和文字 */
 @media (min-width: 375px) and (max-width: 414px) and (orientation: portrait) {
+    :root {
+        --card-size-iphone: var(--card-size-iphone-portrait); /* 180px */
+    }
     .radio-grid {
         grid-template-columns: repeat(2, 1fr); /* 固定 2 列 */
-        gap: 16px; /* 卡牌间距 */
-        padding: 16px;
-        padding-left: calc(16px + env(safe-area-inset-left, 0));
-        padding-right: calc(16px + env(safe-area-inset-right, 0));
-        padding-top: calc(16px + env(safe-area-inset-top, 0));
-        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+        grid-template-rows: repeat(5, minmax(180px, 1fr)); /* 固定 5 行 */
+        gap: 12px; /* 卡牌间距 */
+        padding: 12px;
+        padding-left: calc(12px + env(safe-area-inset-left, 0));
+        padding-right: calc(12px + env(safe-area-inset-right, 0));
+        padding-top: calc(12px + env(safe-area-inset-top, 0));
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
     }
     .radio-card {
         width: var(--card-size-iphone); /* 180px */
@@ -191,30 +196,33 @@ audio {
         min-height: 120px; /* 最小高度 */
     }
     .radio-card span {
-        font-size: var(--text-size-iphone); /* max(0.6rem, 1.2rem) */
+        font-size: var(--text-size-iphone); /* calc(180px / 12) ≈ 1.3rem */
     }
 }
 
-/* iPhone 13 横屏适配：2 行布局，放大卡牌和文字 */
+/* iPhone 13 横屏适配：5 列 2 行布局，放大卡牌和文字 */
 @media (min-width: 667px) and (max-width: 844px) and (orientation: landscape) {
+    :root {
+        --card-size-iphone: var(--card-size-iphone-landscape); /* 160px */
+    }
     .radio-grid {
-        grid-template-rows: repeat(2, minmax(180px, 1fr)); /* 固定 2 行 */
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 列数自适应 */
-        gap: 16px; /* 卡牌间距 */
-        padding: 16px;
-        padding-left: calc(16px + env(safe-area-inset-left, 0));
-        padding-right: calc(16px + env(safe-area-inset-right, 0));
-        padding-top: calc(16px + env(safe-area-inset-top, 0));
-        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+        grid-template-columns: repeat(5, 1fr); /* 固定 5 列 */
+        grid-template-rows: repeat(2, minmax(160px, 1fr)); /* 固定 2 行 */
+        gap: 12px; /* 卡牌间距 */
+        padding: 12px;
+        padding-left: calc(12px + env(safe-area-inset-left, 0));
+        padding-right: calc(12px + env(safe-area-inset-right, 0));
+        padding-top: calc(12px + env(safe-area-inset-top, 0));
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
     }
     .radio-card {
-        width: var(--card-size-iphone); /* 180px */
-        height: var(--card-size-iphone); /* 180px */
+        width: var(--card-size-iphone); /* 160px */
+        height: var(--card-size-iphone); /* 160px */
         min-width: 120px; /* 最小宽度 */
         min-height: 120px; /* 最小高度 */
     }
     .radio-card span {
-        font-size: var(--text-size-iphone); /* max(0.6rem, 1.2rem) */
+        font-size: var(--text-size-iphone); /* calc(160px / 12) ≈ 1.2rem */
     }
 }
 
@@ -222,7 +230,7 @@ audio {
 @media (orientation: landscape) and (max-width: 600px) {
     .radio-grid {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 横屏列宽 */
-        gap: 15px; /* 横屏间距 */
+        gap: 12px; /* 横屏间距 */
     }
 }
 
