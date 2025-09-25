@@ -16,72 +16,6 @@ let isUserPaused = false; // 用户是否手动暂停
 let playCheckInterval = null; // 播放状态检查定时器
 let hasUserInteracted = false; // 是否有用户交互
 
-// 滚动到卡牌所在行的屏幕中间（横屏和竖屏）
-function scrollToCardRow(targetCard) {
-    const cardRect = targetCard.getBoundingClientRect();
-    // 动态获取卡牌尺寸（--card-size-iphone-portrait, --card-size-iphone-landscape, --card-size 或 --card-size-mobile）
-    const rootStyles = getComputedStyle(document.documentElement);
-    const cardSizeIphonePortrait = parseFloat(rootStyles.getPropertyValue('--card-size-iphone-portrait').trim()) || 180;
-    const cardSizeIphoneLandscape = parseFloat(rootStyles.getPropertyValue('--card-size-iphone-landscape').trim()) || 160;
-    const cardSize = parseFloat(rootStyles.getPropertyValue('--card-size').trim()) || 150;
-    const cardSizeMobile = parseFloat(rootStyles.getPropertyValue('--card-size-mobile').trim()) || 100;
-
-    // 判断是否为 iPhone 13（竖屏或横屏）
-    const isIphonePortrait = window.matchMedia('(min-width: 375px) and (max-width: 414px) and (orientation: portrait)').matches;
-    const isIphoneLandscape = window.matchMedia('(min-width: 667px) and (max-width: 844px) and (orientation: landscape)').matches;
-    const isMobile = window.matchMedia('(max-width: 600px)').matches;
-    const selectedCardSize = isIphonePortrait ? cardSizeIphonePortrait : (isIphoneLandscape ? cardSizeIphoneLandscape : (isMobile ? cardSizeMobile : cardSize));
-
-    // 获取网格 gap（iPhone 13: 12px，移动端: 12px，横屏: 12px，非移动端: 20px）
-    const gridStyles = getComputedStyle(radioGrid);
-    const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || 
-                    ((isIphonePortrait || isIphoneLandscape) ? 12 : 
-                    (isMobile ? 12 : (window.matchMedia('(orientation: landscape)').matches ? 12 : 20)));
-
-    // 计算行高（竖屏）或列宽（横屏）
-    const isLandscape = window.matchMedia('(orientation: landscape)').matches;
-    const itemHeight = selectedCardSize + gridGap; // 每行高度（卡牌高度 + 间距）
-    const itemWidth = selectedCardSize + gridGap; // 每列宽度（卡牌宽度 + 间距）
-
-    // 获取卡牌位置
-    const cardTop = targetCard.offsetTop; // 卡牌顶部相对于网格的偏移
-    const cardLeft = targetCard.offsetLeft; // 卡牌左侧相对于网格的偏移
-    const rowTop = Math.floor(cardTop / itemHeight) * itemHeight; // 所在行顶部
-    const columnLeft = Math.floor(cardLeft / itemWidth) * itemWidth; // 所在列左侧
-    const rowCenter = rowTop + (selectedCardSize / 2); // 行中心点
-    const columnCenter = columnLeft + (selectedCardSize / 2); // 列中心点
-
-    // 获取视口尺寸，考虑安全区域
-    const safeAreaTop = parseFloat(rootStyles.getPropertyValue('padding-top').trim()) || 0;
-    const safeAreaBottom = parseFloat(rootStyles.getPropertyValue('padding-bottom').trim()) || 0;
-    const safeAreaLeft = parseFloat(rootStyles.getPropertyValue('padding-left').trim()) || 0;
-    const safeAreaRight = parseFloat(rootStyles.getPropertyValue('padding-right').trim()) || 0;
-    const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
-    const viewportWidth = window.innerWidth - safeAreaLeft - safeAreaRight;
-
-    // 计算滚动目标
-    let scrollTarget;
-    if (isIphoneLandscape) {
-        // 横屏：滚动到列中心
-        scrollTarget = columnCenter - (viewportWidth / 2);
-        const maxScrollX = radioGrid.scrollWidth - viewportWidth;
-        const scrollX = Math.max(0, Math.min(scrollTarget, maxScrollX));
-        window.scrollTo({
-            left: scrollX + safeAreaLeft, // 调整安全区域偏移
-            behavior: 'smooth'
-        });
-    } else {
-        // 竖屏：滚动到行中心
-        scrollTarget = rowCenter - (viewportHeight / 2);
-        const maxScrollY = radioGrid.scrollHeight - viewportHeight;
-        const scrollY = Math.max(0, Math.min(scrollTarget, maxScrollY));
-        window.scrollTo({
-            top: scrollY + safeAreaTop, // 调整安全区域偏移
-            behavior: 'smooth'
-        });
-    }
-}
-
 // 加载频道列表
 async function loadChannels(maxRetries = 3, retryDelay = 3000) {
     let attempts = 0; // 重试计数
@@ -141,7 +75,6 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                                 retryCount = 0;
                                 retryPlay(card, streamUrl);
                             }
-                            scrollToCardRow(card); // 滚动到卡牌所在行
                         } else {
                             // 新卡牌：取消其他卡牌选中状态
                             cards.forEach(c => {
@@ -157,7 +90,6 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                             isUserPaused = false;
                             retryCount = 0;
                             retryPlay(card, streamUrl);
-                            scrollToCardRow(card); // 滚动到卡牌所在行
                         }
                         hasUserInteracted = true;
                     }
@@ -310,7 +242,6 @@ if ('mediaSession' in navigator) {
             isUserPaused = false;
             retryCount = 0;
             retryPlay(currentCard, currentCard.dataset.stream);
-            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
         }
     });
     navigator.mediaSession.setActionHandler('pause', () => {
@@ -319,7 +250,6 @@ if ('mediaSession' in navigator) {
             currentCard.dataset.status = 'paused';
             isUserPaused = true;
             localStorage.setItem('lastStatus', 'paused');
-            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
         }
     });
 }
