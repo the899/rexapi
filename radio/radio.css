@@ -4,7 +4,7 @@
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
     --card-size-pc: 130px; /* PC 端卡牌尺寸 */
-    --card-size-ios: 120px; /* iOS 卡牌尺寸 */
+    --card-size-ios: 110px; /* iOS 卡牌尺寸 */
     --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
     --text-size-pc: 1.3rem; /* PC 端文字大小 */
     --text-size-ios: 1.2rem; /* iOS 文字大小 */
@@ -22,6 +22,11 @@ html, body {
     background-color: var(--bg-color);
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+/* 隐藏垂直滚动条 */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
 }
 
 /* 设置 body 样式，水平居中，适配安全区域 */
@@ -50,6 +55,11 @@ body {
     padding-right: env(safe-area-inset-right, var(--safe-area-inset));
     padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset));
     min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+}
+
+/* 隐藏网格容器滚动条 */
+.radio-grid::-webkit-scrollbar {
+    display: none;
 }
 
 /* 卡牌样式，默认使用移动端尺寸 */
@@ -156,8 +166,8 @@ audio {
     .radio-card {
         width: var(--card-size-ios);
         height: var(--card-size-ios);
-        min-width: 120px;
-        min-height: 120px;
+        min-width: 110px;
+        min-height: 110px;
     }
     .radio-card span {
         font-size: var(--text-size-ios);

@@ -242,7 +242,7 @@ player.addEventListener('waiting', () => {
 });
 player.addEventListener('playing', () => {
     if (currentCard && player.src && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
-        targetCard.dataset.status = 'playing';
+        currentCard.dataset.status = 'playing';
         isUserPaused = false;
         localStorage.setItem('lastStatus', 'playing');
         retryCount = 0;
