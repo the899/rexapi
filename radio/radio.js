@@ -23,7 +23,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
         try {
             radioGrid.innerHTML = ''; // 清空网格
             // 加载 radio.json，禁用缓存
-            const response = await fetch('https://www.a1b2.cc/radio.json', { cache: 'no-cache' });
+            const response = await fetch('config.json', { cache: 'no-cache' });
             if (!response.ok) {
                 throw new Error(`HTTP 错误，状态码：${response.status}`);
             }
