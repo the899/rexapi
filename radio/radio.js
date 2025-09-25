@@ -24,7 +24,9 @@ function setGridMaxWidth() {
     const cardSize = parseFloat(rootStyles.getPropertyValue(
         isPC ? '--card-size-pc' : isIOS ? '--card-size-ios' : '--card-size-mobile'
     ).trim()) || 100;
-    const windowWidth = window.innerWidth;
+    const windowWidth = window.innerWidth - 
+        parseFloat(rootStyles.getPropertyValue('env(safe-area-inset-left, 0)').trim()) -
+        parseFloat(rootStyles.getPropertyValue('env(safe-area-inset-right, 0)').trim());
     const columns = Math.floor(windowWidth / cardSize);
     const maxWidth = columns * cardSize;
     radioGrid.style.maxWidth = `${maxWidth}px`;
@@ -59,6 +61,12 @@ function scrollToCardRow(targetCard) {
 
 // 动态调整滚动位置和网格宽度
 window.addEventListener('resize', () => {
+    setGridMaxWidth();
+    if (currentCard) scrollToCardRow(currentCard);
+});
+
+// 监听横竖屏切换
+window.addEventListener('orientationchange', () => {
     setGridMaxWidth();
     if (currentCard) scrollToCardRow(currentCard);
 });

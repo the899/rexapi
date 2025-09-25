@@ -25,6 +25,7 @@ html, body {
     scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
     -ms-overflow-style: none; /* 隐藏 IE/Edge 滚动条 */
     -webkit-overflow-scrolling: touch; /* iOS 流畅滚动 */
+    overscroll-behavior-y: contain; /* 防止 iOS 过度滚动 */
 }
 
 /* 隐藏 Webkit 滚动条 */
@@ -63,6 +64,7 @@ body {
     scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
     -ms-overflow-style: none; /* 隐藏 IE/Edge 滚动条 */
     -webkit-overflow-scrolling: touch; /* iOS 流畅滚动 */
+    overscroll-behavior-y: contain; /* 防止 iOS 过度滚动 */
 }
 
 /* 隐藏网格容器滚动条 */
