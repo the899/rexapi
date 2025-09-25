@@ -3,10 +3,12 @@
     --bg-color: #1a1a1a; /* 背景色：深色 */
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
-    --card-size-iphone: 120px; /* iPhone 13 卡牌尺寸 */
-    --card-size-macos: 130px; /* macOS 卡牌尺寸 */
-    --text-size-iphone: 1.2rem; /* iPhone 13 文字大小 */
-    --text-size-macos: 1.3rem; /* macOS 文字大小 */
+    --card-size-pc: 130px; /* PC 端卡牌尺寸 */
+    --card-size-ios: 120px; /* iOS 卡牌尺寸 */
+    --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
+    --text-size-pc: 1.3rem; /* PC 端文字大小 */
+    --text-size-ios: 1.2rem; /* iOS 文字大小 */
+    --text-size-mobile: 1rem; /* 移动端文字大小 */
     --safe-area-inset: 16px; /* Apple 设计规范间距 */
     --grid-gap: 12px; /* 卡牌间距 */
 }
@@ -52,12 +54,12 @@ body {
     min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
 }
 
-/* 卡牌样式，定义统一尺寸、圆角、交互效果 */
+/* 卡牌样式，默认使用移动端尺寸 */
 .radio-card {
-    width: var(--card-size-iphone);
-    height: var(--card-size-iphone);
-    min-width: 120px;
-    min-height: 120px;
+    width: var(--card-size-mobile);
+    height: var(--card-size-mobile);
+    min-width: 100px;
+    min-height: 100px;
     background-color: var(--bg-color);
     border-radius: 30px;
     overflow: hidden;
@@ -72,7 +74,7 @@ body {
 /* 卡牌内文字样式 */
 .radio-card span {
     color: var(--text-color);
-    font-size: var(--text-size-iphone);
+    font-size: var(--text-size-mobile);
     text-align: center;
     padding: 10px;
     word-break: break-all;
@@ -148,54 +150,37 @@ audio {
     display: none;
 }
 
-/* iPhone 13 适配：动态列数 */
-@media (max-width: 414px) {
+/* iOS 适配（iPhone 13） */
+@media (-webkit-device-pixel-ratio) {
     .radio-grid {
-        grid-template-columns: repeat(auto-fit, var(--card-size-iphone));
+        grid-template-columns: repeat(auto-fit, var(--card-size-ios));
         gap: var(--grid-gap);
     }
     .radio-card {
-        width: var(--card-size-iphone);
-        height: var(--card-size-iphone);
+        width: var(--card-size-ios);
+        height: var(--card-size-ios);
         min-width: 120px;
         min-height: 120px;
     }
     .radio-card span {
-        font-size: var(--text-size-iphone);
+        font-size: var(--text-size-ios);
     }
 }
 
-/* macOS 适配：动态列数 */
+/* PC 端适配（macOS） */
 @media (min-width: 1024px) {
     .radio-grid {
-        grid-template-columns: repeat(auto-fit, var(--card-size-macos));
+        grid-template-columns: repeat(auto-fit, var(--card-size-pc));
         gap: var(--grid-gap);
     }
     .radio-card {
-        width: var(--card-size-macos);
-        height: var(--card-size-macos);
+        width: var(--card-size-pc);
+        height: var(--card-size-pc);
         min-width: 130px;
         min-height: 130px;
     }
     .radio-card span {
-        font-size: var(--text-size-macos);
-    }
-}
-
-/* 其他设备：动态列数 */
-@media (min-width: 415px) and (max-width: 1023px) {
-    .radio-grid {
-        grid-template-columns: repeat(auto-fit, var(--card-size-iphone));
-        gap: var(--grid-gap);
-    }
-    .radio-card {
-        width: var(--card-size-iphone);
-        height: var(--card-size-iphone);
-        min-width: 120px;
-        min-height: 120px;
-    }
-    .radio-card span {
-        font-size: var(--text-size-iphone);
+        font-size: var(--text-size-pc);
     }
 }
 

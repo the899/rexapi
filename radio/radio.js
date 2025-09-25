@@ -21,8 +21,11 @@ function scrollToCardRow(targetCard) {
     if (scrollTimeout) clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
         const rootStyles = getComputedStyle(document.documentElement);
-        const isMacOS = window.matchMedia('(min-width: 1024px)').matches;
-        const cardSize = parseFloat(rootStyles.getPropertyValue(isMacOS ? '--card-size-macos' : '--card-size-iphone').trim()) || 120;
+        const isPC = window.matchMedia('(min-width: 1024px)').matches;
+        const isIOS = window.matchMedia('(-webkit-device-pixel-ratio)').matches;
+        const cardSize = parseFloat(rootStyles.getPropertyValue(
+            isPC ? '--card-size-pc' : isIOS ? '--card-size-ios' : '--card-size-mobile'
+        ).trim()) || 100;
         const gridGap = parseFloat(rootStyles.getPropertyValue('--grid-gap').trim()) || 12;
         const cardTop = targetCard.offsetTop;
         const itemHeight = cardSize + gridGap;
