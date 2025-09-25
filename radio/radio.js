@@ -2,6 +2,7 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/radio/sw.js'); // 注册 sw.js
+        // console.log('Service Worker registered');
     });
 }
 
@@ -15,41 +16,42 @@ const maxRetries = 5; // 最大播放重试次数
 let isUserPaused = false; // 用户是否手动暂停
 let playCheckInterval = null; // 播放状态检查定时器
 let hasUserInteracted = false; // 是否有用户交互
+let scrollTimeout = null; // 防抖定时器
 
 // 滚动到卡牌所在行的屏幕中间（横屏和竖屏）
 function scrollToCardRow(targetCard) {
-    const cardRect = targetCard.getBoundingClientRect();
-    // 动态获取卡牌尺寸
-    const rootStyles = getComputedStyle(document.documentElement);
-    const isMacOS = window.matchMedia('(min-width: 1024px)').matches;
-    const cardSize = parseFloat(rootStyles.getPropertyValue(isMacOS ? '--card-size-macos' : '--card-size-iphone').trim()) || 130;
-    const gridStyles = getComputedStyle(radioGrid);
-    const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || 12;
+    if (scrollTimeout) clearTimeout(scrollTimeout); // 清除现有防抖定时器
+    scrollTimeout = setTimeout(() => {
+        const cardRect = targetCard.getBoundingClientRect();
+        // 动态获取卡牌尺寸
+        const rootStyles = getComputedStyle(document.documentElement);
+        const isMacOS = window.matchMedia('(min-width: 1024px)').matches;
+        const cardSize = parseFloat(rootStyles.getPropertyValue(isMacOS ? '--card-size-macos' : '--card-size-iphone').trim()) || 130;
+        const gridStyles = getComputedStyle(radioGrid);
+        const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || 12;
 
-    // 判断是否为 iPhone 13（竖屏或横屏）或 macOS
-    const isIphonePortrait = window.matchMedia('(min-width: 375px) and (max-width: 414px) and (orientation: portrait)').matches;
-    const isIphoneLandscape = window.matchMedia('(min-width: 667px) and (max-width: 844px) and (orientation: landscape)').matches;
+        // 计算行高
+        const itemHeight = cardSize + gridGap; // 每行高度（卡牌高度 + 间距）
+        const cardTop = targetCard.offsetTop; // 卡牌顶部相对于网格的偏移
+        const rowTop = Math.floor(cardTop / itemHeight) * itemHeight; // 所在行顶部
+        const rowCenter = rowTop + (cardSize / 2); // 行中心点
 
-    // 计算行高
-    const itemHeight = cardSize + gridGap; // 每行高度（卡牌高度 + 间距）
-    const cardTop = targetCard.offsetTop; // 卡牌顶部相对于网格的偏移
-    const rowTop = Math.floor(cardTop / itemHeight) * itemHeight; // 所在行顶部
-    const rowCenter = rowTop + (cardSize / 2); // 行中心点
+        // 获取视口尺寸，考虑安全区域
+        const safeAreaTop = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
+        const safeAreaBottom = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
+        const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
 
-    // 获取视口尺寸，考虑安全区域
-    const safeAreaTop = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
-    const safeAreaBottom = parseFloat(rootStyles.getPropertyValue('--safe-area-inset').trim()) || 16;
-    const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
+        // 计算滚动目标（垂直方向滚动到行中心）
+        const scrollTarget = rowCenter - (viewportHeight / 2);
+        const maxScrollY = radioGrid.scrollHeight - viewportHeight;
+        const scrollY = Math.max(0, Math.min(scrollTarget, maxScrollY));
 
-    // 计算滚动目标（垂直方向滚动到行中心）
-    const scrollTarget = rowCenter - (viewportHeight / 2);
-    const maxScrollY = radioGrid.scrollHeight - viewportHeight;
-    const scrollY = Math.max(0, Math.min(scrollTarget, maxScrollY));
-
-    window.scrollTo({
-        top: scrollY + safeAreaTop, // 调整安全区域偏移
-        behavior: 'smooth'
-    });
+        window.scrollTo({
+            top: scrollY + safeAreaTop, // 调整安全区域偏移
+            behavior: 'smooth'
+        });
+        // console.log(`Scrolled to card at row center: ${scrollY}px`);
+    }, 100); // 防抖 100ms
 }
 
 // 加载频道列表
@@ -58,7 +60,6 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
     async function tryFetchConfig() {
         try {
             radioGrid.innerHTML = ''; // 清空网格
-            // 加载 radio.json，禁用缓存
             const response = await fetch('https://www.a1b2.cc/radio.json', { cache: 'no-cache' });
             if (!response.ok) {
                 throw new Error(`HTTP 错误，状态码：${response.status}`);
@@ -72,9 +73,9 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
             channelNames.forEach((name) => {
                 const card = document.createElement('div');
                 card.className = 'radio-card';
-                card.dataset.stream = channels[name]; // 设置流地址
+                card.dataset.stream = channels[name];
                 const span = document.createElement('span');
-                span.textContent = name; // 设置频道名称
+                span.textContent = name;
                 card.appendChild(span);
                 radioGrid.appendChild(card);
             });
@@ -82,7 +83,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
             // 创建“重置应用”卡牌
             const resetCard = document.createElement('div');
             resetCard.className = 'radio-card';
-            resetCard.dataset.reset = 'true'; // 标记为重置卡牌
+            resetCard.dataset.reset = 'true';
             const resetSpan = document.createElement('span');
             resetSpan.textContent = '重置应用';
             resetCard.appendChild(resetSpan);
@@ -93,14 +94,12 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
             cards.forEach(card => {
                 card.addEventListener('click', () => {
                     if (card.dataset.reset === 'true') {
-                        // 重置应用：弹出确认框
                         if (confirm('确定要重置应用吗？这将清除所有缓存和播放状态，并加载最新频道列表。')) {
                             resetApp();
                         }
                     } else {
-                        const streamUrl = card.dataset.stream; // 获取流地址
+                        const streamUrl = card.dataset.stream;
                         if (currentCard === card) {
-                            // 当前卡牌：切换播放/暂停
                             if (!player.paused) {
                                 player.pause();
                                 card.dataset.status = 'paused';
@@ -111,9 +110,8 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                                 retryCount = 0;
                                 retryPlay(card, streamUrl);
                             }
-                            scrollToCardRow(card); // 滚动到卡牌所在行
+                            scrollToCardRow(card);
                         } else {
-                            // 新卡牌：取消其他卡牌选中状态
                             cards.forEach(c => {
                                 if (c.dataset.reset !== 'true') {
                                     c.classList.remove('selected');
@@ -127,21 +125,20 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                             isUserPaused = false;
                             retryCount = 0;
                             retryPlay(card, streamUrl);
-                            scrollToCardRow(card); // 滚动到卡牌所在行
+                            scrollToCardRow(card);
                         }
                         hasUserInteracted = true;
                     }
                 });
             });
+            // console.log(`Loaded ${channelNames.length} channels`);
         } catch (err) {
+            // console.error(`Failed to load channels: ${err.message}`);
             attempts++;
             if (attempts < maxRetries) {
-                // 重试加载，间隔 retryDelay
                 setTimeout(tryFetchConfig, retryDelay);
             } else {
-                // 显示简化的错误提示
                 radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">文件加载错误，请重试</p>`;
-                // 添加“重置应用”卡牌
                 const resetCard = document.createElement('div');
                 resetCard.className = 'radio-card';
                 resetCard.dataset.reset = 'true';
@@ -162,32 +159,30 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
 
 // 播放电台流，支持重试
 function retryPlay(targetCard, streamUrl) {
-    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000; // PWA 重试间隔 5 秒
-    if (retryTimeout) clearTimeout(retryTimeout); // 清除现有重试定时器
-    if (playCheckInterval) clearInterval(playCheckInterval); // 清除播放检查定时器
+    const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
+    if (retryTimeout) clearTimeout(retryTimeout);
+    if (playCheckInterval) clearInterval(playCheckInterval);
 
-    // 检查音频是否已在播放
     if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
         targetCard.dataset.status = 'playing';
         isUserPaused = false;
         retryCount = 0;
+        // console.log(`Already playing: ${streamUrl}`);
         return;
     }
 
-    // 达到最大重试次数，显示错误
     if (retryCount >= maxRetries) {
         targetCard.dataset.status = 'error';
+        // console.error(`Max retries reached for ${streamUrl}`);
         return;
     }
 
-    targetCard.dataset.status = 'connecting'; // 设置连接中状态
+    targetCard.dataset.status = 'connecting';
     if (player.src !== streamUrl) {
-        player.src = streamUrl; // 设置新的流地址
+        player.src = streamUrl;
     }
 
-    // 尝试播放
     player.play().then(() => {
-        // 每 500ms 检查播放状态
         playCheckInterval = setInterval(() => {
             if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
                 targetCard.dataset.status = 'playing';
@@ -196,17 +191,18 @@ function retryPlay(targetCard, streamUrl) {
                 retryCount = 0;
                 clearInterval(playCheckInterval);
                 if (retryTimeout) clearTimeout(retryTimeout);
+                // console.log(`Playing: ${streamUrl}`);
             }
         }, 500);
-    }).catch(() => {
+    }).catch((err) => {
         targetCard.dataset.status = 'error';
         retryCount++;
+        // console.error(`Play error: ${err.message}`);
         if (retryCount < maxRetries) {
             retryTimeout = setTimeout(() => retryPlay(targetCard, streamUrl), retryInterval);
         }
     });
 
-    // 10 秒后检查是否仍未播放
     setTimeout(() => {
         if (player.paused && targetCard.dataset.status === 'connecting' && player.readyState < 2) {
             targetCard.dataset.status = 'error';
@@ -224,9 +220,9 @@ function handleUserInteraction() {
         hasUserInteracted = true;
         retryCount = 0;
         retryPlay(currentCard, currentCard.dataset.stream);
+        // console.log('Retrying playback due to user interaction');
     }
 }
-// 绑定用户交互事件（点击、触摸、键盘）
 document.addEventListener('click', handleUserInteraction, { once: true });
 document.addEventListener('touchstart', handleUserInteraction, { once: true });
 document.addEventListener('keydown', handleUserInteraction, { once: true });
@@ -234,19 +230,17 @@ document.addEventListener('keydown', handleUserInteraction, { once: true });
 // 重置应用，清除状态和缓存
 async function resetApp() {
     try {
-        player.pause(); // 暂停播放
-        player.src = ''; // 清空音频源
+        player.pause();
+        player.src = '';
         const cards = document.querySelectorAll('.radio-card');
-        // 清除卡牌状态（除重置卡牌）
         cards.forEach(card => {
             if (card.dataset.reset !== 'true') {
                 card.classList.remove('selected');
                 card.dataset.status = '';
             }
         });
-        currentCard = null; // 清空当前卡牌
-        localStorage.clear(); // 清除本地存储
-        // 注销 Service Worker 和缓存
+        currentCard = null;
+        localStorage.clear();
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (let registration of registrations) {
@@ -259,9 +253,11 @@ async function resetApp() {
                 }
             }
         }
-        await loadChannels(); // 重新加载频道
+        await loadChannels();
+        // console.log('App reset successfully');
     } catch (err) {
         alert('重置应用失败，请检查网络或联系支持团队。');
+        // console.error(`Reset failed: ${err.message}`);
     }
 }
 
@@ -280,7 +276,7 @@ if ('mediaSession' in navigator) {
             isUserPaused = false;
             retryCount = 0;
             retryPlay(currentCard, currentCard.dataset.stream);
-            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
+            scrollToCardRow(currentCard);
         }
     });
     navigator.mediaSession.setActionHandler('pause', () => {
@@ -289,7 +285,7 @@ if ('mediaSession' in navigator) {
             currentCard.dataset.status = 'paused';
             isUserPaused = true;
             localStorage.setItem('lastStatus', 'paused');
-            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
+            scrollToCardRow(currentCard);
         }
     });
 }
@@ -297,12 +293,12 @@ if ('mediaSession' in navigator) {
 // 音频播放器事件监听
 player.addEventListener('waiting', () => {
     if (currentCard && player.src) {
-        currentCard.dataset.status = 'connecting'; // 设置连接中状态
+        currentCard.dataset.status = 'connecting';
     }
 });
 player.addEventListener('playing', () => {
     if (currentCard && player.src && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
-        currentCard.dataset.status = 'playing'; // 设置播放状态
+        currentCard.dataset.status = 'playing';
         isUserPaused = false;
         localStorage.setItem('lastStatus', 'playing');
         retryCount = 0;
@@ -312,14 +308,14 @@ player.addEventListener('playing', () => {
 });
 player.addEventListener('pause', () => {
     if (currentCard && player.src && isUserPaused) {
-        currentCard.dataset.status = 'paused'; // 设置暂停状态
+        currentCard.dataset.status = 'paused';
         localStorage.setItem('lastStatus', 'paused');
     }
 });
 player.addEventListener('error', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            currentCard.dataset.status = 'error'; // 设置错误状态
+            currentCard.dataset.status = 'error';
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
@@ -331,7 +327,7 @@ player.addEventListener('error', () => {
 player.addEventListener('stalled', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            currentCard.dataset.status = 'error'; // 设置错误状态
+            currentCard.dataset.status = 'error';
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
@@ -343,7 +339,7 @@ player.addEventListener('stalled', () => {
 player.addEventListener('suspend', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            currentCard.dataset.status = 'error'; // 设置错误状态
+            currentCard.dataset.status = 'error';
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
