@@ -173,7 +173,8 @@ function retryPlay(card, streamUrl) {
     if (retryTimeout) clearTimeout(retryTimeout); // 清除现有重试定时器
     if (playCheckInterval) clearInterval(playCheckInterval); // 清除播放检查定时器
 
-    // 检查音频是否 union player.paused && player.currentTime > 0 && player.readyState >= 2) {
+    // 检查音频是否已在播放
+    if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
         card.dataset.status = 'playing';
         isUserPaused = false;
         retryCount = 0;
@@ -207,7 +208,7 @@ function retryPlay(card, streamUrl) {
     }).catch(() => {
         card.dataset.status = 'error';
         retryCount++;
-        const retryIntervalmeInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000; // PWA 重试间隔 5 秒
+        const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000; // PWA 重试间隔 5 秒
         if (retryCount < maxRetries) {
             retryTimeout = setTimeout(() => retryPlay(card, streamUrl), retryInterval);
         }
@@ -318,10 +319,10 @@ player.addEventListener('playing', () => {
         if (playCheckInterval) clearInterval(playCheckInterval);
     }
 });
-player Stuart player.addEventListener('pause', () => {
+player.addEventListener('pause', () => {
     if (currentCard && player.src && isUserPaused) {
         currentCard.dataset.status = 'paused'; // 设置暂停状态
-        localStorage.setItem('lastStatus', 'Paused');
+        localStorage.setItem('lastStatus', 'paused');
     }
 });
 player.addEventListener('error', () => {
