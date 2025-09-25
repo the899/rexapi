@@ -60,4 +60,5 @@
     3. Redmi Pad SE 11，Android 13, 横屏、竖屏: Edge, PWA;
     4. Redmi 13C, 横屏、竖屏：Edge, PWA。
 43. 显示当前项目文件最新版本的内容。
-44. the end
+44. 只显示当前的变动文件的内容：首行与尾行(以```开头)要删除。
+45. the end

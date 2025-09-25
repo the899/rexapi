@@ -16,34 +16,41 @@ let isUserPaused = false; // 用户是否手动暂停
 let playCheckInterval = null; // 播放状态检查定时器
 let hasUserInteracted = false; // 是否有用户交互
 
-// 滚动到卡牌所在行的屏幕中间（仅限竖屏）
+// 滚动到卡牌所在行的屏幕中间（横屏和竖屏）
 function scrollToCardRow(card) {
-    if (window.matchMedia('(orientation: portrait)').matches) {
-        const cardRect = card.getBoundingClientRect();
-        const cardHeight = cardRect.height; // 卡牌高度（100px 移动端）
-        const gridGap = 12; // radio-grid 的 gap（12px）
-        const rowHeight = cardHeight + gridGap; // 每行高度（卡牌高度 + 间距）
-        const cardTop = card.offsetTop; // 卡牌顶部相对于网格的偏移
-        const rowTop = Math.floor(cardTop / rowHeight) * rowHeight; // 所在行顶部
-        const rowCenter = rowTop + (cardHeight / 2); // 行中心点
+    const cardRect = card.getBoundingClientRect();
+    // 动态获取卡牌尺寸（--card-size 或 --card-size-mobile）
+    const rootStyles = getComputedStyle(document.documentElement);
+    const cardSize = parseFloat(rootStyles.getPropertyValue('--card-size').trim()) || 150;
+    const cardSizeMobile = parseFloat(rootStyles.getPropertyValue('--card-size-mobile').trim()) || 100;
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+    const cardHeight = isMobile ? cardSizeMobile : cardSize;
+    
+    // 获取网格 gap（移动端 12px，横屏 15px，非移动端 20px）
+    const gridStyles = getComputedStyle(radioGrid);
+    const gridGap = parseFloat(gridStyles.getPropertyValue('gap').trim()) || (isMobile ? 12 : (window.matchMedia('(orientation: landscape)').matches ? 15 : 20));
+    
+    const rowHeight = cardHeight + gridGap; // 每行高度（卡牌高度 + 间距）
+    const cardTop = card.offsetTop; // 卡牌顶部相对于网格的偏移
+    const rowTop = Math.floor(cardTop / rowHeight) * rowHeight; // 所在行顶部
+    const rowCenter = rowTop + (cardHeight / 2); // 行中心点
 
-        // 获取视口高度，考虑安全区域
-        const safeAreaTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0');
-        const safeAreaBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom') || '0');
-        const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
-        const scrollTarget = rowCenter - (viewportHeight / 2); // 行中心对齐屏幕中间
+    // 获取视口高度，考虑安全区域
+    const safeAreaTop = parseFloat(rootStyles.getPropertyValue('padding-top').trim()) || 0;
+    const safeAreaBottom = parseFloat(rootStyles.getPropertyValue('padding-bottom').trim()) || 0;
+    const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
+    const scrollTarget = rowCenter - (viewportHeight / 2); // 行中心对齐屏幕中间
 
-        // 确保滚动不超出网格边界
-        const gridRect = radioGrid.getBoundingClientRect();
-        const maxScroll = radioGrid.scrollHeight - viewportHeight;
-        const scrollY = Math.max(0, Math.min(scrollTarget, maxScroll));
+    // 确保滚动不超出网格边界
+    const gridRect = radioGrid.getBoundingClientRect();
+    const maxScroll = radioGrid.scrollHeight - viewportHeight;
+    const scrollY = Math.max(0, Math.min(scrollTarget, maxScroll));
 
-        // 平滑滚动到目标位置
-        window.scrollTo({
-            top: scrollY + safeAreaTop, // 调整安全区域偏移
-            behavior: 'smooth'
-        });
-    }
+    // 平滑滚动到目标位置
+    window.scrollTo({
+        top: scrollY + safeAreaTop, // 调整安全区域偏移
+        behavior: 'smooth'
+    });
 }
 
 // 加载频道列表
