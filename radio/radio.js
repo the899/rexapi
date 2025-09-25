@@ -16,6 +16,36 @@ let isUserPaused = false; // 用户是否手动暂停
 let playCheckInterval = null; // 播放状态检查定时器
 let hasUserInteracted = false; // 是否有用户交互
 
+// 滚动到卡牌所在行的屏幕中间（仅限竖屏）
+function scrollToCardRow(card) {
+    if (window.matchMedia('(orientation: portrait)').matches) {
+        const cardRect = card.getBoundingClientRect();
+        const cardHeight = cardRect.height; // 卡牌高度（100px 移动端）
+        const gridGap = 12; // radio-grid 的 gap（12px）
+        const rowHeight = cardHeight + gridGap; // 每行高度（卡牌高度 + 间距）
+        const cardTop = card.offsetTop; // 卡牌顶部相对于网格的偏移
+        const rowTop = Math.floor(cardTop / rowHeight) * rowHeight; // 所在行顶部
+        const rowCenter = rowTop + (cardHeight / 2); // 行中心点
+
+        // 获取视口高度，考虑安全区域
+        const safeAreaTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0');
+        const safeAreaBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom') || '0');
+        const viewportHeight = window.innerHeight - safeAreaTop - safeAreaBottom;
+        const scrollTarget = rowCenter - (viewportHeight / 2); // 行中心对齐屏幕中间
+
+        // 确保滚动不超出网格边界
+        const gridRect = radioGrid.getBoundingClientRect();
+        const maxScroll = radioGrid.scrollHeight - viewportHeight;
+        const scrollY = Math.max(0, Math.min(scrollTarget, maxScroll));
+
+        // 平滑滚动到目标位置
+        window.scrollTo({
+            top: scrollY + safeAreaTop, // 调整安全区域偏移
+            behavior: 'smooth'
+        });
+    }
+}
+
 // 加载频道列表
 async function loadChannels(maxRetries = 3, retryDelay = 3000) {
     let attempts = 0; // 重试计数
@@ -75,6 +105,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                                 retryCount = 0;
                                 retryPlay(card, streamUrl);
                             }
+                            scrollToCardRow(card); // 滚动到卡牌所在行
                         } else {
                             // 新卡牌：取消其他卡牌选中状态
                             cards.forEach(c => {
@@ -90,6 +121,7 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
                             isUserPaused = false;
                             retryCount = 0;
                             retryPlay(card, streamUrl);
+                            scrollToCardRow(card); // 滚动到卡牌所在行
                         }
                         hasUserInteracted = true;
                     }
@@ -243,6 +275,7 @@ if ('mediaSession' in navigator) {
             isUserPaused = false;
             retryCount = 0;
             retryPlay(currentCard, currentCard.dataset.stream);
+            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
         }
     });
     navigator.mediaSession.setActionHandler('pause', () => {
@@ -251,6 +284,7 @@ if ('mediaSession' in navigator) {
             currentCard.dataset.status = 'paused';
             isUserPaused = true;
             localStorage.setItem('lastStatus', 'paused');
+            scrollToCardRow(currentCard); // 滚动到当前卡牌所在行
         }
     });
 }
@@ -292,7 +326,7 @@ player.addEventListener('error', () => {
 player.addEventListener('stalled', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            card.dataset.status = 'error'; // 设置错误状态
+            currentCard.dataset.status = 'error'; // 设置错误状态
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
@@ -304,7 +338,7 @@ player.addEventListener('stalled', () => {
 player.addEventListener('suspend', () => {
     if (currentCard && player.src) {
         if (player.paused && player.readyState < 2) {
-            card.dataset.status = 'error'; // 设置错误状态
+            currentCard.dataset.status = 'error'; // 设置错误状态
             retryCount++;
             const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
             if (retryCount < maxRetries) {
