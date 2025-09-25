@@ -67,11 +67,13 @@ window.addEventListener('resize', () => {
 
 // 监听横竖屏切换
 window.addEventListener('orientationchange', () => {
-    setGridMaxWidth();
-    if (currentCard) scrollToCardRow(currentCard);
+    setTimeout(() => {
+        setGridMaxWidth();
+        if (currentCard) scrollToCardRow(currentCard);
+    }, 100); // 延迟确保屏幕尺寸更新
 });
 
-// 加载频道列表
+// 加载频道列表（生成 9 个频道 + 1 个重置卡牌）
 async function loadChannels(maxRetries = 3, retryDelay = 3000) {
     let attempts = 0;
     async function tryFetchConfig() {
@@ -82,7 +84,8 @@ async function loadChannels(maxRetries = 3, retryDelay = 3000) {
             const channels = await response.json();
             if (!channels || typeof channels !== 'object') throw new Error('Invalid JSON');
 
-            Object.keys(channels).forEach(name => {
+            // 限制为 9 个频道
+            Object.keys(channels).slice(0, 9).forEach(name => {
                 const card = document.createElement('div');
                 card.className = 'radio-card';
                 card.dataset.stream = channels[name];
