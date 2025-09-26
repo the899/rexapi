@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- 启用 PWA 全屏模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- 状态栏透明，内容可覆盖 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- 主题色，匹配你的背景以覆盖状态栏 -->
     <meta name="theme-color" content="#1a1a1a">
-    <title>听音悦台</title>
     <link rel="manifest" href="/radio/manifest.json">
     <link rel="stylesheet" href="/radio/radio.css">
+    <title>听音悦台</title>
 </head>
+
 <body>
     <div class="radio-grid"></div>
     <audio id="radio-player"></audio>
     <script src="/radio/radio.js"></script>
 </body>
+
 </html>
