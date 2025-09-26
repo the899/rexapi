@@ -4,7 +4,7 @@
     --text-color: #e0e0e0; /* 文字色：浅灰 */
     --accent-color: #007bff; /* 强调色：蓝色 */
     --card-size-pc: 130px; /* PC 端卡牌尺寸 */
-    --card-size-ios: 150px; /* iOS 卡牌尺寸，单独定义便于修改 */
+    --card-size-ios: 140px; /* iOS 卡牌尺寸，单独定义便于修改 */
     --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
     --text-size-pc: 1.3rem; /* PC 端文字大小 */
     --text-size-ios: 1.6rem; /* iOS 文字大小，单独定义便于修改 */
