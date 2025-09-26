@@ -17,7 +17,8 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    min-width: 360px;
+    /* min-width: 360px; */
+    min-width: 400px;
     min-height: 100vh;
     background-color: var(--bg-color);
     overflow-x: hidden;
