@@ -1,36 +1,40 @@
 /* 定义全局 CSS 变量 */
 :root {
-    --bg-color: #1a1a1a; /* 背景色：深色 */
-    --text-color: #e0e0e0; /* 文字色：浅灰 */
-    --accent-color: #007bff; /* 强调色：蓝色 */
-    --card-size-pc: 130px; /* PC 端卡牌尺寸 */
-    --card-size-ios: 130px; /* iOS 卡牌尺寸，单独定义便于修改 */
-    --card-size-mobile: 100px; /* 移动端卡牌尺寸 */
-    --text-size-pc: 1.3rem; /* PC 端文字大小 */
-    --text-size-ios: 1.6rem; /* iOS 文字大小，单独定义便于修改 */
-    --text-size-mobile: 1rem; /* 移动端文字大小 */
-    --safe-area-inset: 16px; /* Apple 设计规范间距 */
+    --bg-color: #1a1a1a;  /* 背景色：深色 */
+    --text-color: #e0e0e0;  /* 文字色：浅灰 */
+    --accent-color: #007bff;  /* 强调色：蓝色 */
+    --card-size-pc: 130px;  /* PC 端卡牌尺寸 */
+    --card-size-ios: 130px;  /* iOS 卡牌尺寸，单独定义便于修改 */
+    --card-size-mobile: 100px;  /* 移动端卡牌尺寸 */
+    --text-size-pc: 1.3rem;  /* PC 端文字大小 */
+    --text-size-ios: 1.6rem;  /* iOS 文字大小，单独定义便于修改 */
+    --text-size-mobile: 1rem;  /* 移动端文字大小 */
+    --safe-area-inset: 16px;  /* Apple 设计规范间距 */
 }
 
 /* 设置页面基础样式，移除默认边距，允许垂直滚动 */
-html, body {
+html,
+body {
     margin: 0;
-    padding: 0;
+    /* padding: 0; add 3 lines */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    height: 100%;
+    min-height: calc(100% + env(safe-area-inset-top));
     box-sizing: border-box;
-    /* min-width: 360px; */
     min-width: 360px;
-    min-height: 100vh;
+    /* min-height: 100vh; del 1 lines */
     background-color: var(--bg-color);
     overflow-x: hidden;
     overflow-y: auto;
-    scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
-    -ms-overflow-style: none; /* 隐藏 IE/Edge 滚动条 */
-    -webkit-overflow-scrolling: touch; /* iOS 流畅滚动 */
-    overscroll-behavior-y: contain; /* 防止 iOS 过度滚动 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 /* 隐藏 Webkit 滚动条 */
-html::-webkit-scrollbar, body::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
     display: none;
 }
 
@@ -43,10 +47,7 @@ body {
     min-height: 100dvh;
     color: var(--text-color);
     background-color: var(--bg-color);
-    padding: env(safe-area-inset-top, var(--safe-area-inset))
-            env(safe-area-inset-right, var(--safe-area-inset))
-            env(safe-area-inset-bottom, var(--safe-area-inset))
-            env(safe-area-inset-left, var(--safe-area-inset));
+    padding: env(safe-area-inset-top, var(--safe-area-inset)) env(safe-area-inset-right, var(--safe-area-inset)) env(safe-area-inset-bottom, var(--safe-area-inset)) env(safe-area-inset-left, var(--safe-area-inset));
 }
 
 /* 频道卡牌容器，水平居中，使用 Flexbox */
@@ -62,10 +63,14 @@ body {
     padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset));
     min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
     margin: 0 auto;
-    scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
-    -ms-overflow-style: none; /* 隐藏 IE/Edge 滚动条 */
-    -webkit-overflow-scrolling: touch; /* iOS 流畅滚动 */
-    overscroll-behavior-y: contain; /* 防止 iOS 过度滚动 */
+    scrollbar-width: none;
+    /* 隐藏 Firefox 滚动条 */
+    -ms-overflow-style: none;
+    /* 隐藏 IE/Edge 滚动条 */
+    -webkit-overflow-scrolling: touch;
+    /* iOS 流畅滚动 */
+    overscroll-behavior-y: contain;
+    /* 防止 iOS 过度滚动 */
 }
 
 /* 隐藏网格容器滚动条 */
@@ -130,13 +135,11 @@ body {
     display: block;
     width: 40px;
     height: 40px;
-    background: linear-gradient(
-        to right,
-        #007bff 12px,
-        transparent 12px 18px,
-        #007bff 18px 30px,
-        transparent 30px
-    );
+    background: linear-gradient(to right,
+            #007bff 12px,
+            transparent 12px 18px,
+            #007bff 18px 30px,
+            transparent 30px);
 }
 
 /* 连接中状态：显示旋转加载图标 */
@@ -177,6 +180,7 @@ audio {
         min-width: 120px;
         min-height: 120px;
     }
+
     .radio-card span {
         font-size: var(--text-size-ios);
     }
@@ -190,6 +194,7 @@ audio {
         min-width: 130px;
         min-height: 130px;
     }
+
     .radio-card span {
         font-size: var(--text-size-pc);
     }
@@ -197,5 +202,7 @@ audio {
 
 /* 旋转动画 */
 @keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
