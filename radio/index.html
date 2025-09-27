@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=844, height=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=844, height=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>听音悦台</title>
@@ -26,8 +26,12 @@
             height: 390px;
             background-color: var(--bg-color);
             overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
             font-family: system-ui, -apple-system, sans-serif;
             color: var(--text-color);
+            touch-action: none; /* Prevent touch scrolling */
         }
 
         /* Setting body styles, centered horizontally and vertically */
@@ -41,14 +45,14 @@
         /* Test rounded rectangle, covering entire screen */
         .test-rect {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 844px;
             height: 390px;
             background-color: transparent;
             border: 1px solid #e0e0e0; /* 1px border */
             border-radius: 38px; /* Apple design spec corner radius */
-            z-index: 100;
+            box-sizing: border-box;
+            z-index: -1; /* Ensure cards are clickable */
         }
 
         /* Channel card container, fixed 2 rows 5 columns, centered */
@@ -81,6 +85,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10; /* Ensure cards are above test-rect */
         }
 
         /* Card text styles */
@@ -104,7 +109,7 @@
             background-color: #333;
             transform: scale(1.1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            z-index: 10;
+            z-index: 15;
         }
 
         /* Card status icon base styles */
@@ -176,7 +181,7 @@
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/radio/sw.js');
+                navigator.serviceWorker.register('/radio/sw.js').catch(err => console.error('Service Worker registration failed:', err));
             });
         }
 
@@ -262,6 +267,7 @@
                         });
                     });
                 } catch (err) {
+                    console.error('Load channels error:', err);
                     attempts++;
                     if (attempts < maxRetries) {
                         setTimeout(tryFetchConfig, retryDelay);
@@ -303,7 +309,10 @@
             }
 
             targetCard.dataset.status = 'connecting';
-            if (player.src !== streamUrl) player.src = streamUrl;
+            if (player.src !== streamUrl) {
+                player.src = streamUrl;
+                player.load(); // Ensure fresh load of stream
+            }
 
             player.play().then(() => {
                 playCheckInterval = setInterval(() => {
@@ -322,7 +331,8 @@
                         }
                     }
                 }, 1000);
-            }).catch(() => {
+            }).catch(err => {
+                console.error('Play error:', err);
                 targetCard.dataset.status = 'error';
                 retryCount++;
                 if (retryCount < maxRetries) {
@@ -354,6 +364,7 @@
                 }
                 await loadChannels();
             } catch (err) {
+                console.error('Reset app error:', err);
                 alert('重置应用失败，请检查网络或联系支持团队。');
             }
         }
