@@ -168,8 +168,8 @@
 <body>
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
-  <!-- 引入本地 /radio/config.json -->
-  <script src="/radio/config.json" type="application/json" id="config-data"></script>
+  <!-- 引入本地 config.json -->
+  <script src="./config.json" type="application/json" id="config-data"></script>
   <script>
     // 注册 Service Worker
     if ('serviceWorker' in navigator) {
@@ -257,10 +257,13 @@
     // 加载频道列表（前 9 个频道 + 1 个重置卡牌）
     const loadChannels = () => {
       try {
-        const configData = document.getElementById('config-data').textContent;
-        const channels = JSON.parse(configData);
+        const configElement = document.getElementById('config-data');
+        if (!configElement || !configElement.textContent) {
+          throw new Error('无法加载 config.json，可能文件不存在或路径错误');
+        }
+        const channels = JSON.parse(configElement.textContent);
         if (!channels || typeof channels !== 'object') {
-          throw new Error('无效的 JSON 格式');
+          throw new Error('config.json 格式无效，需为对象格式');
         }
 
         radioGrid.innerHTML = '';
@@ -276,8 +279,8 @@
 
         setGridMaxWidth();
       } catch (err) {
-        console.error('加载频道失败:', err);
-        radioGrid.innerHTML = '<p style="text-align: center; padding: 20px;">文件加载错误，请重试</p>';
+        console.error('加载频道失败:', err.message);
+        radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">文件加载错误：${err.message}</p>`;
         const resetCard = createCard('重置应用', null, true);
         radioGrid.appendChild(resetCard);
         setGridMaxWidth();
