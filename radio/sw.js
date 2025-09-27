@@ -1,7 +1,6 @@
 const CACHE_NAME = 'radio-app-cache-v1';
 const urlsToCache = [
   '/radio/index.html',
-  '/radio/config.json',
   '/radio/icon.png'
 ];
 
