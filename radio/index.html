@@ -305,9 +305,6 @@
       });
     };
 
-    // 初始化加载频道
-    loadChannels();
-
     // 设置 Media Session
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -409,6 +406,9 @@
       "汽车音乐": "https://live.ximalaya.com/radio-first-page-app/live/2265/64.m3u8?transcode=ts",
       "烟台音乐": "https://live.ximalaya.com/radio-first-page-app/live/2152/64.m3u8?transcode=ts"
     };
+
+    // 初始化加载频道
+    loadChannels();
   </script>
 </body>
 </html>
