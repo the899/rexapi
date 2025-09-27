@@ -285,15 +285,9 @@
 
     // 动态加载频道
     fetch('/radio/config.json')
-      .then(response => {
-        if (!response.ok) throw new Error('HTTP 错误');
-        return response.json();
-      })
+      .then(response => response.json())
       .then(channels => {
         console.log('开始加载频道');
-        if (!channels || typeof channels !== 'object') {
-          throw new Error('config.json 格式无效');
-        }
         console.log('频道数据:', Object.keys(channels).slice(0, 10));
         radioGrid.innerHTML = '';
         Object.keys(channels).slice(0, 10).forEach(name => {
