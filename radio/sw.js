@@ -1,7 +1,7 @@
-const CACHE_NAME = 'radio-app-cache-v1';
+const CACHE_NAME = 'radio-app-cache-v9';
 const urlsToCache = [
   '/radio/index.html',
-  '/radio/hotfm.json',
+  '/radio/config.json',
   '/radio/icon.png'
 ];
 
