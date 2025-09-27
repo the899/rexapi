@@ -168,8 +168,8 @@
 <body>
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
-  <!-- 引入本地 config.json -->
-  <script src="./config.json" type="application/json" id="config-data"></script>
+  <!-- 引入本地 hotfm.json -->
+  <script src="./hotfm.json" type="application/json" id="config-data"></script>
   <script>
     // 注册 Service Worker
     if ('serviceWorker' in navigator) {
@@ -259,11 +259,11 @@
       try {
         const configElement = document.getElementById('config-data');
         if (!configElement || !configElement.textContent) {
-          throw new Error('无法加载 config.json，可能文件不存在或路径错误');
+          throw new Error('无法加载 hotfm.json，可能文件不存在或路径错误');
         }
         const channels = JSON.parse(configElement.textContent);
         if (!channels || typeof channels !== 'object') {
-          throw new Error('config.json 格式无效，需为对象格式');
+          throw new Error('hotfm.json 格式无效，需为对象格式');
         }
 
         radioGrid.innerHTML = '';
