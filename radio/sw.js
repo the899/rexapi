@@ -1,7 +1,8 @@
-const CACHE_NAME = 'radio-app-cache-v10';
+const CACHE_NAME = 'radio-app-cache-v13';
 const urlsToCache = [
   '/radio/index.html',
-  '/radio/icon.png'
+  '/radio/icon.png',
+  '/radio/config.json'
 ];
 
 // 安装 Service Worker，缓存必要文件
