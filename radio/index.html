@@ -168,8 +168,8 @@
 <body>
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
-  <!-- 引入本地 config.json -->
-  <script src="config.json" type="application/json" id="config-data"></script>
+  <!-- 引入本地 /radio/config.json -->
+  <script src="/radio/config.json" type="application/json" id="config-data"></script>
   <script>
     // 注册 Service Worker
     if ('serviceWorker' in navigator) {
@@ -371,8 +371,8 @@
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: '听音悦台',
-        artist: 'CRI',
-        album: 'Online Radio'
+        artist: '听音悦台',
+        album: '在线音乐电台'
       });
       navigator.mediaSession.setActionHandler('play', () => {
         if (currentCard) {
