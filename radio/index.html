@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=844, height=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>听音悦台</title>
@@ -13,11 +13,11 @@
             --text-color: #e0e0e0; /* 文字色：浅灰 */
             --accent-color: #007bff; /* 强调色：蓝色 */
             --card-size: 155px; /* 卡牌尺寸，固定为 155px */
-            --text-size: 1.2rem; /* 文字大小，固定为 1.2rem */
-            --safe-area-inset: 16px; /* Apple 设计规范间距 */
+            --text-size: 1.55rem; /* 文字大小，固定为 1.55rem */
+            --safe-area-inset: 0px; /* 无刘海全屏，安全间距设为 0 */
         }
 
-        /* 设置页面基础样式，移除默认边距，禁止滚动 */
+        /* 设置页面基础样式，固定尺寸，禁止滚动 */
         html, body {
             margin: 0;
             padding: 0;
@@ -36,7 +36,19 @@
             justify-content: center;
             align-items: center;
             min-height: 390px;
-            padding: var(--safe-area-inset);
+        }
+
+        /* 测试用圆角矩形，覆盖整个屏幕 */
+        .test-rect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 844px;
+            height: 390px;
+            background-color: transparent;
+            border: 1px solid #e0e0e0; /* 1px 边框 */
+            border-radius: 38px; /* Apple 规范圆角 */
+            z-index: 100;
         }
 
         /* 频道卡牌容器，固定 2 行 5 列，水平垂直居中 */
@@ -51,6 +63,7 @@
             background-color: var(--bg-color);
             padding: 0;
             overflow: hidden;
+            z-index: 1;
         }
 
         /* 卡牌样式，固定尺寸 */
@@ -156,6 +169,7 @@
     </style>
 </head>
 <body>
+    <div class="test-rect"></div>
     <div class="radio-grid"></div>
     <audio id="radio-player"></audio>
     <script>
