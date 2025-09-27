@@ -232,36 +232,6 @@
       });
     };
 
-    // 加载频道列表（前 10 个频道）
-    const loadChannels = async () => {
-      console.log('开始加载频道'); // 调试：确认函数执行
-      try {
-        const response = await fetch('/radio/config.json');
-        if (!response.ok) {
-          throw new Error(`HTTP 错误: ${response.status}`);
-        }
-        const channels = await response.json();
-        if (!channels || typeof channels !== 'object') {
-          throw new Error('config.json 格式无效，需为对象格式');
-        }
-
-        console.log('频道数据:', Object.keys(channels).slice(0, 10)); // 调试：输出加载的频道
-        radioGrid.innerHTML = '';
-        Object.keys(channels).slice(0, 10).forEach(name => {
-          console.log('创建卡牌:', name); // 调试：确认卡牌创建
-          const card = createCard(name, channels[name]);
-          radioGrid.appendChild(card);
-          bindCardEvents(card);
-        });
-
-        setGridMaxWidth();
-      } catch (err) {
-        console.error('加载频道失败:', err);
-        radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">配置文件 config.json 加载错误。</p>`;
-        setGridMaxWidth();
-      }
-    };
-
     // 播放电台流
     const retryPlay = (targetCard, streamUrl) => {
       const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
@@ -283,7 +253,7 @@
       updateCardStatus(targetCard, 'connecting');
       if (player.src !== streamUrl) {
         player.src = streamUrl;
-        player.load(); // 确保重新加载流
+        player.load();
       }
 
       player.play().then(() => {
@@ -313,8 +283,32 @@
       });
     };
 
-    // 初始化加载频道
-    loadChannels();
+    // 动态加载频道
+    fetch('/radio/config.json')
+      .then(response => {
+        if (!response.ok) throw new Error('HTTP 错误');
+        return response.json();
+      })
+      .then(channels => {
+        console.log('开始加载频道');
+        if (!channels || typeof channels !== 'object') {
+          throw new Error('config.json 格式无效');
+        }
+        console.log('频道数据:', Object.keys(channels).slice(0, 10));
+        radioGrid.innerHTML = '';
+        Object.keys(channels).slice(0, 10).forEach(name => {
+          console.log('创建卡牌:', name);
+          const card = createCard(name, channels[name]);
+          radioGrid.appendChild(card);
+          bindCardEvents(card);
+        });
+        setGridMaxWidth();
+      })
+      .catch(err => {
+        console.error('加载频道失败:', err);
+        radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">配置文件 config.json 加载错误。</p>`;
+        setGridMaxWidth();
+      });
 
     // 设置 Media Session
     if ('mediaSession' in navigator) {

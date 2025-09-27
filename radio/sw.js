@@ -1,4 +1,4 @@
-const CACHE_NAME = 'radio-app-cache-v13';
+const CACHE_NAME = 'radio-app-cache-v4';
 const urlsToCache = [
   '/radio/index.html',
   '/radio/icon.png',
