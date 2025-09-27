@@ -149,11 +149,6 @@
       background-size: contain;
     }
 
-    /* 重置应用卡牌：无状态图标 */
-    .radio-card[data-reset="true"]::after {
-      display: none !important;
-    }
-
     /* 隐藏音频播放器 */
     audio {
       display: none;
@@ -193,35 +188,22 @@
     };
 
     // 创建卡牌元素
-    const createCard = (name, streamUrl = null, isReset = false) => {
+    const createCard = (name, streamUrl) => {
       const card = document.createElement('div');
       card.className = 'radio-card';
-      if (isReset) {
-        card.dataset.reset = 'true';
-      } else {
-        card.dataset.stream = streamUrl;
-      }
+      card.dataset.stream = streamUrl;
       card.innerHTML = `<span>${name}</span>`;
       return card;
     };
 
     // 更新卡牌状态
     const updateCardStatus = (card, status) => {
-      if (card && card.dataset.reset !== 'true') {
-        card.dataset.status = status;
-      }
+      card.dataset.status = status;
     };
 
     // 绑定卡牌点击事件
     const bindCardEvents = (card) => {
       card.addEventListener('click', () => {
-        if (card.dataset.reset === 'true') {
-          if (confirm('确定要重置应用吗？这将清除所有缓存和播放状态，并加载最新频道列表。')) {
-            resetApp();
-          }
-          return;
-        }
-
         const streamUrl = card.dataset.stream;
         if (currentCard === card) {
           if (!player.paused) {
@@ -236,10 +218,8 @@
           }
         } else {
           document.querySelectorAll('.radio-card').forEach(c => {
-            if (c.dataset.reset !== 'true') {
-              c.classList.remove('selected');
-              updateCardStatus(c, '');
-            }
+            c.classList.remove('selected');
+            updateCardStatus(c, '');
           });
           card.classList.add('selected');
           currentCard = card;
@@ -252,7 +232,7 @@
       });
     };
 
-    // 加载频道列表（前 9 个频道 + 1 个重置卡牌）
+    // 加载频道列表（前 10 个频道）
     const loadChannels = async () => {
       try {
         const response = await fetch('/radio/config.json');
@@ -265,24 +245,17 @@
         }
 
         radioGrid.innerHTML = '';
-        Object.keys(channels).slice(0, 9).forEach(name => {
+        Object.keys(channels).slice(0, 10).forEach(name => {
           const card = createCard(name, channels[name]);
           radioGrid.appendChild(card);
           bindCardEvents(card);
         });
 
-        const resetCard = createCard('重置应用', null, true);
-        radioGrid.appendChild(resetCard);
-        bindCardEvents(resetCard);
-
         setGridMaxWidth();
       } catch (err) {
         console.error('加载频道失败:', err.message);
         radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">文件加载错误：${err.message}</p>`;
-        const resetCard = createCard('重置应用', null, true);
-        radioGrid.appendChild(resetCard);
         setGridMaxWidth();
-        bindCardEvents(resetCard);
       }
     };
 
@@ -335,34 +308,6 @@
           retryTimeout = setTimeout(() => retryPlay(targetCard, streamUrl), retryInterval);
         }
       });
-    };
-
-    // 重置应用
-    const resetApp = async () => {
-      try {
-        player.pause();
-        player.src = '';
-        document.querySelectorAll('.radio-card').forEach(card => {
-          if (card.dataset.reset !== 'true') {
-            card.classList.remove('selected');
-            updateCardStatus(card, '');
-          }
-        });
-        currentCard = null;
-        localStorage.clear();
-        if ('serviceWorker' in navigator) {
-          const registrations = await navigator.serviceWorker.getRegistrations();
-          for (const registration of registrations) await registration.unregister();
-          if ('caches' in window) {
-            const cacheNames = await caches.keys();
-            for (const cacheName of cacheNames) await caches.delete(cacheName);
-          }
-        }
-        loadChannels();
-      } catch (err) {
-        console.error('重置应用失败:', err);
-        alert('重置应用失败，请检查网络或联系支持团队。');
-      }
     };
 
     // 初始化加载频道
