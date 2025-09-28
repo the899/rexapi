@@ -16,14 +16,15 @@
       --text-size: 1.8rem;
       --safe-area-inset: 0px;
     }
+
+    /* 根元素样式，确保全屏显示，忽略刘海和 Home Indicator */
     html, body {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       background-color: var(--bg-color);
-      overflow: hidden;
       position: fixed;
       top: 0;
       left: 0;
@@ -31,72 +32,93 @@
       color: var(--text-color);
       touch-action: none;
     }
+
+    /* 主体居中，确保卡牌区域垂直和水平居中 */
     body {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100%;
+      min-height: 100vh;
+      border: 1px solid #1a1a1a;  /* 测试边框，发布时1a1a1a */
     }
+
+    /* 卡牌网格容器，居中显示，设置默认竖屏尺寸 */
     .radio-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: flex;  /* 使用 Flexbox 布局 */
+      flex-wrap: wrap;  /* 允许换行 */
       justify-content: center;
       align-content: center;
-      width: 100%;
-      background-color: transparent;
-      border: none;
-      padding: 0;
-      overflow: visible;
-      z-index: 1;
+      width: 100%;  /* 适应屏幕宽度 */
+      max-width: calc(var(--card-size) * 2);  /* 竖屏默认2列 */
+      max-height: calc(100vh - 20px);  /* 留出一些空间
+      background-color: transparent;  /* 背景透明 */
+      border: 1px solid #1a1a1a;  /* 测试边框，发布时1a1a1a */
+      padding: 0;  /* 卡牌间距由卡牌本身的 margin 控制 */
+      overflow: visible;  /* 允许卡牌溢出显示 */
+      z-index: 1;  /* 确保卡牌在背景之上 */
+      gap: 0;  /* 卡牌间距由卡牌本身的 margin 控制 */
+      margin: auto;  /* 卡牌居中显示 */
     }
+
+    /* 横屏样式：2 行 5 列，775x310px */
     @media (orientation: landscape) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 5); /* 5 * 155px = 775px */
-        height: calc(var(--card-size) * 2); /* 2 * 155px = 310px */
+        max-width: calc(var(--card-size) * 5);  /* 横屏5列 */
+        max-height: calc(var(--card-size) * 2);  /* 横屏2行 */
+        flex-flow: row wrap;  /* 横向排列，允许换行 */
       }
     }
+
+    /* 竖屏样式：5 行 2 列，310x775px */
     @media (orientation: portrait) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 2); /* 2 * 155px = 310px */
-        height: calc(var(--card-size) * 5); /* 5 * 155px = 775px */
+        max-width: calc(var(--card-size) * 2);  /* 竖屏2列 */
+        max-height: calc(var(--card-size) * 5);  /* 竖屏5行 */
+        flex-flow: row wrap;   /* 横向排列，允许换行 */
       }
     }
+
+    /* 卡牌样式，固定 155x155px，圆角 30px */
     .radio-card {
       width: var(--card-size);
       height: var(--card-size);
-      min-width: 155px;
-      min-height: 155px;
       background-color: var(--bg-color);
       border-radius: 30px;
       border: none;
-      overflow: hidden;
-      cursor: pointer;
+      overflow: hidden;  /* 确保内容不溢出圆角 */
+      cursor: pointer;   /* 鼠标悬停时显示手型光标 */
       transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
+      position: relative;  /* 以便定位伪元素 */
+      display: flex;  /* 使用 Flexbox 布局 */
+      align-items: center;  /* 垂直居中 */
+      justify-content: center;  /* 水平居中 */
+      z-index: 10;  /* 确保卡牌在网格之上 */
+      box-sizing: border-box;  /* 包括边框和内边距在内 */
+      flex-shrink: 0;  /* 防止卡牌缩小 */
     }
+
     .radio-card span {
-      color: var(--text-color);
+      color: var(--text-color);  /* 文字颜色 */
       font-size: var(--text-size);
       text-align: center;
-      padding: 10px;
-      word-break: break-all;
-      line-height: 1.2;
-      z-index: 1;
+      padding: 10px;  /* 内边距 */
+      word-break: break-all;  /* 长词换行 */
+      line-height: 1.2;  /* 行高 */
+      z-index: 1;  /* 确保文字在伪元素之上 */
     }
+
     .radio-card:not(.selected) {
       background-color: var(--bg-color);
     }
+
     .radio-card.selected {
       background-color: #333;
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-      z-index: 15;
+      transform: scale(1.1);  /* 选中时放大 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);   /* 选中时阴影 */ 
+      z-index: 15;  /* 确保选中卡牌在其他卡牌之上 */
     }
-    .radio-card::after {
+
+    .radio-card::after {  /* 伪元素用于显示状态图标 */
       content: '';
       position: absolute;
       top: 50%;
@@ -105,7 +127,8 @@
       display: none;
       z-index: 2;
     }
-    .radio-card[data-status="paused"]::after {
+
+    .radio-card[data-status="paused"]::after {  /* 暂停状态图标 */
       display: block;
       width: 40px;
       height: 40px;
@@ -117,7 +140,8 @@
         transparent 30px
       );
     }
-    .radio-card[data-status="connecting"]::after {
+
+    .radio-card[data-status="connecting"]::after {  /* 连接中状态图标 */
       display: block;
       width: 40px;
       height: 40px;
@@ -126,17 +150,20 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    .radio-card[data-status="error"]::after {
+
+    .radio-card[data-status="error"]::after {   /* 错误状态图标 */
       display: block;
       width: 40px;
       height: 40px;
       background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>') no-repeat center;
       background-size: contain;
     }
+
     audio {
       display: none;
     }
-    @keyframes spin {
+
+    @keyframes spin {  /* 旋转动画 */
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
@@ -145,27 +172,54 @@
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
   <script>
+    // 注册 Service Worker，支持离线缓存
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+        // 延迟执行以确保初始方向检测准确
+        requestAnimationFrame(setGridMaxWidthAndHeight);
         navigator.serviceWorker.register(`${subdir}/sw.js`)
           .catch(err => console.error('Service Worker 注册失败:', err));
       });
     }
+
+    // 获取 DOM 元素
     const radioGrid = document.querySelector('.radio-grid');
     const player = document.getElementById('radio-player');
-    let currentCard = null;
-    let retryTimeout = null;
-    let retryCount = 0;
-    const maxRetries = 5;
-    let isUserPaused = false;
-    let playCheckInterval = null;
+    let currentCard = null; // 当前选中的卡牌
+    let retryTimeout = null; // 重试定时器
+    let retryCount = 0; // 重试次数
+    const maxRetries = 5; // 最大重试次数
+    let isUserPaused = false; // 用户是否手动暂停
+    let playCheckInterval = null; // 播放状态检查定时器
+
+    // 设置卡牌网格尺寸和排列方向
     const setGridMaxWidthAndHeight = () => {
       const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+      radioGrid.style.display = 'none'; // 隐藏以强制重排
       radioGrid.style.maxWidth = isLandscape ? '775px' : '310px';
-      radioGrid.style.height = isLandscape ? '310px' : '775px';
+      radioGrid.style.maxHeight = isLandscape ? '310px' : 'calc(100vh - 20px)';
+      radioGrid.style.flexFlow = 'row wrap';
+      // radioGrid.style.flexFlow = isLandscape ? 'row wrap' : 'column wrap';
+      // 重新排列卡牌
+      const cards = Array.from(radioGrid.children);
+      radioGrid.innerHTML = '';
+      cards.forEach(card => radioGrid.appendChild(card));
+      // 延迟恢复显示，确保渲染完成
+      requestAnimationFrame(() => {
+        radioGrid.style.display = 'flex';
+      });
     };
-    window.addEventListener('resize', setGridMaxWidthAndHeight);
+
+    // 监听窗口大小变化和方向变化
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(setGridMaxWidthAndHeight);
+    });
+    window.addEventListener('orientationchange', () => {
+      requestAnimationFrame(setGridMaxWidthAndHeight);
+    });
+
+    // 创建卡牌元素
     const createCard = (name, streamUrl) => {
       const card = document.createElement('div');
       card.className = 'radio-card';
@@ -173,9 +227,13 @@
       card.innerHTML = `<span>${name}</span>`;
       return card;
     };
+
+    // 更新卡牌状态（播放、暂停、连接中、错误）
     const updateCardStatus = (card, status) => {
       card.dataset.status = status;
     };
+
+    // 绑定卡牌点击事件
     const bindCardEvents = (card) => {
       card.addEventListener('click', () => {
         const streamUrl = card.dataset.stream;
@@ -205,6 +263,8 @@
         }
       });
     };
+
+    // 重试播放音频
     const retryPlay = (targetCard, streamUrl) => {
       const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
       if (retryTimeout) clearTimeout(retryTimeout);
@@ -250,6 +310,8 @@
         }
       });
     };
+
+    // 异步加载 config.json 并渲染卡牌
     const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
     fetch(`${subdir}/config.json`)
       .then(response => response.json())
@@ -270,6 +332,8 @@
         radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">配置文件 config.json 加载错误。</p>`;
         setGridMaxWidthAndHeight();
       });
+
+    // 配置 Media Session
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: '听音悦台',
@@ -292,6 +356,8 @@
         }
       });
     }
+
+    // 监听音频播放器事件
     player.addEventListener('waiting', () => {
       if (currentCard && player.src) updateCardStatus(currentCard, 'connecting');
     });
