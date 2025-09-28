@@ -39,7 +39,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      border: 1px solid #1a1a1a;  /* 测试边框，发布时1a1a1a */
+      border: 1px solid #faf9f9;  /* 测试边框，发布时1a1a1a */
     }
 
     /* 卡牌网格容器，居中显示，设置默认竖屏尺寸 */
@@ -200,7 +200,6 @@
       radioGrid.style.maxWidth = isLandscape ? '775px' : '310px';
       radioGrid.style.maxHeight = isLandscape ? '310px' : 'calc(100vh - 20px)';
       radioGrid.style.flexFlow = 'row wrap';
-      // radioGrid.style.flexFlow = isLandscape ? 'row wrap' : 'column wrap';
       // 重新排列卡牌
       const cards = Array.from(radioGrid.children);
       radioGrid.innerHTML = '';
