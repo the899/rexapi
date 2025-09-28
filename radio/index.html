@@ -12,7 +12,7 @@
       --bg-color: #1a1a1a;
       --text-color: #e0e0e0;
       --accent-color: #007bff;
-      --card-size: 150px;
+      --card-size: 155px;
       --text-size: 1.8rem;
       --safe-area-inset: 0px;
     }
@@ -39,45 +39,42 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      border: 1px solid #d8d6d6;  /* 测试边框，发布时可移除 */
+      border: 1px solid #1a1a1a;  /* 测试边框，发布时1a1a1a */
     }
 
     /* 卡牌网格容器，居中显示，设置默认竖屏尺寸 */
     .radio-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: flex;  /* 使用 Flexbox 布局 */
+      flex-wrap: wrap;  /* 允许换行 */
       justify-content: center;
       align-content: center;
-      width: 100%;
-      max-width: calc(var(--card-size) * 2);
-      /* max-height: calc(100vh - 20px); */
-      /* min-height: 100vh;  确保竖屏时占满高度 */
-      background-color: transparent;
-      border: 1px solid #353535;  /* 测试边框，发布时可移除 */
-      /* border: none; */
-      padding: 0;
-      /* padding-bottom: var(--safe-area-inset); */
-      overflow: visible;
-      z-index: 1;
-      gap: 0;
-      margin: auto;
+      width: 100%;  /* 适应屏幕宽度 */
+      max-width: calc(var(--card-size) * 2);  /* 竖屏默认2列 */
+      max-height: calc(100vh - 20px);  /* 留出一些空间
+      background-color: transparent;  /* 背景透明 */
+      border: 1px solid #1a1a1a;  /* 测试边框，发布时1a1a1a */
+      padding: 0;  /* 卡牌间距由卡牌本身的 margin 控制 */
+      overflow: visible;  /* 允许卡牌溢出显示 */
+      z-index: 1;  /* 确保卡牌在背景之上 */
+      gap: 0;  /* 卡牌间距由卡牌本身的 margin 控制 */
+      margin: auto;  /* 卡牌居中显示 */
     }
 
     /* 横屏样式：2 行 5 列，775x310px */
     @media (orientation: landscape) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 5);
-        max-height: calc(var(--card-size) * 2);
-        flex-flow: row wrap;
+        max-width: calc(var(--card-size) * 5);  /* 横屏5列 */
+        max-height: calc(var(--card-size) * 2);  /* 横屏2行 */
+        flex-flow: row wrap;  /* 横向排列，允许换行 */
       }
     }
 
     /* 竖屏样式：5 行 2 列，310x775px */
     @media (orientation: portrait) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 2);
-        max-height: calc(var(--card-size) * 5);
-        flex-flow: column wrap;
+        max-width: calc(var(--card-size) * 2);  /* 竖屏2列 */
+        max-height: calc(var(--card-size) * 5);  /* 竖屏5行 */
+        flex-flow: row wrap;   /* 横向排列，允许换行 */
       }
     }
 
@@ -88,26 +85,26 @@
       background-color: var(--bg-color);
       border-radius: 30px;
       border: none;
-      overflow: hidden;
-      cursor: pointer;
+      overflow: hidden;  /* 确保内容不溢出圆角 */
+      cursor: pointer;   /* 鼠标悬停时显示手型光标 */
       transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      box-sizing: border-box;
-      flex-shrink: 0;
+      position: relative;  /* 以便定位伪元素 */
+      display: flex;  /* 使用 Flexbox 布局 */
+      align-items: center;  /* 垂直居中 */
+      justify-content: center;  /* 水平居中 */
+      z-index: 10;  /* 确保卡牌在网格之上 */
+      box-sizing: border-box;  /* 包括边框和内边距在内 */
+      flex-shrink: 0;  /* 防止卡牌缩小 */
     }
 
     .radio-card span {
-      color: var(--text-color);
+      color: var(--text-color);  /* 文字颜色 */
       font-size: var(--text-size);
       text-align: center;
-      padding: 10px;
-      word-break: break-all;
-      line-height: 1.2;
-      z-index: 1;
+      padding: 10px;  /* 内边距 */
+      word-break: break-all;  /* 长词换行 */
+      line-height: 1.2;  /* 行高 */
+      z-index: 1;  /* 确保文字在伪元素之上 */
     }
 
     .radio-card:not(.selected) {
@@ -116,12 +113,12 @@
 
     .radio-card.selected {
       background-color: #333;
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-      z-index: 15;
+      transform: scale(1.1);  /* 选中时放大 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);   /* 选中时阴影 */ 
+      z-index: 15;  /* 确保选中卡牌在其他卡牌之上 */
     }
 
-    .radio-card::after {
+    .radio-card::after {  /* 伪元素用于显示状态图标 */
       content: '';
       position: absolute;
       top: 50%;
@@ -131,7 +128,7 @@
       z-index: 2;
     }
 
-    .radio-card[data-status="paused"]::after {
+    .radio-card[data-status="paused"]::after {  /* 暂停状态图标 */
       display: block;
       width: 40px;
       height: 40px;
@@ -144,7 +141,7 @@
       );
     }
 
-    .radio-card[data-status="connecting"]::after {
+    .radio-card[data-status="connecting"]::after {  /* 连接中状态图标 */
       display: block;
       width: 40px;
       height: 40px;
@@ -154,7 +151,7 @@
       animation: spin 1s linear infinite;
     }
 
-    .radio-card[data-status="error"]::after {
+    .radio-card[data-status="error"]::after {   /* 错误状态图标 */
       display: block;
       width: 40px;
       height: 40px;
@@ -166,7 +163,7 @@
       display: none;
     }
 
-    @keyframes spin {
+    @keyframes spin {  /* 旋转动画 */
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
