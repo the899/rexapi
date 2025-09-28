@@ -177,9 +177,10 @@
       window.addEventListener('load', () => {
         const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
         // 延迟执行以确保初始方向检测准确
-        setTimeout(() => {
-          requestAnimationFrame(setGridMaxWidthAndHeight);
-        }, 100);
+        // setTimeout(() => {
+        //   requestAnimationFrame(setGridMaxWidthAndHeight);
+        // }, 100);
+        requestAnimationFrame(setGridMaxWidthAndHeight);
         navigator.serviceWorker.register(`${subdir}/sw.js`)
           .catch(err => console.error('Service Worker 注册失败:', err));
       });
