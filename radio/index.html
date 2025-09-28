@@ -167,24 +167,6 @@
     @keyframes spin {
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
-
-    #debugOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 1pt solid #fff; /* 四条边线 */
-      border-radius: 16px; /* Apple 规范圆角 */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 2rem;
-      z-index: 1000;
-      box-sizing: border-box; /* 确保边框包含在尺寸内 */
-    }
   </style>
 </head>
 <body>
@@ -254,14 +236,6 @@
 
     // 绑定卡牌点击事件
     const bindCardEvents = (card) => {
-      // 长按显示调试信息
-      card.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        const overlay = document.getElementById('debugOverlay');
-        overlay.style.display = 'flex';
-        overlay.textContent = `${window.innerWidth} x ${window.innerHeight}`;
-        setTimeout(() => overlay.style.display = 'none', 3000);
-      });
       card.addEventListener('click', () => {
         const streamUrl = card.dataset.stream;
         if (currentCard === card) {
