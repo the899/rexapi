@@ -1,5 +1,6 @@
-const CACHE_NAME = 'radio-app-cache-v4';
+const CACHE_NAME = 'radio-iPhone13-0-v1';
 const urlsToCache = [
+  '/radio/',
   '/radio/index.html',
   '/radio/icon.png',
   '/radio/config.json'

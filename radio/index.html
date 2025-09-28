@@ -15,6 +15,8 @@
       --bg-color: #1a1a1a; /* 背景颜色：深色 */
       --text-color: #e0e0e0; /* 文字颜色：浅灰 */
       --accent-color: #007bff; /* 强调色：蓝色 */
+      --screen-width: 844px; /* 设计屏幕宽度，固定为 844px */
+      --screen-height: 390px; /* 设计屏幕高度，固定为 390px */
       --card-size: 155px; /* 卡牌尺寸，固定为 155px */
       --text-size: 1.8rem; /* 文字大小，固定为 1.8rem */
       --safe-area-inset: 0px; /* 无刘海全屏，安全边距为 0 */
@@ -25,8 +27,8 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      width: 844px;
-      height: 390px;
+      width: var(--screen-width);
+      height: var(--screen-height);
       background-color: var(--bg-color);
       overflow: hidden;
       position: fixed;
@@ -42,7 +44,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 390px;
+      min-height: var(--screen-height);
     }
 
     /* 卡牌容器，固定 2 行 5 列，居中 */
@@ -65,8 +67,8 @@
     .radio-card {
       width: var(--card-size);
       height: var(--card-size);
-      min-width: 155px;
-      min-height: 155px;
+      min-width: var(--card-size);
+      min-height: var(--card-size);
       background-color: var(--bg-color);
       border-radius: 30px; /* 卡牌圆角 */
       border: none; /* 无边框 */
@@ -274,7 +276,7 @@
           }
         }, 1000);
       }).catch(err => {
-        console.error('播放错误:', err);
+        // console.error('播放错误:', err);
         updateCardStatus(targetCard, 'error');
         retryCount++;
         if (retryCount < maxRetries) {
@@ -287,11 +289,11 @@
     fetch('/radio/config.json')
       .then(response => response.json())
       .then(channels => {
-        console.log('开始加载频道');
-        console.log('频道数据:', Object.keys(channels).slice(0, 10));
+        // console.log('开始加载频道');
+        // console.log('频道数据:', Object.keys(channels).slice(0, 10));
         radioGrid.innerHTML = '';
         Object.keys(channels).slice(0, 10).forEach(name => {
-          console.log('创建卡牌:', name);
+          // console.log('创建卡牌:', name);
           const card = createCard(name, channels[name]);
           radioGrid.appendChild(card);
           bindCardEvents(card);
@@ -299,7 +301,7 @@
         setGridMaxWidth();
       })
       .catch(err => {
-        console.error('加载频道失败:', err);
+        // console.error('加载频道失败:', err);
         radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">配置文件 config.json 加载错误。</p>`;
         setGridMaxWidth();
       });

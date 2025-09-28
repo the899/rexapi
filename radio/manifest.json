@@ -1,9 +1,9 @@
 {
   "name": "听音悦台",
-  "short_name": "音悦台",
+  "short_name": "听音悦台",
   "description": "在线电台播放器",
-  "start_url": "/radio/index.html",
-  "display": "fullscreen",
+  "start_url": "/radio/",
+  "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
   "orientation": "landscape",
@@ -11,11 +11,6 @@
     {
       "src": "/radio/icon.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/radio/icon.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
