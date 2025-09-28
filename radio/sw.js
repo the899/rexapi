@@ -1,9 +1,10 @@
-const CACHE_NAME = 'radio-iPhone13-0-v1';
+const CACHE_NAME = 'radio-iPhone13-0-v2';
+const subdir = self.location.pathname.split('/').slice(0, -1).join('/') || '/';
 const urlsToCache = [
-  '/radio/',
-  '/radio/index.html',
-  '/radio/icon.png',
-  '/radio/config.json'
+  '${subdir}/',
+  '${subdir}/index.html',
+  '${subdir}/icon.png',
+  '${subdir}/config.json'
 ];
 
 // 安装 Service Worker，缓存必要文件

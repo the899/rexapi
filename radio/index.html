@@ -6,9 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>听音悦台</title>
-  <link rel="apple-touch-icon" href="/radio/icon.png">
-  <link rel="icon" href="/radio/icon.png">
-  <link rel="manifest" href="/radio/manifest.json">
+  <link rel="apple-touch-icon" href="./icon.png">
+  <link rel="icon" href="./icon.png">
+  <link rel="manifest" href="./manifest.json">
   <style>
     /* 定义全局 CSS 变量 */
     :root {
@@ -166,10 +166,11 @@
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
   <script>
+    const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
     // 注册 Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/radio/sw.js')
+        navigator.serviceWorker.register(`${subdir}/sw.js`)
           .catch(err => console.error('Service Worker 注册失败:', err));
       });
     }
@@ -286,7 +287,7 @@
     };
 
     // 动态加载频道
-    fetch('/radio/config.json')
+    fetch(`${subdir}/config.json`)
       .then(response => response.json())
       .then(channels => {
         // console.log('开始加载频道');
