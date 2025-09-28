@@ -199,7 +199,7 @@
       radioGrid.style.display = 'none'; // 隐藏以强制重排
       radioGrid.style.maxWidth = isLandscape ? '775px' : '310px';
       radioGrid.style.maxHeight = isLandscape ? '310px' : 'calc(100vh - 20px)';
-      radioGrid.style.flexFlow = isLandscape ? 'row wrap' : 'column wrap';
+      // radioGrid.style.flexFlow = isLandscape ? 'row wrap' : 'column wrap';
       // 重新排列卡牌
       const cards = Array.from(radioGrid.children);
       radioGrid.innerHTML = '';
