@@ -31,7 +31,15 @@
       font-family: system-ui, -apple-system, sans-serif;
       color: var(--text-color);
       touch-action: none;
-    }
+      min-height: calc(100% + env(safe-area-inset-top)); /* 延伸到顶部刘海下 */
+      padding: 
+        env(safe-area-inset-top)    /* 顶部：刘海高度，内容避开或延伸 */
+        env(safe-area-inset-right)  /* 右侧：竖屏通常 0 */
+        env(safe-area-inset-bottom) /* 底部：home indicator 高度，设为 0 以忽略 */
+        env(safe-area-inset-left);  /* 左侧：竖屏通常 0 */
+      padding-bottom: 0; /* 如果想完全忽略底部保护区，覆盖以上设置 */
+      min-height: -webkit-fill-available;
+        }
 
     /* 主体居中，确保卡牌区域垂直和水平居中 */
     body {
