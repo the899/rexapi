@@ -26,7 +26,7 @@
       padding: 0;
       box-sizing: border-box;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       background-color: var(--bg-color);
       overflow: hidden;
       position: fixed;
@@ -42,7 +42,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100%;
+      min-height: 100vh;
     }
 
     /* 卡牌容器，固定 2 行 5 列，居中 */
@@ -52,12 +52,16 @@
       justify-content: center;
       align-content: center;
       width: 100%;
+      width: 100%;
+      max-width: calc(var(--card-size) * 2); /* 默认竖屏 310px */
+      height: calc(var(--card-size) * 5); /* 默认竖屏 775px */
       background-color: transparent; /* 无背景，避免边框效果 */
       border: none; /* 明确移除边框 */
       padding: 0;
       overflow: visible; /* 防止裁剪卡牌圆角 */
       z-index: 1;
       box-sizing: border-box;
+      margin: auto; /* 强制居中 */
     }
     @media (orientation: landscape) {
       .radio-grid {
@@ -77,8 +81,8 @@
     .radio-card {
       width: var(--card-size);
       height: var(--card-size);
-      min-width: var(--card-size);
-      min-height: var(--card-size);
+      /* min-width: var(--card-size);
+      min-height: var(--card-size); */
       background-color: var(--bg-color);
       border-radius: 30px; /* 卡牌圆角 */
       border: none; /* 无边框 */
@@ -179,12 +183,13 @@
   <script>
     const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
     // 注册 Service Worker
-    // if ('serviceWorker' in navigator) {
-    //   window.addEventListener('load', () => {
-    //     navigator.serviceWorker.register(`${subdir}/sw.js`)
-    //       .catch(err => console.error('Service Worker 注册失败:', err));
-    //   });
-    // }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        setTimeout(setGridMaxWidthAndHeight, 0);
+        navigator.serviceWorker.register(`${subdir}/sw.js`)
+          .catch(err => console.error('Service Worker 注册失败:', err));
+      });
+    }
 
     // 获取 DOM 元素
     const radioGrid = document.querySelector('.radio-grid');
@@ -199,6 +204,7 @@
     // 设置网格最大宽度（固定 5 列）
     const setGridMaxWidthAndHeight = () => {
       const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+      radioGrid.style.display = 'none'; // 隐藏以强制重排
       radioGrid.style.maxWidth = isLandscape ? '775px' : '310px';
       radioGrid.style.height = isLandscape ? '310px' : '775px';
       radioGrid.style.flexDirection = isLandscape ? 'row' : 'column';
@@ -206,16 +212,13 @@
       const cards = Array.from(radioGrid.children);
       radioGrid.innerHTML = '';
       cards.forEach(card => radioGrid.appendChild(card));
+      radioGrid.style.display = 'flex'; // 恢复显示
     };
-    window.addEventListener('load', () => {
-      setGridMaxWidthAndHeight();
-      // Service Worker 注册
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`${subdir}/sw.js`)
-          .catch(err => console.error('Service Worker 注册失败:', err));
-      }
-    });
+    // 监听 resize 和 orientationchange 事件
     window.addEventListener('resize', () => {
+      requestAnimationFrame(setGridMaxWidthAndHeight);
+    });
+    window.addEventListener('orientationchange', () => {
       requestAnimationFrame(setGridMaxWidthAndHeight);
     });
 
