@@ -179,12 +179,12 @@
   <script>
     const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
     // 注册 Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register(`${subdir}/sw.js`)
-          .catch(err => console.error('Service Worker 注册失败:', err));
-      });
-    }
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('load', () => {
+    //     navigator.serviceWorker.register(`${subdir}/sw.js`)
+    //       .catch(err => console.error('Service Worker 注册失败:', err));
+    //   });
+    // }
 
     // 获取 DOM 元素
     const radioGrid = document.querySelector('.radio-grid');
@@ -207,14 +207,14 @@
       radioGrid.innerHTML = '';
       cards.forEach(card => radioGrid.appendChild(card));
     };
-    // window.addEventListener('load', () => {
-    //   setGridMaxWidthAndHeight();
-    //   // Service Worker 注册
-    //   if ('serviceWorker' in navigator) {
-    //     navigator.serviceWorker.register(`${subdir}/sw.js`)
-    //       .catch(err => console.error('Service Worker 注册失败:', err));
-    //   }
-    // });
+    window.addEventListener('load', () => {
+      setGridMaxWidthAndHeight();
+      // Service Worker 注册
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(`${subdir}/sw.js`)
+          .catch(err => console.error('Service Worker 注册失败:', err));
+      }
+    });
     window.addEventListener('resize', () => {
       requestAnimationFrame(setGridMaxWidthAndHeight);
     });
