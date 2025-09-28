@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, height=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>听音悦台</title>
@@ -10,17 +8,16 @@
   <link rel="icon" href="./icon.png">
   <link rel="manifest" href="./manifest.json">
   <style>
-    /* 定义全局 CSS 变量 */
     :root {
-      --bg-color: #1a1a1a; /* 背景颜色：深色 */
-      --text-color: #e0e0e0; /* 文字颜色：浅灰 */
-      --accent-color: #007bff; /* 强调色：蓝色 */
-      --card-size: 155px; /* 卡牌尺寸，固定为 155px */
-      --text-size: 1.8rem; /* 文字大小，固定为 1.8rem */
-      --safe-area-inset: 0px; /* 无刘海全屏，安全边距为 0 */
+      --bg-color: #1a1a1a;
+      --text-color: #e0e0e0;
+      --accent-color: #007bff;
+      --card-size: 155px;
+      --text-size: 1.8rem;
+      --safe-area-inset: 0px;
     }
 
-    /* 设置页面基础样式，固定尺寸，禁用滚动 */
+    /* 根元素样式，确保全屏显示，忽略刘海和 Home Indicator */
     html, body {
       margin: 0;
       padding: 0;
@@ -28,16 +25,15 @@
       width: 100%;
       height: 100vh;
       background-color: var(--bg-color);
-      overflow: hidden;
       position: fixed;
       top: 0;
       left: 0;
       font-family: system-ui, -apple-system, sans-serif;
       color: var(--text-color);
-      touch-action: none; /* 禁止触控滚动 */
+      touch-action: none;
     }
 
-    /* 设置 body 样式，水平垂直居中 */
+    /* 主体居中，确保卡牌区域垂直和水平居中 */
     body {
       display: flex;
       justify-content: center;
@@ -45,47 +41,50 @@
       min-height: 100vh;
     }
 
-    /* 卡牌容器，固定 2 行 5 列，居中 */
+    /* 卡牌网格容器，居中显示，设置默认竖屏尺寸 */
     .radio-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-content: center;
       width: 100%;
-      width: 100%;
-      max-width: calc(var(--card-size) * 2); /* 默认竖屏 310px */
-      height: calc(var(--card-size) * 5); /* 默认竖屏 775px */
-      background-color: transparent; /* 无背景，避免边框效果 */
-      border: none; /* 明确移除边框 */
+      max-width: calc(var(--card-size) * 2);
+      max-height: calc(100vh - 20px);
+      background-color: transparent;
+      border: none;
       padding: 0;
-      overflow: visible; /* 防止裁剪卡牌圆角 */
+      overflow: visible;
       z-index: 1;
       box-sizing: border-box;
-      margin: auto; /* 强制居中 */
+      margin: auto;
+      gap: 0;
     }
+
+    /* 横屏样式：2 行 5 列，775x310px */
     @media (orientation: landscape) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 5); /* 5 * 155px = 775px */
-        height: calc(var(--card-size) * 2); /* 2 * 155px = 310px */
-        flex-direction: row;
+        max-width: calc(var(--card-size) * 5);
+        max-height: calc(var(--card-size) * 2);
+        flex-flow: row wrap;
       }
     }
+
+    /* 竖屏样式：5 行 2 列，310x775px */
     @media (orientation: portrait) {
       .radio-grid {
-        max-width: calc(var(--card-size) * 2); /* 2 * 155px = 310px */
-        height: calc(var(--card-size) * 5); /* 5 * 155px = 775px */
-        flex-direction: column;
+        max-width: calc(var(--card-size) * 2);
+        max-height: calc(var(--card-size) * 5);
+        flex-flow: column wrap;
       }
     }
-    /* 卡牌样式，固定尺寸 */
+
+    /* 卡牌样式，固定 155x155px，圆角 30px */
     .radio-card {
       width: var(--card-size);
       height: var(--card-size);
-      /* min-width: var(--card-size);
-      min-height: var(--card-size); */
       background-color: var(--bg-color);
-      border-radius: 30px; /* 卡牌圆角 */
-      border: none; /* 无边框 */
+      border-radius: 30px;
+      border: none;
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
@@ -95,9 +94,9 @@
       justify-content: center;
       z-index: 10;
       box-sizing: border-box;
+      flex-shrink: 0;
     }
 
-    /* 卡牌文字样式 */
     .radio-card span {
       color: var(--text-color);
       font-size: var(--text-size);
@@ -108,12 +107,10 @@
       z-index: 1;
     }
 
-    /* 未选中卡牌样式 */
     .radio-card:not(.selected) {
       background-color: var(--bg-color);
     }
 
-    /* 选中卡牌样式，带阴影 */
     .radio-card.selected {
       background-color: #333;
       transform: scale(1.1);
@@ -121,7 +118,6 @@
       z-index: 15;
     }
 
-    /* 卡牌状态图标基础样式 */
     .radio-card::after {
       content: '';
       position: absolute;
@@ -132,7 +128,6 @@
       z-index: 2;
     }
 
-    /* 暂停状态：显示双竖条 */
     .radio-card[data-status="paused"]::after {
       display: block;
       width: 40px;
@@ -146,7 +141,6 @@
       );
     }
 
-    /* 连接中状态：显示旋转加载器 */
     .radio-card[data-status="connecting"]::after {
       display: block;
       width: 40px;
@@ -157,7 +151,6 @@
       animation: spin 1s linear infinite;
     }
 
-    /* 错误状态：显示红色感叹号图标 */
     .radio-card[data-status="error"]::after {
       display: block;
       width: 40px;
@@ -166,12 +159,10 @@
       background-size: contain;
     }
 
-    /* 隐藏音频播放器 */
     audio {
       display: none;
     }
 
-    /* 旋转动画 */
     @keyframes spin {
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
@@ -181,11 +172,14 @@
   <div class="radio-grid"></div>
   <audio id="radio-player"></audio>
   <script>
-    const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
-    // 注册 Service Worker
+    // 注册 Service Worker，支持离线缓存
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        setTimeout(setGridMaxWidthAndHeight, 0);
+        const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+        // 延迟执行以确保初始方向检测准确
+        setTimeout(() => {
+          requestAnimationFrame(setGridMaxWidthAndHeight);
+        }, 100);
         navigator.serviceWorker.register(`${subdir}/sw.js`)
           .catch(err => console.error('Service Worker 注册失败:', err));
       });
@@ -194,27 +188,31 @@
     // 获取 DOM 元素
     const radioGrid = document.querySelector('.radio-grid');
     const player = document.getElementById('radio-player');
-    let currentCard = null;
-    let retryTimeout = null;
-    let retryCount = 0;
-    const maxRetries = 5;
-    let isUserPaused = false;
-    let playCheckInterval = null;
+    let currentCard = null; // 当前选中的卡牌
+    let retryTimeout = null; // 重试定时器
+    let retryCount = 0; // 重试次数
+    const maxRetries = 5; // 最大重试次数
+    let isUserPaused = false; // 用户是否手动暂停
+    let playCheckInterval = null; // 播放状态检查定时器
 
-    // 设置网格最大宽度（固定 5 列）
+    // 设置卡牌网格尺寸和排列方向
     const setGridMaxWidthAndHeight = () => {
       const isLandscape = window.matchMedia('(orientation: landscape)').matches;
       radioGrid.style.display = 'none'; // 隐藏以强制重排
       radioGrid.style.maxWidth = isLandscape ? '775px' : '310px';
-      radioGrid.style.height = isLandscape ? '310px' : '775px';
-      radioGrid.style.flexDirection = isLandscape ? 'row' : 'column';
-      // 强制重新排列卡牌
+      radioGrid.style.maxHeight = isLandscape ? '310px' : 'calc(100vh - 20px)';
+      radioGrid.style.flexFlow = isLandscape ? 'row wrap' : 'column wrap';
+      // 重新排列卡牌
       const cards = Array.from(radioGrid.children);
       radioGrid.innerHTML = '';
       cards.forEach(card => radioGrid.appendChild(card));
-      radioGrid.style.display = 'flex'; // 恢复显示
+      // 延迟恢复显示，确保渲染完成
+      requestAnimationFrame(() => {
+        radioGrid.style.display = 'flex';
+      });
     };
-    // 监听 resize 和 orientationchange 事件
+
+    // 监听窗口大小变化和方向变化
     window.addEventListener('resize', () => {
       requestAnimationFrame(setGridMaxWidthAndHeight);
     });
@@ -231,7 +229,7 @@
       return card;
     };
 
-    // 更新卡牌状态
+    // 更新卡牌状态（播放、暂停、连接中、错误）
     const updateCardStatus = (card, status) => {
       card.dataset.status = status;
     };
@@ -267,30 +265,26 @@
       });
     };
 
-    // 播放电台流
+    // 重试播放音频
     const retryPlay = (targetCard, streamUrl) => {
       const retryInterval = ('standalone' in navigator && navigator.standalone) ? 5000 : 3000;
       if (retryTimeout) clearTimeout(retryTimeout);
       if (playCheckInterval) clearInterval(playCheckInterval);
-
       if (player.src === streamUrl && !player.paused && player.currentTime > 0 && player.readyState >= 2) {
         updateCardStatus(targetCard, 'playing');
         isUserPaused = false;
         retryCount = 0;
         return;
       }
-
       if (retryCount >= maxRetries) {
         updateCardStatus(targetCard, 'error');
         return;
       }
-
       updateCardStatus(targetCard, 'connecting');
       if (player.src !== streamUrl) {
         player.src = streamUrl;
         player.load();
       }
-
       player.play().then(() => {
         playCheckInterval = setInterval(() => {
           if (!player.paused && player.currentTime > 0 && player.readyState >= 2) {
@@ -309,6 +303,7 @@
           }
         }, 1000);
       }).catch(err => {
+        console.error('播放错误:', err);
         updateCardStatus(targetCard, 'error');
         retryCount++;
         if (retryCount < maxRetries) {
@@ -317,12 +312,16 @@
       });
     };
 
-    // 动态加载频道
+    // 异步加载 config.json 并渲染卡牌
+    const subdir = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
     fetch(`${subdir}/config.json`)
       .then(response => response.json())
       .then(channels => {
+        console.log('开始加载频道');
+        console.log('频道数据:', Object.keys(channels).slice(0, 10));
         radioGrid.innerHTML = '';
         Object.keys(channels).slice(0, 10).forEach(name => {
+          console.log('创建卡牌:', name);
           const card = createCard(name, channels[name]);
           radioGrid.appendChild(card);
           bindCardEvents(card);
@@ -330,11 +329,12 @@
         setGridMaxWidthAndHeight();
       })
       .catch(err => {
+        console.error('加载频道失败:', err);
         radioGrid.innerHTML = `<p style="text-align: center; padding: 20px;">配置文件 config.json 加载错误。</p>`;
         setGridMaxWidthAndHeight();
       });
 
-    // 设置 Media Session
+    // 配置 Media Session
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: '听音悦台',
@@ -358,7 +358,7 @@
       });
     }
 
-    // 音频播放器事件监听
+    // 监听音频播放器事件
     player.addEventListener('waiting', () => {
       if (currentCard && player.src) updateCardStatus(currentCard, 'connecting');
     });
@@ -390,4 +390,3 @@
     });
   </script>
 </body>
-</html>
