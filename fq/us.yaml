@@ -181,7 +181,9 @@ proxy-groups:
   - VLESS-美国3-三网优化-x2
 - name: Steam
   type: select
-  proxies: []
+  proxies:
+  - DIRECT
+  - Proxy
 rules:
 - DOMAIN-SUFFIX,360.cn,DIRECT
 - DOMAIN-SUFFIX,360.com,DIRECT

@@ -116,7 +116,9 @@ proxy-groups:
   - VLESS-台湾2-三网优化-低倍率-x1
 - name: Steam
   type: select
-  proxies: []
+  proxies:
+  - DIRECT
+  - Proxy
 rules:
 - DOMAIN-SUFFIX,360.cn,DIRECT
 - DOMAIN-SUFFIX,360.com,DIRECT
