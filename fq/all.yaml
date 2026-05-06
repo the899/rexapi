@@ -1,0 +1,1636 @@
+#---------------------------------------------------#
+## 更新：2026-04-09 01:29:58
+## 感谢：https://github.com/Hackl0us/SS-Rule-Snippet
+#---------------------------------------------------#
+
+# 允许局域网的连接
+allow-lan: true
+
+# 规则模式：Rule（规则） / Global（全局代理）/ Direct（全局直连）
+mode: Rule
+
+# 设置日志输出级别 (默认级别：silent，即不输出任何内容，以避免因日志内容过大而导致程序内存溢出）。
+# 5 个级别：silent / info / warning / error / debug。级别越高日志输出量越大，越倾向于调试，若需要请自行开启。
+log-level: silent
+
+# Clash 的 RESTful API
+external-controller: '0.0.0.0:9090'
+
+
+# 您可以将静态网页资源（如 clash-dashboard）放置在一个目录中，clash 将会服务于 `RESTful API/ui`
+# 参数应填写配置目录的相对路径或绝对路径。
+# external-ui: folder
+
+dns:
+  enable: true
+  ipv6: true
+  default-nameserver:
+    - 223.5.5.5
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - '*.lan'
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  fallback:
+    - tls://8.8.4.4
+    - tls://1.1.1.1
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+
+proxies:
+  - {"name":"如遇不可用请访问3.airtcp.us","type":"vmess","server":"122.195.189.84","port":10008,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","alterId":2,"cipher":"auto","udp":true}
+  - {"name":"永久官网：airtcp.com（版本大更新，请访问官网）","type":"vmess","server":"122.195.189.84","port":10008,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","alterId":2,"cipher":"auto","udp":true}
+  - {"name":"若刷新订阅不成功请从官网重新导入或咨询客服","type":"vmess","server":"122.195.189.84","port":10008,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","alterId":2,"cipher":"auto","udp":true}
+  - {"name":"BGP智能路由-香港01-大带宽-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35024,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港02-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35026,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港03-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35027,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港04-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35028,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港05-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35029,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港06-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35030,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港07-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35031,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港08-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35051,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港09-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35052,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-香港10-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35053,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本01-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35001,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本02-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35002,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本03-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35003,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本04-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35004,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本05-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35005,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本06-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35013,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本07-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35014,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本08-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35033,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本09-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35054,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-日本10-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35055,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国01-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35006,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国02-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35007,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国03-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35008,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国04-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35009,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国05-流媒体AI-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35010,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国06-家宽-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35017,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国07-家宽-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35022,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国08-家宽-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35023,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国09-家宽-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35049,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-美国10-家宽-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35050,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-加拿大01-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35046,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-印度01-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35020,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-台湾01-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35011,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-台湾02-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35012,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-台湾03-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35015,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-台湾04-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35016,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-台湾05-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35048,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-德国01-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35034,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-德国02-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35040,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-德国03-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35041,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡01-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35025,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡02-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35019,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡03-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35037,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡04-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35038,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡05-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35039,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡06-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35056,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡07-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35057,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡08-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35058,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡09-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35059,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-新加坡10-流媒体AI-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35060,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-法国01-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35032,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-荷兰01-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35042,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-荷兰02-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35043,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-韩国01-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35021,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-韩国02-ss-x2","type":"ss","server":"zhihu-yun.newblossom.cn","port":35047,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-马来西亚01-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35044,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"BGP智能路由-马来西亚02-ss-x2","type":"ss","server":"taobao-yun.newblossom.cn","port":35045,"password":"leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==","cipher":"2022-blake3-aes-128-gcm","udp":true,"udp-over-tcp":true,"udp-over-tcp-version":2}
+  - {"name":"VLESS-香港1-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":33200,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-香港2-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":33201,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-香港3-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":33202,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-日本1-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34250,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-日本2-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34251,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-日本3-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34252,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-美国1-三网优化-x2","type":"vless","server":"meituan-yun.newblossom.cn","port":34400,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-美国2-三网优化-x2","type":"vless","server":"meituan-yun.newblossom.cn","port":34401,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-美国3-三网优化-x2","type":"vless","server":"meituan-yun.newblossom.cn","port":34402,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-台湾1-三网优化-低倍率-x1","type":"vless","server":"hiten1.newblossom.cn","port":8443,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-台湾2-三网优化-低倍率-x1","type":"vless","server":"hiten2.newblossom.cn","port":8443,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-德国1-三网优化-x2","type":"vless","server":"meituan-yun.newblossom.cn","port":34450,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-德国2-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34451,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-德国3-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34452,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-新加坡1-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34300,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-新加坡2-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34301,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+  - {"name":"VLESS-新加坡3-三网优化-x1","type":"vless","server":"meituan-yun.newblossom.cn","port":34302,"uuid":"94b23b50-8180-37de-8bf1-7825a3e68ba1","udp":true,"tls":true,"reality-opts":{"public-key":"224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY","short-id":"8352e4aa"},"skip-cert-verify":true,"servername":"www.microsoft.com","network":"tcp","client-fingerprint":"firefox"}
+
+proxy-groups:
+-
+  name: Proxy
+  type: select
+  proxies:
+    - 如遇不可用请访问3.airtcp.us
+    - 永久官网：airtcp.com（版本大更新，请访问官网）
+    - 若刷新订阅不成功请从官网重新导入或咨询客服
+    - BGP智能路由-香港01-大带宽-ss-x2
+    - BGP智能路由-香港02-ss-x2
+    - BGP智能路由-香港03-ss-x2
+    - BGP智能路由-香港04-ss-x2
+    - BGP智能路由-香港05-ss-x2
+    - BGP智能路由-香港06-ss-x2
+    - BGP智能路由-香港07-ss-x2
+    - BGP智能路由-香港08-ss-x2
+    - BGP智能路由-香港09-ss-x2
+    - BGP智能路由-香港10-ss-x2
+    - BGP智能路由-日本01-流媒体AI-ss-x2
+    - BGP智能路由-日本02-流媒体AI-ss-x2
+    - BGP智能路由-日本03-流媒体AI-ss-x2
+    - BGP智能路由-日本04-流媒体AI-ss-x2
+    - BGP智能路由-日本05-流媒体AI-ss-x2
+    - BGP智能路由-日本06-流媒体AI-ss-x2
+    - BGP智能路由-日本07-流媒体AI-ss-x2
+    - BGP智能路由-日本08-流媒体AI-ss-x2
+    - BGP智能路由-日本09-流媒体AI-ss-x2
+    - BGP智能路由-日本10-流媒体AI-ss-x2
+    - BGP智能路由-美国01-流媒体AI-ss-x2
+    - BGP智能路由-美国02-流媒体AI-ss-x2
+    - BGP智能路由-美国03-流媒体AI-ss-x2
+    - BGP智能路由-美国04-流媒体AI-ss-x2
+    - BGP智能路由-美国05-流媒体AI-ss-x2
+    - BGP智能路由-美国06-家宽-ss-x2
+    - BGP智能路由-美国07-家宽-ss-x2
+    - BGP智能路由-美国08-家宽-ss-x2
+    - BGP智能路由-美国09-家宽-ss-x2
+    - BGP智能路由-美国10-家宽-ss-x2
+    - BGP智能路由-加拿大01-ss-x2
+    - BGP智能路由-印度01-ss-x2
+    - BGP智能路由-台湾01-ss-x2
+    - BGP智能路由-台湾02-ss-x2
+    - BGP智能路由-台湾03-ss-x2
+    - BGP智能路由-台湾04-ss-x2
+    - BGP智能路由-台湾05-ss-x2
+    - BGP智能路由-德国01-ss-x2
+    - BGP智能路由-德国02-ss-x2
+    - BGP智能路由-德国03-ss-x2
+    - BGP智能路由-新加坡01-流媒体AI-ss-x2
+    - BGP智能路由-新加坡02-流媒体AI-ss-x2
+    - BGP智能路由-新加坡03-流媒体AI-ss-x2
+    - BGP智能路由-新加坡04-流媒体AI-ss-x2
+    - BGP智能路由-新加坡05-流媒体AI-ss-x2
+    - BGP智能路由-新加坡06-流媒体AI-ss-x2
+    - BGP智能路由-新加坡07-流媒体AI-ss-x2
+    - BGP智能路由-新加坡08-流媒体AI-ss-x2
+    - BGP智能路由-新加坡09-流媒体AI-ss-x2
+    - BGP智能路由-新加坡10-流媒体AI-ss-x2
+    - BGP智能路由-法国01-ss-x2
+    - BGP智能路由-荷兰01-ss-x2
+    - BGP智能路由-荷兰02-ss-x2
+    - BGP智能路由-韩国01-ss-x2
+    - BGP智能路由-韩国02-ss-x2
+    - BGP智能路由-马来西亚01-ss-x2
+    - BGP智能路由-马来西亚02-ss-x2
+    - VLESS-香港1-三网优化-x1
+    - VLESS-香港2-三网优化-x1
+    - VLESS-香港3-三网优化-x1
+    - VLESS-日本1-三网优化-x1
+    - VLESS-日本2-三网优化-x1
+    - VLESS-日本3-三网优化-x1
+    - VLESS-美国1-三网优化-x2
+    - VLESS-美国2-三网优化-x2
+    - VLESS-美国3-三网优化-x2
+    - VLESS-台湾1-三网优化-低倍率-x1
+    - VLESS-台湾2-三网优化-低倍率-x1
+    - VLESS-德国1-三网优化-x2
+    - VLESS-德国2-三网优化-x1
+    - VLESS-德国3-三网优化-x1
+    - VLESS-新加坡1-三网优化-x1
+    - VLESS-新加坡2-三网优化-x1
+    - VLESS-新加坡3-三网优化-x1
+-
+  name: Steam
+  type: select
+  proxies:
+    - DIRECT
+    - Proxy
+
+
+# 规则
+rules:
+  # 360
+  - DOMAIN-SUFFIX,360.cn,DIRECT
+  - DOMAIN-SUFFIX,360.com,DIRECT
+  - DOMAIN-SUFFIX,360.net,DIRECT
+  - DOMAIN-SUFFIX,360safe.com,DIRECT
+  - DOMAIN-SUFFIX,so.com,DIRECT
+  - DOMAIN-SUFFIX,fangcloud.com,DIRECT
+
+  # ACM (Association for Computing Machinery)
+  - DOMAIN-SUFFIX,acm.org,Proxy
+
+  # AdBlock
+  - DOMAIN-SUFFIX,adblockplus.org,Proxy
+  - DOMAIN-SUFFIX,getadblock.com,Proxy
+
+  # AdGuard
+  - DOMAIN-SUFFIX,adguard.info,Proxy
+  - DOMAIN-SUFFIX,adguard.org,Proxy
+  - DOMAIN-SUFFIX,adtidy.org,Proxy
+  - DOMAIN-SUFFIX,agrd.eu,Proxy
+
+  # Adobe
+  - DOMAIN-SUFFIX,adobe.com,Proxy
+  - DOMAIN-SUFFIX,adobedtm.com,Proxy
+  - DOMAIN-SUFFIX,omtrdc.net,Proxy
+  - DOMAIN-SUFFIX,typekit.net,Proxy
+
+  # Agence France-Presse
+  - DOMAIN-SUFFIX,afp.com,Proxy
+
+  # Agricultural Bank of China
+  - DOMAIN-SUFFIX,95599.cn,DIRECT
+  - DOMAIN-SUFFIX,abchina.com,DIRECT
+
+  # Akamai
+  - DOMAIN-SUFFIX,akadns.net,Proxy
+  - DOMAIN-SUFFIX,akamai.com,Proxy
+  - DOMAIN-SUFFIX,akamai.net,Proxy
+  - DOMAIN-SUFFIX,akamaihd.net,Proxy
+  - DOMAIN-SUFFIX,akamaized.net,Proxy
+  - DOMAIN-SUFFIX,edgekey.net,Proxy
+  - DOMAIN-SUFFIX,edgesuite.net,Proxy
+
+  # Alibaba
+  - DOMAIN-SUFFIX,9game.cn,DIRECT
+  - DOMAIN-SUFFIX,aliapp.org,DIRECT
+  - DOMAIN-SUFFIX,alibaba.com,DIRECT
+  - DOMAIN-SUFFIX,alibabacloud.com,Proxy
+  - DOMAIN-SUFFIX,alicdn.com,DIRECT
+  - DOMAIN-SUFFIX,aliexpress.com,DIRECT
+  - DOMAIN-SUFFIX,aligames.com,DIRECT
+  - DOMAIN-SUFFIX,alipay.com,DIRECT
+  - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
+  - DOMAIN-SUFFIX,alitrip.com,DIRECT
+  - DOMAIN-SUFFIX,aliyun.com,DIRECT
+  - DOMAIN-SUFFIX,amap.com,DIRECT
+  - DOMAIN-SUFFIX,dingtalk.com,DIRECT
+  - DOMAIN-SUFFIX,ele.me,DIRECT
+  - DOMAIN-SUFFIX,elemecdn.com,DIRECT
+  - DOMAIN-SUFFIX,fliggy.com,DIRECT
+  - DOMAIN-SUFFIX,freshippo.com,DIRECT
+  - DOMAIN-SUFFIX,goofish.com,DIRECT
+  - DOMAIN-SUFFIX,m.sm.cn,DIRECT
+  - DOMAIN-SUFFIX,mmstat.com,DIRECT
+  - DOMAIN-SUFFIX,quark.cn,DIRECT
+  - DOMAIN-SUFFIX,taobao.com,DIRECT
+  - DOMAIN-SUFFIX,tmall.com,DIRECT
+  - DOMAIN-SUFFIX,xgo-img.com.cn,DIRECT
+  - DOMAIN-SUFFIX,ykimg.com,DIRECT
+  - DOMAIN-SUFFIX,youku.com,DIRECT
+  - DOMAIN-SUFFIX,uc.cn,DIRECT
+  - DOMAIN-SUFFIX,ucweb.com,Proxy
+
+  # Amazon
+  - DOMAIN-SUFFIX,amazon.com,Proxy
+  - DOMAIN-SUFFIX,amazonaws.com,Proxy
+  - DOMAIN-SUFFIX,awsglobalaccelerator.com,Proxy
+  - DOMAIN-SUFFIX,audible.com,Proxy
+  - DOMAIN-SUFFIX,bit.ly,Proxy
+  - DOMAIN-SUFFIX,cloudfront.net,Proxy
+  - DOMAIN-SUFFIX,imdb.com,Proxy
+  - DOMAIN-SUFFIX,media-amazon.com,Proxy
+  - DOMAIN-SUFFIX,primevideo.com,Proxy
+  - DOMAIN-SUFFIX,ring.com,Proxy
+  - DOMAIN-SUFFIX,ssl-images-amazon.com,Proxy
+  - DOMAIN-SUFFIX,wholefoodsmarket.com,Proxy
+  - DOMAIN-SUFFIX,zappos.com,Proxy
+
+  # AMD
+  - DOMAIN-SUFFIX,amd.com,DIRECT
+
+  # ApkMirror
+  - DOMAIN-SUFFIX,apkmirror.com,Proxy
+
+  # Apkpure
+  - DOMAIN-SUFFIX,apkpure.net,Proxy
+  - DOMAIN-SUFFIX,apkpure.com,Proxy
+  - DOMAIN-SUFFIX,winudf.com,Proxy
+
+  # Apple
+  - DOMAIN-SUFFIX,apple.com.cn,DIRECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,apple-mapkit.com,DIRECT
+  - DOMAIN-SUFFIX,cdn-apple.com,DIRECT
+  - DOMAIN-SUFFIX,mzstatic.com,DIRECT
+
+  # arXiv
+  - DOMAIN-SUFFIX,arxiv.org,Proxy
+
+  # Associated Press News
+  - DOMAIN-SUFFIX,apnews.com,Proxy
+
+  # Atlassian
+  - DOMAIN-SUFFIX,atlassian.com,Proxy
+  - DOMAIN-SUFFIX,atlassian.net,Proxy
+  - DOMAIN-SUFFIX,atl-paas.net,Proxy
+  - DOMAIN-SUFFIX,bitbucket.org,Proxy
+  - DOMAIN-SUFFIX,jira.com,Proxy
+  - DOMAIN-SUFFIX,trello.com,Proxy
+  - DOMAIN-SUFFIX,confluence.com,Proxy
+
+  # Autodesk
+  - DOMAIN-SUFFIX,autodesk.com,Proxy
+  - DOMAIN-SUFFIX,autodesk.net,Proxy
+
+  # Bahamut
+  - DOMAIN-SUFFIX,bahamut.com.tw,Proxy
+  - DOMAIN-SUFFIX,gamer.com.tw,Proxy
+
+  # Baidu
+  - DOMAIN-SUFFIX,baidu.com,DIRECT
+  - DOMAIN-SUFFIX,bcebos.com,DIRECT
+  - DOMAIN-SUFFIX,bdimg.com,DIRECT
+  - DOMAIN-SUFFIX,bdstatic.com,DIRECT
+
+  # Bank of China
+  - DOMAIN-SUFFIX,bankofchina.com,DIRECT
+  - DOMAIN-SUFFIX,boc.cn,DIRECT
+
+  # BBC
+  - DOMAIN-SUFFIX,bbc.co.uk,Proxy
+  - DOMAIN-SUFFIX,bbc.com,Proxy
+  - DOMAIN-SUFFIX,bbci.co.uk,Proxy
+
+  # Bilibili
+  - DOMAIN-SUFFIX,bilibili.com,DIRECT
+  - DOMAIN-SUFFIX,bilibili.tv,Proxy
+  - DOMAIN-SUFFIX,bilivideo.cn,DIRECT
+  - DOMAIN-SUFFIX,hdslb.com,DIRECT
+
+  # Blizzard Entertainment
+  - DOMAIN-SUFFIX,battle.net,Proxy
+  - DOMAIN-SUFFIX,blizzard.com,Proxy
+
+  # Booking
+  - DOMAIN-SUFFIX,booking.com,Proxy
+  - DOMAIN-SUFFIX,bstatic.com,Proxy
+
+  # Boss Zhipin
+  - DOMAIN-SUFFIX,zhipin.com,DIRECT
+
+  # Bloomberg
+  - DOMAIN-SUFFIX,bbhub.io,Proxy
+  - DOMAIN-SUFFIX,bloomberg.co.jp,Proxy
+  - DOMAIN-SUFFIX,bloomberg.com,Proxy
+  - DOMAIN-SUFFIX,bloombergchina.com,DIRECT
+  - DOMAIN-SUFFIX,bwbx.io,Proxy
+
+  # Bytedance
+  - DOMAIN-SUFFIX,bdxiguaimg.com,DIRECT
+  - DOMAIN-SUFFIX,bdxiguastatic.com,DIRECT
+  - DOMAIN-SUFFIX,bytecdn.com,DIRECT
+  - DOMAIN-SUFFIX,byted-ug.com,DIRECT
+  - DOMAIN-SUFFIX,bytedance.com,DIRECT
+  - DOMAIN-SUFFIX,bytednsdoc.com,DIRECT
+  - DOMAIN-SUFFIX,bytegoofy.com,DIRECT
+  - DOMAIN-SUFFIX,byteimg.com,DIRECT
+  - DOMAIN-SUFFIX,bytescm.com,DIRECT
+  - DOMAIN-SUFFIX,bytetoc.com,DIRECT
+  - DOMAIN-SUFFIX,bytetos.com,DIRECT
+  - DOMAIN-SUFFIX,capcut.cn,DIRECT
+  - DOMAIN-SUFFIX,dcarimg.com,DIRECT
+  - DOMAIN-SUFFIX,dcarstatic.com,DIRECT
+  - DOMAIN-SUFFIX,dongchedi.com,DIRECT
+  - DOMAIN-SUFFIX,doubao.com,DIRECT
+  - DOMAIN-SUFFIX,douyin.com,DIRECT
+  - DOMAIN-SUFFIX,douyinpic.com,DIRECT
+  - DOMAIN-SUFFIX,douyinstatic.com,DIRECT
+  - DOMAIN-SUFFIX,fanqienovel.com,DIRECT
+  - DOMAIN-SUFFIX,feishu.cn,DIRECT
+  - DOMAIN-SUFFIX,feishucdn.com,DIRECT
+  - DOMAIN-SUFFIX,fqnovelpic.com,DIRECT
+  - DOMAIN-SUFFIX,fqnovelstatic.com,DIRECT
+  - DOMAIN-SUFFIX,ibytedapm.com,DIRECT
+  - DOMAIN-SUFFIX,ixigua.com,DIRECT
+  - DOMAIN-SUFFIX,novelquickapp.com,DIRECT
+  - DOMAIN-SUFFIX,pipix.com,DIRECT
+  - DOMAIN-SUFFIX,snssdk.com,DIRECT
+  - DOMAIN-SUFFIX,tiktok.com,Proxy
+  - DOMAIN-SUFFIX,tiktok.net,Proxy
+  - DOMAIN-SUFFIX,tiktokcdn.com,Proxy
+  - DOMAIN-SUFFIX,tiktokcdn-us.com,Proxy
+  - DOMAIN-SUFFIX,tiktokd.org,Proxy
+  - DOMAIN-SUFFIX,tiktokv.com,Proxy
+  - DOMAIN-SUFFIX,toutiao.com,DIRECT
+  - DOMAIN-SUFFIX,toutiaocdn.com,DIRECT
+  - DOMAIN-SUFFIX,toutiaoimg.com,DIRECT
+  - DOMAIN-SUFFIX,toutiaostatic.com,DIRECT
+  - DOMAIN-SUFFIX,ugh5.cn,DIRECT
+  - DOMAIN-SUFFIX,ugurl.cn,DIRECT
+  - DOMAIN-SUFFIX,vlabstatic.com,DIRECT
+  - DOMAIN-SUFFIX,yhgfb-cn-static.com,DIRECT
+  - DOMAIN-SUFFIX,zijieapi.com,DIRECT
+
+  # Caiyun Weather
+  - DOMAIN-SUFFIX,caiyunapp.com,DIRECT
+  - DOMAIN-SUFFIX,caiyuncdn.com,DIRECT
+  - DOMAIN-SUFFIX,colorfulclouds.net,DIRECT
+
+  # Canbridge
+  - DOMAIN-SUFFIX,cambridge.org,Proxy
+
+  # Canva
+  - DOMAIN-SUFFIX,canva.com,Proxy
+
+  # ChatGPT
+  - DOMAIN-SUFFIX,chatgpt.com,Proxy
+  - DOMAIN-SUFFIX,openai.com,Proxy
+  - DOMAIN-SUFFIX,oaistatic.com,Proxy
+
+  # China Broadcast
+  - DOMAIN-SUFFIX,10099.com.cn,DIRECT
+
+  # China Construction Bank
+  - DOMAIN-SUFFIX,ccb.com,DIRECT
+
+  # China Merchants Bank
+  - DOMAIN-SUFFIX,cmbchina.com,DIRECT
+  - DOMAIN-SUFFIX,cmbimg.com,DIRECT
+
+  # China Mobile
+  - DOMAIN-SUFFIX,10086.cn,DIRECT
+  - DOMAIN-SUFFIX,139.com,DIRECT
+  - DOMAIN-SUFFIX,chinamobileltd.com,DIRECT
+  - DOMAIN-SUFFIX,migu.cn,DIRECT
+  - DOMAIN-SUFFIX,miguvideo.com,DIRECT
+
+  # China Railway
+  - DOMAIN-SUFFIX,12306.cn,DIRECT
+
+  # China Telecom
+  - DOMAIN-SUFFIX,189.cn,DIRECT
+  - DOMAIN-SUFFIX,chinatelecom.com.cn,DIRECT
+
+  # China Unicom
+  - DOMAIN-SUFFIX,10010.com,DIRECT
+  - DOMAIN-SUFFIX,chinaunicom.com,DIRECT
+  - DOMAIN-SUFFIX,chinaunicom.com.cn,DIRECT
+  - DOMAIN-SUFFIX,wo.cn,DIRECT
+
+  # Claude AI
+  - DOMAIN-SUFFIX,anthropic.com,Proxy
+  - DOMAIN-SUFFIX,claude.ai,Proxy
+
+  # Cloudflare
+  - DOMAIN-SUFFIX,1.1.1.1,Proxy
+  - DOMAIN-SUFFIX,cloudflare.com,Proxy
+  - DOMAIN-SUFFIX,cloudflare.net,Proxy
+  - DOMAIN-SUFFIX,cloudflare-quic.com,Proxy
+  - DOMAIN-SUFFIX,cloudflareaccess.com,Proxy
+  - DOMAIN-SUFFIX,cloudflareclient.com,Proxy
+  - DOMAIN-SUFFIX,cloudflarecommunity.com,Proxy
+  - DOMAIN-SUFFIX,cloudflaredns.com,Proxy
+  - DOMAIN-SUFFIX,cloudflaregateway.com,Proxy
+  - DOMAIN-SUFFIX,cloudflareimages.com,Proxy
+  - DOMAIN-SUFFIX,cloudflarepages.dev,Proxy
+  - DOMAIN-SUFFIX,cloudflarestatus.com,Proxy
+  - DOMAIN-SUFFIX,cloudflarestream.com,Proxy
+  - DOMAIN-SUFFIX,cloudflarewarp.com,Proxy
+  - DOMAIN-SUFFIX,cloudflareworkers.com,Proxy
+  - DOMAIN-SUFFIX,one.one.one.one,Proxy
+
+  # CNBlogs
+  - DOMAIN-SUFFIX,cnblogs.com,DIRECT
+  - DOMAIN-SUFFIX,cnblogs.vip,DIRECT
+
+  # CNN
+  - DOMAIN-SUFFIX,cnn.com,Proxy
+  - DOMAIN-SUFFIX,cnn.io,Proxy
+  - DOMAIN-SUFFIX,warnermediacdn.com,Proxy
+  - DOMAIN-SUFFIX,wbd.com,Proxy
+
+  # Coursera
+  - DOMAIN-SUFFIX,coursera.org,Proxy
+
+  # Contentful
+  - DOMAIN-SUFFIX,contentful.com,Proxy
+  - DOMAIN-SUFFIX,ctfassets.net,Proxy
+
+  # Crisp Chat
+  - DOMAIN-SUFFIX,crisp.chat,Proxy
+
+  # DailyMail
+  - DOMAIN-SUFFIX,dailymail.co.uk,Proxy
+
+  # Deepseek
+  - DOMAIN-SUFFIX,deepseek.com,DIRECT
+
+  # DeviantArt
+  - DOMAIN-SUFFIX,deviantart.com,Proxy
+  - DOMAIN-SUFFIX,deviantart.net,Proxy
+  - DOMAIN-SUFFIX,wixmp.com,Proxy
+
+  # Didi Trip
+  - DOMAIN-SUFFIX,didichuxing.com,DIRECT
+  - DOMAIN-SUFFIX,didiglobal.com,DIRECT
+  - DOMAIN-SUFFIX,didistatic.com,DIRECT
+  - DOMAIN-SUFFIX,xiaojukeji.com,DIRECT
+
+  # Discord
+  - DOMAIN-SUFFIX,discord.com,Proxy
+  - DOMAIN-SUFFIX,discord.gg,Proxy
+  - DOMAIN-SUFFIX,discord.media,Proxy
+  - DOMAIN-SUFFIX,discordapp.com,Proxy
+  - DOMAIN-SUFFIX,discordcdn.com,Proxy
+  - DOMAIN-SUFFIX,discordstatus.com,Proxy
+  - DOMAIN-SUFFIX,dis.gd,Proxy
+
+  # Disney Plus
+  - DOMAIN-SUFFIX,bamgrid.com,Proxy
+  - DOMAIN-SUFFIX,disney-plus.net,Proxy
+  - DOMAIN-SUFFIX,disneyplus.com,Proxy
+  - DOMAIN-SUFFIX,hulu.com,Proxy
+
+  # Disqus
+  - DOMAIN-SUFFIX,disqus.com,Proxy
+  - DOMAIN-SUFFIX,disquscdn.com,Proxy
+
+  # Douyu
+  - DOMAIN-SUFFIX,douyu.com,DIRECT
+  - DOMAIN-SUFFIX,douyucdn.cn,DIRECT
+
+  # Dropbox
+  - DOMAIN-SUFFIX,dropbox.com,Proxy
+  - DOMAIN-SUFFIX,dropboxstatic.com,Proxy
+
+  # DuckDuckGo
+  - DOMAIN-SUFFIX,duckduckgo.com,Proxy
+
+  # Electronic Arts
+  - DOMAIN-SUFFIX,ea.com,Proxy
+
+  # eBay
+  - DOMAIN-SUFFIX,ebay.com,Proxy
+  - DOMAIN-SUFFIX,ebay.com.hk,Proxy
+
+  # Economist
+  - DOMAIN-SUFFIX,economist.com,Proxy
+
+  # edX
+  - DOMAIN-SUFFIX,edx.org,Proxy
+
+  # Epic Games
+  - DOMAIN-SUFFIX,epicgames.com,Proxy
+  - DOMAIN-SUFFIX,unrealengine.com,Proxy
+
+  # Fandom
+  - DOMAIN-SUFFIX,fandom.com,Proxy
+  - DOMAIN-SUFFIX,gamespot.com,Proxy
+  - DOMAIN-SUFFIX,wikia.com,Proxy
+  - DOMAIN-SUFFIX,wikia-services.com,Proxy
+  - DOMAIN-SUFFIX,wikia.nocookie.net,Proxy
+
+  # Fastl
+  - DOMAIN-SUFFIX,fastly.com,Proxy
+  - DOMAIN-SUFFIX,fastly.net,Proxy
+  - DOMAIN-SUFFIX,fastlyio.com,Proxy
+  - DOMAIN-SUFFIX,fastlylb.net,Proxy
+  - DOMAIN-SUFFIX,fastly-insights.com,Proxy
+
+  # Figma
+  - DOMAIN-SUFFIX,coiven.com,Proxy
+  - DOMAIN-SUFFIX,figma.com,Proxy
+  - DOMAIN-SUFFIX,figma.cool,Proxy
+
+  # Flickr
+  - DOMAIN-SUFFIX,flickr.com,Proxy
+  - DOMAIN-SUFFIX,staticflickr.com,Proxy
+
+  # Financial Times
+  - DOMAIN-SUFFIX,ft.com,Proxy
+
+  # Font Awesome
+  - DOMAIN-SUFFIX,fontawesome.com,Proxy
+
+  # Future plc
+  - DOMAIN-SUFFIX,androidcentral.com,Proxy
+  - DOMAIN-SUFFIX,futurecdn.net,Proxy
+  - DOMAIN-SUFFIX,futureplc.com,Proxy
+
+  # Github
+  - DOMAIN-SUFFIX,github.blog,Proxy
+  - DOMAIN-SUFFIX,github.com,Proxy
+  - DOMAIN-SUFFIX,github.dev,Proxy
+  - DOMAIN-SUFFIX,github.io,Proxy
+  - DOMAIN-SUFFIX,github1s.com,Proxy
+  - DOMAIN-SUFFIX,githubapp.com,Proxy
+  - DOMAIN-SUFFIX,githubassets.com,Proxy
+  - DOMAIN-SUFFIX,githubcopilot.com,Proxy
+  - DOMAIN-SUFFIX,githubnext.com,Proxy
+  - DOMAIN-SUFFIX,githubstatus.com,Proxy
+  - DOMAIN-SUFFIX,githubuniverse.com,Proxy
+  - DOMAIN-SUFFIX,githubusercontent.com,Proxy
+
+  # Gitlab
+  - DOMAIN-SUFFIX,gitlab.io,Proxy
+  - DOMAIN-SUFFIX,gitpod.io,Proxy
+
+  # Gradle
+  - DOMAIN-SUFFIX,gradle.com,Proxy
+  - DOMAIN-SUFFIX,gradle.org,Proxy
+
+  # Gravtar
+  - DOMAIN-SUFFIX,ravatar.com,Proxy
+
+  # CD Projekt
+  - DOMAIN-SUFFIX,cdprojekt.com,Proxy
+  - DOMAIN-SUFFIX,gog.com,Proxy
+  - DOMAIN-SUFFIX,gog-statics.com,Proxy
+  - DOMAIN-SUFFIX,gogalaxy.com,Proxy
+
+  # Go Lang (Unofficial)
+  - DOMAIN-SUFFIX,golang.org,Proxy
+  - DOMAIN-SUFFIX,gopkg.in,Proxy
+  - DOMAIN-SUFFIX,goproxy.io,Proxy
+  - DOMAIN-SUFFIX,goproxy.cn,DIRECT
+
+  # Google (Including Alphabet)
+  - DOMAIN-SUFFIX,abc.xyz,Proxy
+  - DOMAIN-SUFFIX,android.com,Proxy
+  - DOMAIN-SUFFIX,ampproject.org,Proxy
+  - DOMAIN-SUFFIX,autodraw.com,Proxy
+  - DOMAIN-SUFFIX,blogger.com,Proxy
+  - DOMAIN-SUFFIX,blogspot.com,Proxy
+  - DOMAIN-SUFFIX,capitalg.com,Proxy
+  - DOMAIN-SUFFIX,transparency.dev,Proxy
+  - DOMAIN-SUFFIX,chromestatus.com,Proxy
+  - DOMAIN-SUFFIX,chromium.org,Proxy
+  - DOMAIN-SUFFIX,creativelab5.com,Proxy
+  - DOMAIN-SUFFIX,dart.dev,Proxy
+  - DOMAIN-SUFFIX,debug.com,Proxy
+  - DOMAIN-SUFFIX,deepmind.com,Proxy
+  - DOMAIN-SUFFIX,doubleclick.net,Proxy
+  - DOMAIN-SUFFIX,flutter.dev,Proxy
+  - DOMAIN-SUFFIX,flutter-io.cn,DIRECT
+  - DOMAIN-SUFFIX,getmdl.io,Proxy
+  - DOMAIN-SUFFIX,ggpht.com,Proxy
+  - DOMAIN-SUFFIX,gmail.com,Proxy
+  - DOMAIN-SUFFIX,go.dev,Proxy
+  - DOMAIN-SUFFIX,google.co.jp,Proxy
+  - DOMAIN-SUFFIX,google.com,Proxy
+  - DOMAIN-SUFFIX,google.com.hk,Proxy
+  - DOMAIN-SUFFIX,google.com.sg,Proxy
+  - DOMAIN-SUFFIX,google.com.tw,Proxy
+  - DOMAIN-SUFFIX,google.cn,DIRECT
+  - DOMAIN-SUFFIX,googleanalytics.com,Proxy
+  - DOMAIN-SUFFIX,googleanalytics-cn.com,DIRECT
+  - DOMAIN-SUFFIX,googleapis.com,Proxy
+  - DOMAIN-SUFFIX,googletagmanager.com,DIRECT
+  - DOMAIN-SUFFIX,googlevideo.com,Proxy
+  - DOMAIN-SUFFIX,googleusercontent.com,Proxy
+  - DOMAIN-SUFFIX,gstatic.com,Proxy
+  - DOMAIN-SUFFIX,gv.com,Proxy
+  - DOMAIN-SUFFIX,gvt0.com,Proxy
+  - DOMAIN-SUFFIX,gvt1.com,Proxy
+  - DOMAIN-SUFFIX,gvt2.com,Proxy
+  - DOMAIN-SUFFIX,gvt3.com,Proxy
+  - DOMAIN-SUFFIX,gwtproject.org,Proxy
+  - DOMAIN-SUFFIX,itasoftware.com,Proxy
+  - DOMAIN-SUFFIX,material.io,Proxy
+  - DOMAIN-SUFFIX,pki.goog,DIRECT
+  - DOMAIN-SUFFIX,polymer-project.org,Proxy
+  - DOMAIN-SUFFIX,pub.dev,Proxy
+  - DOMAIN-SUFFIX,recaptcha.net,Proxy
+  - DOMAIN-SUFFIX,shattered.io,Proxy
+  - DOMAIN-SUFFIX,tensorflow.org,Proxy
+  - DOMAIN-SUFFIX,waymo.com,Proxy
+  - DOMAIN-SUFFIX,webmproject.org,Proxy
+  - DOMAIN-SUFFIX,webrtc.org,Proxy
+  - DOMAIN-SUFFIX,widevine.com,Proxy
+  - DOMAIN-SUFFIX,x.company,Proxy
+  - DOMAIN-SUFFIX,youtu.be,Proxy
+  - DOMAIN-SUFFIX,youtube.com,Proxy
+  - DOMAIN-SUFFIX,yt.be,Proxy
+  - DOMAIN-SUFFIX,ytimg.com,Proxy
+  - DOMAIN-KEYWORD,google,Proxy
+  - DOMAIN-KEYWORD,youtube,Proxy
+
+  # Governments
+  - DOMAIN-SUFFIX,edu.cn,DIRECT
+  - DOMAIN-SUFFIX,gov.cn,DIRECT
+
+  # Harvard
+  - DOMAIN-SUFFIX,harvard.edu,Proxy
+
+  # HERE Technologies
+  - DOMAIN-SUFFIX,here.com,Proxy
+
+  # Huawei
+  - DOMAIN-SUFFIX,huawei.com,DIRECT
+  - DOMAIN-SUFFIX,huaweicloud.com,DIRECT
+
+  # HubSpot (CRM)
+  - DOMAIN-SUFFIX,hsappstatic.net,Proxy
+  - DOMAIN-SUFFIX,hubspot.com,Proxy
+
+  # Humble Bundle
+  - DOMAIN-SUFFIX,humblebundle.com,Proxy
+
+  # Huya
+  - DOMAIN-SUFFIX,huya.com,DIRECT
+  - DOMAIN-SUFFIX,msstatic.com,DIRECT
+
+  # IGN
+  - DOMAIN-SUFFIX,ign.com,Proxy
+  - DOMAIN-SUFFIX,ignimgs.com,Proxy
+
+  # Imgur
+  - DOMAIN-SUFFIX,imgur.com,Proxy
+
+  # Industrial and Commercial Bank of China
+  - DOMAIN-SUFFIX,icbc.com.cn,DIRECT
+  - DOMAIN-SUFFIX,icbc-ltd.com,DIRECT
+
+  # Intel
+  - DOMAIN-SUFFIX,intel.cn,DIRECT
+  - DOMAIN-SUFFIX,intel.com,Proxy
+
+  # Internet Archive
+  - DOMAIN-SUFFIX,archive.org,Proxy
+
+  # IPv6 Test
+  - DOMAIN-SUFFIX,ipv6-test.com,DIRECT
+  - DOMAIN-SUFFIX,test-ipv6.com,DIRECT
+
+  # iQiYi
+  - DOMAIN-SUFFIX,iq.com,Proxy
+  - DOMAIN-SUFFIX,iqiyi.com,DIRECT
+  - DOMAIN-SUFFIX,iqiyipic.com,DIRECT
+  - DOMAIN-SUFFIX,qy.net,Proxy
+
+  # itch
+  - DOMAIN-SUFFIX,itch.io,Proxy
+  - DOMAIN-SUFFIX,itch.zone,Proxy
+
+  # Jianshu
+  - DOMAIN-SUFFIX,jianshu.com,DIRECT
+  - DOMAIN-SUFFIX,jianshu.io,DIRECT
+
+  # Jingdong
+  - DOMAIN-SUFFIX,360buyimg.com,DIRECT
+  - DOMAIN-SUFFIX,jd.com,DIRECT
+  - DOMAIN-SUFFIX,jdcloud.com,DIRECT
+
+  # JetBrains
+  - DOMAIN-SUFFIX,intellij.com,Proxy
+  - DOMAIN-SUFFIX,intellij.net,Proxy
+  - DOMAIN-SUFFIX,jb.gg,Proxy
+  - DOMAIN-SUFFIX,jetbrains.com,Proxy
+  - DOMAIN-SUFFIX,jetbrains.net,Proxy
+  - DOMAIN-SUFFIX,myjetbrains.com,Proxy
+
+  # jQuery
+  - DOMAIN-SUFFIX,cdnjquery.com,Proxy
+  - DOMAIN-SUFFIX,jquery.com,Proxy
+  - DOMAIN-SUFFIX,jquery.org,Proxy
+  - DOMAIN-SUFFIX,openjsf.org,Proxy
+
+  # JSTOR
+  - DOMAIN-SUFFIX,jstor.org,Proxy
+
+  # Khan Academy
+  - DOMAIN-SUFFIX,khanacademy.org,Proxy
+
+  # Kingsoft
+  - DOMAIN-SUFFIX,51dzt.com,DIRECT
+  - DOMAIN-SUFFIX,iciba.com,DIRECT
+  - DOMAIN-SUFFIX,ijinshan.com,DIRECT
+  - DOMAIN-SUFFIX,kdocs.cn,DIRECT
+  - DOMAIN-SUFFIX,kingsoft.com,DIRECT
+  - DOMAIN-SUFFIX,ksyun.com,DIRECT
+  - DOMAIN-SUFFIX,wps.com,Proxy
+  - DOMAIN-SUFFIX,wps.cn,DIRECT
+  - DOMAIN-SUFFIX,wpspdf.cn,DIRECT
+
+  # Kuaishou
+  - DOMAIN-SUFFIX,gifshow.com,DIRECT
+  - DOMAIN-SUFFIX,kuaishou.com,DIRECT
+  - DOMAIN-SUFFIX,kwcdn.com,DIRECT
+
+  # Lianjia
+  - DOMAIN-SUFFIX,lianjia.com,DIRECT
+  - DOMAIN-SUFFIX,ljcdn.com,DIRECT
+  - DOMAIN-SUFFIX,ke.com,DIRECT
+  - DOMAIN-SUFFIX,ziroom.com,DIRECT
+
+  # Liepin
+  - DOMAIN-SUFFIX,liepin.com,DIRECT
+  - DOMAIN-SUFFIX,lietou-static.com,DIRECT
+
+  # Mangguo TV
+  - DOMAIN-SUFFIX,mgtv.com,DIRECT
+
+  # Mapbox
+  - DOMAIN-SUFFIX,mapbox.com,Proxy
+
+  # Maven
+  - DOMAIN-SUFFIX,maven.org,Proxy
+  - DOMAIN-SUFFIX,mvnrepository.com,Proxy
+
+  # Medium
+  - DOMAIN-SUFFIX,medium.com,Proxy
+
+  # Mega
+  - DOMAIN-SUFFIX,mega.io,Proxy
+  - DOMAIN-SUFFIX,mega.nz,Proxy
+
+  # Meitu
+  - DOMAIN-SUFFIX,designkit.com,DIRECT
+  - DOMAIN-SUFFIX,kaipai.com,DIRECT
+  - DOMAIN-SUFFIX,meitu.com,DIRECT
+  - DOMAIN-SUFFIX,meitudata.com,DIRECT
+  - DOMAIN-SUFFIX,meitustat.com,DIRECT
+
+  # Meituan
+  - DOMAIN-SUFFIX,dianping.com,DIRECT
+  - DOMAIN-SUFFIX,meituan.com,DIRECT
+  - DOMAIN-SUFFIX,meituan.net,DIRECT
+  - DOMAIN-SUFFIX,qiandai.com,DIRECT
+
+  # Meta Platforms
+  - DOMAIN-SUFFIX,cdninstagram.com,Proxy
+  - DOMAIN-SUFFIX,facebook.com,Proxy
+  - DOMAIN-SUFFIX,fb.com,Proxy
+  - DOMAIN-SUFFIX,fbcdn.net,Proxy
+  - DOMAIN-SUFFIX,fbsbx.com,Proxy
+  - DOMAIN-SUFFIX,ig.me,Proxy
+  - DOMAIN-SUFFIX,instagr.am,Proxy
+  - DOMAIN-SUFFIX,instagram.com,Proxy
+  - DOMAIN-SUFFIX,m.me,Proxy
+  - DOMAIN-SUFFIX,meta.ai,Proxy
+  - DOMAIN-SUFFIX,meta.com,Proxy
+  - DOMAIN-SUFFIX,metacdn.com,Proxy
+  - DOMAIN-SUFFIX,messenger.com,Proxy
+  - DOMAIN-SUFFIX,msngr.com,Proxy
+  - DOMAIN-SUFFIX,threads.com,Proxy
+  - DOMAIN-SUFFIX,threads.net,Proxy
+  - DOMAIN-SUFFIX,whatsapp.com,Proxy
+  - DOMAIN-SUFFIX,whatsapp.net,Proxy
+
+  # Mircosoft
+  - DOMAIN-SUFFIX,1drv.com,Proxy
+  - DOMAIN-SUFFIX,aka.ms,Proxy
+  - DOMAIN-SUFFIX,asp.net,Proxy
+  - DOMAIN-SUFFIX,azure.com,Proxy
+  - DOMAIN-SUFFIX,azureedge.net,Proxy
+  - DOMAIN-SUFFIX,azurewebsites.net,Proxy
+  - DOMAIN-SUFFIX,cn.bing.com,DIRECT
+  - DOMAIN-SUFFIX,cn.windowssearch.com,DIRECT
+  - DOMAIN-SUFFIX,bing.com,Proxy
+  - DOMAIN-SUFFIX,bingapis.com,Proxy
+  - DOMAIN-SUFFIX,cloudapp.net,Proxy
+  - DOMAIN-SUFFIX,hotmail.com,Proxy
+  - DOMAIN-SUFFIX,licdn.com,Proxy
+  - DOMAIN-SUFFIX,linkedin.com,Proxy
+  - DOMAIN-SUFFIX,live.com,Proxy
+  - DOMAIN-SUFFIX,microsoft.com,Proxy
+  - DOMAIN-SUFFIX,microsoft365.com,Proxy
+  - DOMAIN-SUFFIX,microsoftonline.com,Proxy
+  - DOMAIN-SUFFIX,msauth.net,Proxy
+  - DOMAIN-SUFFIX,msedge.net,Proxy
+  - DOMAIN-SUFFIX,msn.com,Proxy
+  - DOMAIN-SUFFIX,msn.cn,DIRECT
+  - DOMAIN-SUFFIX,sfx.ms,Proxy
+  - DOMAIN-SUFFIX,office.com,Proxy
+  - DOMAIN-SUFFIX,office365.com,Proxy
+  - DOMAIN-SUFFIX,onedrive.com,Proxy
+  - DOMAIN-SUFFIX,onedrive.live.com,Proxy
+  - DOMAIN-SUFFIX,onmicrosoft.com,Proxy
+  - DOMAIN-SUFFIX,outlook.com,Proxy
+  - DOMAIN-SUFFIX,powerbi.com,Proxy
+  - DOMAIN-SUFFIX,sharepoint.com,Proxy
+  - DOMAIN-SUFFIX,visualstudio.com,Proxy
+  - DOMAIN-SUFFIX,vscode.dev,Proxy
+  - DOMAIN-SUFFIX,windows.com,Proxy
+  - DOMAIN-SUFFIX,windows.net,Proxy
+  - DOMAIN-SUFFIX,windowssearch.com,Proxy
+  - DOMAIN-SUFFIX,windowsupdate.com,DIRECT
+  - DOMAIN-SUFFIX,xbox.com,Proxy
+  - DOMAIN-SUFFIX,xboxlive.com,Proxy
+  - DOMAIN-SUFFIX,xboxservices.com,Proxy
+
+  # MIT
+  - DOMAIN-SUFFIX,mit.edu,Proxy
+
+  # Moegirlpedia
+  - DOMAIN-SUFFIX,moegirl.icu,Proxy
+  - DOMAIN-SUFFIX,moegirl.org,Proxy
+  - DOMAIN-SUFFIX,moegirl.org.cn,Proxy
+  - DOMAIN-SUFFIX,moegirl.tw,Proxy
+  - DOMAIN-SUFFIX,moegirl.uk,Proxy
+  -
+  # Moji Weather
+  - DOMAIN-SUFFIX,moji.com,DIRECT
+  - DOMAIN-SUFFIX,mojicb.com,DIRECT
+
+  # Mozilla
+  - DOMAIN-SUFFIX,firefox.com,Proxy
+  - DOMAIN-SUFFIX,mozilla.com,Proxy
+  - DOMAIN-SUFFIX,mozilla.org,Proxy
+  - DOMAIN-SUFFIX,thunderbird.net,Proxy
+
+  # Naver
+  - DOMAIN-SUFFIX,lin.ee,Proxy
+  - DOMAIN-SUFFIX,line.me,Proxy
+  - DOMAIN-SUFFIX,line-scdn.net,Proxy
+  - DOMAIN-SUFFIX,linepluscorp.com,Proxy
+  - DOMAIN-SUFFIX,lycorp.co.jp,Proxy
+  - DOMAIN-SUFFIX,naver.com,Proxy
+  - DOMAIN-SUFFIX,navercorp.com,Proxy
+  - DOMAIN-SUFFIX,pstatic.net,Proxy
+
+  # NBC
+  - DOMAIN-SUFFIX,nbc.com,Proxy
+  - DOMAIN-SUFFIX,nbcnews.com,Proxy
+  - DOMAIN-SUFFIX,s-nbcnews.com,Proxy
+
+  # Netease
+  - DOMAIN-SUFFIX,126.com,DIRECT
+  - DOMAIN-SUFFIX,126.net,DIRECT
+  - DOMAIN-SUFFIX,163.com,DIRECT
+  - DOMAIN-SUFFIX,188.com,DIRECT
+  - DOMAIN-SUFFIX,netease.com,DIRECT
+  - DOMAIN-SUFFIX,qiyeym163.com,DIRECT
+  - DOMAIN-SUFFIX,yeah.net,DIRECT
+  - DOMAIN-SUFFIX,youdao.com,DIRECT
+
+  # Netflix
+  - DOMAIN-SUFFIX,fast.com,Proxy
+  - DOMAIN-SUFFIX,netflix.com,Proxy
+  - DOMAIN-SUFFIX,netflix.net,Proxy
+  - DOMAIN-SUFFIX,netflixinvestor.com,Proxy
+  - DOMAIN-SUFFIX,netflixtechblog.com,Proxy
+  - DOMAIN-SUFFIX,nflximg.com,Proxy
+  - DOMAIN-SUFFIX,nflximg.net,Proxy
+  - DOMAIN-SUFFIX,nflxext.com,Proxy
+  - DOMAIN-SUFFIX,nflxso.net,Proxy
+  - DOMAIN-SUFFIX,nflxvideo.net,Proxy
+
+  # Netlify
+  - DOMAIN-SUFFIX,netlify.app,Proxy
+  - DOMAIN-SUFFIX,netlify.com,Proxy
+
+  # Niconico
+  - DOMAIN-SUFFIX,nicovideo.jp,Proxy
+  - DOMAIN-SUFFIX,nimg.jp,Proxy
+
+  # Nitendo
+  - DOMAIN-SUFFIX,nintendo.com,Proxy
+  - DOMAIN-SUFFIX,nintendo.net,Proxy
+
+  # New York Times
+  - DOMAIN-SUFFIX,nyt.com,Proxy
+  - DOMAIN-SUFFIX,nytimes.com,Proxy
+
+  # node.js
+  - DOMAIN-SUFFIX,npmjs.com,Proxy
+  - DOMAIN-SUFFIX,npmjs.org,Proxy
+  - DOMAIN-SUFFIX,nodejs.org,Proxy
+
+  # Notion
+  - DOMAIN-SUFFIX,notion.com,Proxy
+  - DOMAIN-SUFFIX,notion.site,Proxy
+  - DOMAIN-SUFFIX,notion.so,Proxy
+
+  # npmjs
+  - DOMAIN-SUFFIX,npmjs.com,Proxy
+  - DOMAIN-SUFFIX,npmjs.org,Proxy
+
+  # Nuget (.net package manager)
+  - DOMAIN-SUFFIX,nuget.org,Proxy
+
+  # Nvidia
+  - DOMAIN-SUFFIX,nvidia.cn,DIRECT
+  - DOMAIN-SUFFIX,nvidia.com,Proxy
+
+  # One Trust (Cookie Laws)
+  - DOMAIN-SUFFIX,cookielaw.org,Proxy
+  - DOMAIN-SUFFIX,onetrust.com,Proxy
+
+  # OpenJDK
+  - DOMAIN-SUFFIX,openjdk.org,Proxy
+
+  # OpenRailwayMap and OpenStreetMap
+  - DOMAIN-SUFFIX,openrailwaymap.org,Proxy
+  - DOMAIN-SUFFIX,openstreetmap.org,Proxy
+
+  # Openweb
+  - DOMAIN-SUFFIX,openweb.com,Proxy
+  - DOMAIN-SUFFIX,spot.im,Proxy
+
+  # OPPO
+  - DOMAIN-SUFFIX,coloros.com,DIRECT
+  - DOMAIN-SUFFIX,heytap.com,DIRECT
+  - DOMAIN-SUFFIX,heytapmobi.com,DIRECT
+  - DOMAIN-SUFFIX,oppo.com,DIRECT
+  - DOMAIN-SUFFIX,oppomobile.com,DIRECT
+  - DOMAIN-SUFFIX,opposhop.cn,DIRECT
+
+  # Oracle
+  - DOMAIN-SUFFIX,java.com,Proxy
+  - DOMAIN-SUFFIX,java.net,Proxy
+  - DOMAIN-SUFFIX,oracle.com,Proxy
+  - DOMAIN-SUFFIX,oraclecloud.com,Proxy
+  - DOMAIN-SUFFIX,virtualbox.org,Proxy
+
+  # Orange Logic (DAM)
+  - DOMAIN-SUFFIX,orangelogic.com,Proxy
+
+  # Oxford
+  - DOMAIN-SUFFIX,oxford.com,Proxy
+
+  # PayPal
+  - DOMAIN-SUFFIX,paypal.com,DIRECT
+  - DOMAIN-SUFFIX,paypalobjects.com,DIRECT
+
+  # PHP (Both official and unofficial)
+  - DOMAIN-SUFFIX,composer.io,Proxy
+  - DOMAIN-SUFFIX,getcomposer.org,Proxy
+  - DOMAIN-SUFFIX,packagist.org,Proxy
+  - DOMAIN-SUFFIX,php.net,Proxy
+
+  # Pinduoduo
+  - DOMAIN-SUFFIX,pinduoduo.com,DIRECT
+  - DOMAIN-SUFFIX,yangkeduo.com,DIRECT
+
+  # Pinterest
+  - DOMAIN-SUFFIX,pinimg.com,Proxy
+  - DOMAIN-SUFFIX,pinterest.com,Proxy
+
+  # The Pirate Bay
+  - DOMAIN-SUFFIX,thepiratebay.org,Proxy
+
+  # Tomtom
+  - DOMAIN-SUFFIX,tomtom.com,Proxy
+
+  # Pixiv
+  - DOMAIN-SUFFIX,pixiv.net,Proxy
+
+  # PlayStation
+  - DOMAIN-SUFFIX,playstation.com,Proxy
+
+  # PornHub
+  - DOMAIN-SUFFIX,livehdcams.com,Proxy
+  - DOMAIN-SUFFIX,phncdn.com,Proxy
+  - DOMAIN-SUFFIX,pornhub.com,Proxy
+
+  # Postman
+  - DOMAIN-SUFFIX,postman.com,Proxy
+
+  # ProtonMail
+  - DOMAIN-SUFFIX,proton.me,Proxy
+  - DOMAIN-SUFFIX,protonmail.com,Proxy
+  - DOMAIN-SUFFIX,protonvpn.com,Proxy
+
+  # Python and PyPi
+  - DOMAIN-SUFFIX,getpython.info,Proxy
+  - DOMAIN-SUFFIX,python.org,Proxy
+  - DOMAIN-SUFFIX,pypi.org,Proxy
+  - DOMAIN-SUFFIX,pythonhosted.org,Proxy
+  - DOMAIN-SUFFIX,pypa.io,Proxy
+
+  # Quora
+  - DOMAIN-SUFFIX,quora.com,Proxy
+  - DOMAIN-SUFFIX,quoracdn.net,Proxy
+
+  # Radio Free Asia
+  - DOMAIN-SUFFIX,rfa.org,Proxy
+
+  # Reddit
+  - DOMAIN-SUFFIX,redd.it,Proxy
+  - DOMAIN-SUFFIX,reddit.app.link,Proxy
+  - DOMAIN-SUFFIX,reddit.com,Proxy
+  - DOMAIN-SUFFIX,reddithelp.com,Proxy
+  - DOMAIN-SUFFIX,redditinc.com,Proxy
+  - DOMAIN-SUFFIX,redditmail.com,Proxy
+  - DOMAIN-SUFFIX,redditmedia.com,Proxy
+  - DOMAIN-SUFFIX,redditstatic.com,Proxy
+  - DOMAIN-SUFFIX,redditstatus.com,Proxy
+
+  # Redis
+  - DOMAIN-SUFFIX,redis.io,Proxy
+  - DOMAIN-SUFFIX,redislabs.com,Proxy
+
+  # Retuers
+  - DOMAIN-SUFFIX,reuters.com,Proxy
+
+  # Roblox
+  - DOMAIN-SUFFIX,rbxcdn.com,Proxy
+  - DOMAIN-SUFFIX,roblox.com,Proxy
+
+  # Ruby
+  - DOMAIN-SUFFIX,rubygems.org,Proxy
+  - DOMAIN-SUFFIX,ruby-lang.org,Proxy
+
+  # Rust
+  - DOMAIN-SUFFIX,crates.io,Proxy
+  - DOMAIN-SUFFIX,rust-lang.org,Proxy
+
+  # Salesforce
+  - DOMAIN-SUFFIX,force.com,Proxy
+  - DOMAIN-SUFFIX,force-user-content.com,Proxy
+  - DOMAIN-SUFFIX,forceusercontent.com,Proxy
+  - DOMAIN-SUFFIX,salesforce.com,Proxy
+  - DOMAIN-SUFFIX,salesforce-hub.com,Proxy
+  - DOMAIN-SUFFIX,salesforce-scrt.com,Proxy
+  - DOMAIN-SUFFIX,salesforce-setup.com,Proxy
+  - DOMAIN-SUFFIX,salesforce-sites.com,Proxy
+  - DOMAIN-SUFFIX,salesforceiq.com,Proxy
+  - DOMAIN-SUFFIX,salesforceliveagent.com,Proxy
+  - DOMAIN-SUFFIX,site.com,Proxy
+  - DOMAIN-SUFFIX,sfdcfc.com,Proxy
+  - DOMAIN-SUFFIX,sfdcstatic.com,Proxy
+
+  # Samsung
+  - DOMAIN-SUFFIX,samsung.com,DIRECT
+  - DOMAIN-SUFFIX,samsungapps.com,DIRECT
+  - DOMAIN-SUFFIX,samsungcloud.com,DIRECT
+
+  # Science Magazine
+  - DOMAIN-SUFFIX,science.org,Proxy
+
+  # Scribd
+  - DOMAIN-SUFFIX,scribd.com,Proxy
+  - DOMAIN-SUFFIX,scribdassets.com,Proxy
+
+  # Sciencedirect
+  - DOMAIN-SUFFIX,sciencedirect.com,Proxy
+  - DOMAIN-SUFFIX,sciencedirectassets.com,Proxy
+  - DOMAIN-SUFFIX,elsevier.com,Proxy
+
+  # SegmentFault
+  - DOMAIN-SUFFIX,segmentfault.com,DIRECT
+
+  # Shopify
+  - DOMAIN-SUFFIX,shopify.com,Proxy
+
+  # Signal
+  - DOMAIN-SUFFIX,signal.org,Proxy
+
+  # SimpleX Chat
+  - DOMAIN-SUFFIX,simplex.chat,Proxy
+
+  # Sina
+  - DOMAIN-SUFFIX,sina.com,DIRECT
+  - DOMAIN-SUFFIX,sina.cn,DIRECT
+  - DOMAIN-SUFFIX,sinaapp.com,DIRECT
+  - DOMAIN-SUFFIX,t.cn,DIRECT
+  - DOMAIN-SUFFIX,weibo.com,DIRECT
+  - DOMAIN-SUFFIX,weibo.cn,DIRECT
+  - DOMAIN-SUFFIX,sinaimg.cn,DIRECT
+
+  # Sketch (Designing Platform on MacOS)
+  - DOMAIN-SUFFIX,sketch.com,Proxy
+  - DOMAIN-SUFFIX,sketchapp.com,Proxy
+
+  # Slack
+  - DOMAIN-SUFFIX,slack.com,Proxy
+  - DOMAIN-SUFFIX,slack-edge.com,Proxy
+  - DOMAIN-SUFFIX,slack-msgs.com,Proxy
+
+  # Snapchat
+  - DOMAIN-SUFFIX,snapchat.com,Proxy
+
+  # Sohu and Sogou
+  - DOMAIN-SUFFIX,sohu.com,DIRECT
+  - DOMAIN-SUFFIX,sogou.com,DIRECT
+  - DOMAIN-SUFFIX,sogou.cn,DIRECT
+
+  # SoundCloud
+  - DOMAIN-SUFFIX,soundcloud.com,Proxy
+  - DOMAIN-SUFFIX,sndcdn.com,Proxy
+
+  # South China Morning Post
+  - DOMAIN-SUFFIX,i-scmp.com,Proxy
+  - DOMAIN-SUFFIX,scmp.com,Proxy
+
+  # Spiegel
+  - DOMAIN-SUFFIX,spiegel.de,Proxy
+
+  # Spotify
+  - DOMAIN-SUFFIX,scdn.co,Proxy
+  - DOMAIN-SUFFIX,spotify.com,Proxy
+  - DOMAIN-SUFFIX,spotifycdn.com,Proxy
+
+  # Springer
+  - DOMAIN-SUFFIX,springer.com,Proxy
+
+  # Stack Exchange Network
+  - DOMAIN-SUFFIX,askubuntu.com,Proxy
+  - DOMAIN-SUFFIX,serverfault.com,Proxy
+  - DOMAIN-SUFFIX,sstatic.net,Proxy
+  - DOMAIN-SUFFIX,stackoverflow.com,Proxy
+  - DOMAIN-SUFFIX,stackexchange.com,Proxy
+  - DOMAIN-SUFFIX,superuser.com,Proxy
+
+  # Stanford
+  - DOMAIN-SUFFIX,stanford.edu,Proxy
+
+  # Steam
+  - DOMAIN-SUFFIX,playartifact.com,Steam
+  - DOMAIN-SUFFIX,s.team,Steam
+  - DOMAIN-SUFFIX,steam.tv,Steam
+  - DOMAIN-SUFFIX,steam-api.com,Steam
+  - DOMAIN-SUFFIX,steam-chat.com,Steam
+  - DOMAIN-SUFFIX,steamcommunity.com,Steam
+  - DOMAIN-SUFFIX,steamcontent.com,DIRECT
+  - DOMAIN-SUFFIX,steamdeck.com,Steam
+  - DOMAIN-SUFFIX,steamgames.com,Steam
+  - DOMAIN-SUFFIX,steampowered.com,Steam
+  - DOMAIN-SUFFIX,steamserver.net,DIRECT
+  - DOMAIN-SUFFIX,steamstatic.com,DIRECT
+  - DOMAIN-SUFFIX,steamusercontent.com,Steam
+  - DOMAIN-SUFFIX,underlords.com,Steam
+  - DOMAIN-SUFFIX,valvesoftware.com,Steam
+
+  # Stripe
+  - DOMAIN-SUFFIX,stripe.com,Proxy
+  - DOMAIN-SUFFIX,stripe.network,Proxy
+  - DOMAIN-SUFFIX,stripeassets.com,Proxy
+  - DOMAIN-SUFFIX,stripecdn.com,Proxy
+
+  # Suning
+  - DOMAIN-SUFFIX,suning.com,DIRECT
+  - DOMAIN-SUFFIX,suning.cn,DIRECT
+
+  # Tencent
+  - DOMAIN-SUFFIX,cdn-go.cn,DIRECT
+  - DOMAIN-SUFFIX,foxmail.com,DIRECT
+  - DOMAIN-SUFFIX,kugou.com,DIRECT
+  - DOMAIN-SUFFIX,kuwo.com,DIRECT
+  - DOMAIN-SUFFIX,qq.com,DIRECT
+  - DOMAIN-SUFFIX,supercell.com,Proxy
+  - DOMAIN-SUFFIX,tencent.com,DIRECT
+  - DOMAIN-SUFFIX,wechat.com,DIRECT
+  - DOMAIN-SUFFIX,weiyun.com,DIRECT
+  - DOMAIN-SUFFIX,wegame.com.cn,DIRECT
+
+  # TED
+  - DOMAIN-SUFFIX,ted.com,Proxy
+  - DOMAIN-SUFFIX,tedcdn.com,Proxy
+
+  # The Guardian
+  - DOMAIN-SUFFIX,theguardian.com,Proxy
+  - DOMAIN-SUFFIX,guardian.co.uk,Proxy
+  - DOMAIN-SUFFIX,guardianapis.com,Proxy
+  - DOMAIN-SUFFIX,guardianapps.co.uk,Proxy
+  - DOMAIN-SUFFIX,guim.co.uk,Proxy
+
+  # Telegram
+  - DOMAIN-SUFFIX,airsub.shop,Proxy
+  - DOMAIN-SUFFIX,cdn-sync.cc,Proxy
+  - DOMAIN-SUFFIX,cdn-telegram.org,Proxy
+  - DOMAIN-SUFFIX,t.me,Proxy
+  - DOMAIN-SUFFIX,telegram.me,Proxy
+  - DOMAIN-SUFFIX,telegram.org,Proxy
+  - DOMAIN-SUFFIX,telesco.pe,Proxy
+  - IP-CIDR,91.108.56.0/22,Proxy
+  - IP-CIDR,91.108.4.0/22,Proxy
+  - IP-CIDR,91.108.8.0/22,Proxy
+  - IP-CIDR,91.108.16.0/22,Proxy
+  - IP-CIDR,91.108.12.0/22,Proxy
+  - IP-CIDR,91.105.192.0/23,Proxy
+  - IP-CIDR,91.108.20.0/22,Proxy
+  - IP-CIDR,149.154.160.0/20,Proxy
+  - IP-CIDR,185.76.151.0/24,Proxy
+  - IP-CIDR,2001:b28:f23d::/48,Proxy
+  - IP-CIDR,2001:b28:f23f::/48,Proxy
+  - IP-CIDR,2001:67c:4e8::/48,Proxy
+  - IP-CIDR,2001:b28:f23c::/48,Proxy
+  - IP-CIDR,2a0a:f280::/32,Proxy
+
+  # Temu
+  - DOMAIN-SUFFIX,temu.com,Proxy
+
+  # Time (Media / News)
+  - DOMAIN-SUFFIX,time.com,Proxy
+  - DOMAIN-SUFFIX,timeinc.net,Proxy
+
+  # Tongcheng Trip
+  - DOMAIN-SUFFIX,17u.cn,DIRECT
+  - DOMAIN-SUFFIX,40017.cn,DIRECT
+  - DOMAIN-SUFFIX,elongstatic.com,DIRECT
+  - DOMAIN-SUFFIX,ly.com,DIRECT
+  - DOMAIN-SUFFIX,tongchengir.com,DIRECT
+
+  # Tor Project
+  - DOMAIN-SUFFIX,torproject.org,Proxy
+
+  # Tumblr
+  - DOMAIN-SUFFIX,tumblr.com,Proxy
+
+  # TVBS News
+  - DOMAIN-SUFFIX,tvbs.com.tw,Proxy
+
+  # Twilio (API Provider)
+  - DOMAIN-SUFFIX,twilio.com,Proxy
+  - DOMAIN-SUFFIX,twilio.io,Proxy
+
+  # Twitch
+  - DOMAIN-SUFFIX,jtvnw.net,Proxy
+  - DOMAIN-SUFFIX,ttvnw.net,Proxy
+  - DOMAIN-SUFFIX,twitch.tv,Proxy
+  - DOMAIN-SUFFIX,twitchcdn.net,Proxy
+
+  # Twitter
+  - DOMAIN-SUFFIX,t.co,Proxy
+  - DOMAIN-SUFFIX,tweetdeck.com,Proxy
+  - DOMAIN-SUFFIX,twimg.com,Proxy
+  - DOMAIN-SUFFIX,twitter.com,Proxy
+  - DOMAIN-SUFFIX,twtrdns.net,Proxy
+  - DOMAIN-SUFFIX,x.com,Proxy
+
+  # Ubisoft
+  - DOMAIN-SUFFIX,ubisoft.com,Proxy
+
+  # uBlockOrigin
+  - DOMAIN-SUFFIX,ublockorigin.com,Proxy
+
+  # Ubuntu
+  - DOMAIN-SUFFIX,canonical.com,Proxy
+  - DOMAIN-SUFFIX,launchpad.net,Proxy
+  - DOMAIN-SUFFIX,ubuntu.com,Proxy
+
+  # Udacity
+  - DOMAIN-SUFFIX,udacity.com,Proxy
+  - DOMAIN-SUFFIX,udemy.com,Proxy
+
+  # Udemy
+  - DOMAIN-SUFFIX,udemy.com,Proxy
+
+  # Union Pay
+  - DOMAIN-SUFFIX,unionpay.com,DIRECT
+  - DOMAIN-SUFFIX,unionpayintl.com,DIRECT
+
+  # V2EX
+  - DOMAIN-SUFFIX,v2ex.com,Proxy
+
+  # Vercel
+  - DOMAIN-SUFFIX,vercel.app,Proxy
+  - DOMAIN-SUFFIX,vercel.com,Proxy
+  - DOMAIN-SUFFIX,now.sh,Proxy
+
+  # Vivo
+  - DOMAIN-SUFFIX,vivo.com.cn,DIRECT
+
+  # Vimeo
+  - DOMAIN-SUFFIX,vimeo.com,Proxy
+  - DOMAIN-SUFFIX,vimeocdn.com,Proxy
+
+  # VIPS
+  - DOMAIN-SUFFIX,appsimg.com,DIRECT
+  - DOMAIN-SUFFIX,vip.com,DIRECT
+  - DOMAIN-SUFFIX,vipshop.com,DIRECT
+  - DOMAIN-SUFFIX,vipstatic.com,DIRECT
+
+  # Wired
+  - DOMAIN-SUFFIX,wired.com,Proxy
+
+  # VK
+  - DOMAIN-SUFFIX,dzen.ru,Proxy
+  - DOMAIN-SUFFIX,dzeninfra.ru,Proxy
+  - DOMAIN-SUFFIX,imgsmail.ru,Proxy
+  - DOMAIN-SUFFIX,mail.ru,Proxy
+  - DOMAIN-SUFFIX,userapi.com,Proxy
+  - DOMAIN-SUFFIX,vk.com,Proxy
+  - DOMAIN-SUFFIX,vk.ru,Proxy
+
+  # Voice of America
+  - DOMAIN-SUFFIX,voanews.com,Proxy
+
+  # VPN Services
+  - DOMAIN-SUFFIX,expressvpn.com,Proxy
+  - DOMAIN-SUFFIX,nordvpn.com,Proxy
+  - DOMAIN-SUFFIX,surfshark.com,Proxy
+  - DOMAIN-SUFFIX,privateinternetaccess.com,Proxy
+
+  # Vultr
+  - DOMAIN-SUFFIX,vultr.com,Proxy
+
+  # Wall Street Journal
+  - DOMAIN-SUFFIX,wsj.com,Proxy
+  - DOMAIN-SUFFIX,wsj.net,Proxy
+
+  # Washington Post
+  - DOMAIN-SUFFIX,washingtonpost.com,Proxy
+
+  # The Weather Channel
+  - DOMAIN-SUFFIX,w-x.com,Proxy
+  - DOMAIN-SUFFIX,weather.com,Proxy
+  - DOMAIN-SUFFIX,wunderground.com,Proxy
+
+  # Webflow
+  - DOMAIN-SUFFIX,webflow.com,Proxy
+  - DOMAIN-SUFFIX,website-files.com,Proxy
+
+  # Wikipedia
+  - DOMAIN-SUFFIX,mediawiki.org,Proxy
+  - DOMAIN-SUFFIX,wikibooks.org,Proxy
+  - DOMAIN-SUFFIX,wikidata.org,Proxy
+  - DOMAIN-SUFFIX,wikifunctions.org,Proxy
+  - DOMAIN-SUFFIX,wikimedia.org,Proxy
+  - DOMAIN-SUFFIX,wikinews.org,Proxy
+  - DOMAIN-SUFFIX,wikipedia.org,Proxy
+  - DOMAIN-SUFFIX,wikiquote.org,Proxy
+  - DOMAIN-SUFFIX,wikisource.org,Proxy
+  - DOMAIN-SUFFIX,wiktionary.org,Proxy
+  - DOMAIN-SUFFIX,wikiversity.org,Proxy
+  - DOMAIN-SUFFIX,wikivoyage.org,Proxy
+
+  # Windy
+  - DOMAIN-SUFFIX,windy.com,Proxy
+
+  # Wix
+  - DOMAIN-SUFFIX,parastorage.com,Proxy
+  - DOMAIN-SUFFIX,wix.com,Proxy
+  - DOMAIN-SUFFIX,wix-code.com,Proxy
+  - DOMAIN-SUFFIX,wixstatic.com,Proxy
+
+  # Wordpress
+  - DOMAIN-SUFFIX,wordpress.com,Proxy
+  - DOMAIN-SUFFIX,wordpress.net,Proxy
+  - DOMAIN-SUFFIX,wordpress.org,Proxy
+  - DOMAIN-SUFFIX,wordpress.tv,Proxy
+  - DOMAIN-SUFFIX,wordpressfoundation.org,Proxy
+  - DOMAIN-SUFFIX,wp.com,Proxy
+  - DOMAIN-SUFFIX,wpvip.com,Proxy
+
+  # Xiaohongshu
+  - DOMAIN-SUFFIX,xiaohongshu.com,DIRECT
+  - DOMAIN-SUFFIX,xhscdn.com,DIRECT
+
+  # Xiaomi
+  - DOMAIN-SUFFIX,mi.com,DIRECT
+  - DOMAIN-SUFFIX,mi-img.com,DIRECT
+  - DOMAIN-SUFFIX,mifile.cn,DIRECT
+  - DOMAIN-SUFFIX,miui.com,DIRECT
+  - DOMAIN-SUFFIX,miwifi.com,DIRECT
+  - DOMAIN-SUFFIX,xiaomi.com,DIRECT
+  - DOMAIN-SUFFIX,xiaomiev.com,DIRECT
+  - DOMAIN-SUFFIX,xiaomiyoupin.com,DIRECT
+
+  # Xiecheng Trip
+  - DOMAIN-SUFFIX,c-trip.com,DIRECT
+  - DOMAIN-SUFFIX,ctrip.com,DIRECT
+  - DOMAIN-SUFFIX,skyscanner.com,Proxy
+  - DOMAIN-SUFFIX,tianxun.com,DIRECT
+  - DOMAIN-SUFFIX,trip.com,Proxy
+
+  # Xunfei
+  - DOMAIN-SUFFIX,iflytek.com,DIRECT
+  - DOMAIN-SUFFIX,xunfei.cn,DIRECT
+
+  # XHamster
+  - DOMAIN-SUFFIX,xhamster.com,Proxy
+  - DOMAIN-SUFFIX,xhcdn.com,Proxy
+
+  # XNXX
+  - DOMAIN-SUFFIX,xnxx.com,Proxy
+  - DOMAIN-SUFFIX,xnxx-cdn.com,Proxy
+
+  # XVideos
+  - DOMAIN-SUFFIX,xvideos.com,Proxy
+  - DOMAIN-SUFFIX,xvideos.red,Proxy
+  - DOMAIN-SUFFIX,xvideos-cdn.com,Proxy
+  - DOMAIN-SUFFIX,zlink7.com,Proxy
+
+  # Yahoo
+  - DOMAIN-SUFFIX,engadget.com,Proxy
+  - DOMAIN-SUFFIX,yahoo.co.jp,Proxy
+  - DOMAIN-SUFFIX,yahoo.com,Proxy
+  - DOMAIN-SUFFIX,yimg.com,Proxy
+
+  # Yandex
+  - DOMAIN-SUFFIX,yandex.com,Proxy
+  - DOMAIN-SUFFIX,yandex.ru,Proxy
+
+  # Youjizz (Porn)
+  - DOMAIN-SUFFIX,youjizz.com,Proxy
+  - DOMAIN-SUFFIX,yjcontentdelivery.com,Proxy
+
+  # Zendesk
+  - DOMAIN-SUFFIX,zendesk.co.jp,Proxy
+  - DOMAIN-SUFFIX,zendesk.com,Proxy
+  - DOMAIN-SUFFIX,zendesk.hk,Proxy
+  - DOMAIN-SUFFIX,zendesk.tw,Proxy
+  - DOMAIN-SUFFIX,zdassets.com,Proxy
+
+  # Zhihu
+  - DOMAIN-SUFFIX,zhihu.com,DIRECT
+  - DOMAIN-SUFFIX,zhimg.com,DIRECT
+
+  # Zhilian Zhaopin
+  - DOMAIN-SUFFIX,zhaopin.cn,DIRECT
+  - DOMAIN-SUFFIX,zhaopin.com,DIRECT
+
+  # Zoom
+  - DOMAIN-SUFFIX,zoom.us,Proxy
+  - DOMAIN-SUFFIX,zoom.com,Proxy
+  - DOMAIN-SUFFIX,zoomgov.com,Proxy
+
+  # Zuoyebang
+  - DOMAIN-SUFFIX,cdnjtzy.com,DIRECT
+  - DOMAIN-SUFFIX,zuoyebang.com,DIRECT
+
+  # Other CDN
+  - DOMAIN-SUFFIX,bootcdn.cn,DIRECT
+  - DOMAIN-SUFFIX,bootcss.com,Proxy
+  - DOMAIN-SUFFIX,cdnjs.com,Proxy
+  - DOMAIN-SUFFIX,chinanetcenter.com,DIRECT
+  - DOMAIN-SUFFIX,jsdelivr.com,Proxy
+  - DOMAIN-SUFFIX,jsdelivr.net,Proxy
+  - DOMAIN-SUFFIX,qiniu.com,DIRECT
+  - DOMAIN-SUFFIX,staticfile.org,DIRECT
+  - DOMAIN-SUFFIX,unpkg.com,Proxy
+  - DOMAIN-SUFFIX,upyun.com,DIRECT
+  - DOMAIN-SUFFIX,wangsu.com,DIRECT
+
+  # Trivia
+  - DOMAIN-SUFFIX,9to5mac.com,Proxy
+  - DOMAIN-SUFFIX,amnesty.org,Proxy
+  - DOMAIN-SUFFIX,androidauthority.com,Proxy
+  - DOMAIN-SUFFIX,androidpolice.com,Proxy
+  - DOMAIN-SUFFIX,change.org,Proxy
+  - DOMAIN-SUFFIX,fc2.com,Proxy
+  - DOMAIN-SUFFIX,howtogeek.com,Proxy
+  - DOMAIN-SUFFIX,howtogeekimages.com,Proxy
+  - DOMAIN-SUFFIX,independent.co.uk,Proxy
+  - DOMAIN-SUFFIX,internetfreedom.org,Proxy
+  - DOMAIN-SUFFIX,ipapi.com,Proxy
+  - DOMAIN-SUFFIX,jw.org,Proxy
+  - DOMAIN-SUFFIX,linux.do,Proxy
+  - DOMAIN-SUFFIX,macrumors.com,Proxy
+  - DOMAIN-SUFFIX,marxists.org,Proxy
+  - DOMAIN-SUFFIX,nasa.gov,Proxy
+  - DOMAIN-SUFFIX,pcgamer.com,Proxy
+  - DOMAIN-SUFFIX,ptt.cc,Proxy
+  - DOMAIN-SUFFIX,rakuten.co.jp,Proxy
+  - DOMAIN-SUFFIX,scribd.com,Proxy
+  - DOMAIN-SUFFIX,techradar.com,Proxy
+  - DOMAIN-SUFFIX,tomshardware.com,Proxy
+  - DOMAIN-SUFFIX,xda-developers.com,Proxy
+
+  # Own products
+  - DOMAIN-SUFFIX,airtcp.com,Proxy
+  - DOMAIN-SUFFIX,airtcp.us,Proxy
+  - DOMAIN-SUFFIX,airudp.com,Proxy
+
+  # Apps need to use DIRECT policy
+  - PROCESS-NAME,BitComet,DIRECT
+  - PROCESS-NAME,BitComet.exe,DIRECT
+  - PROCESS-NAME,BitComet_x64.exe,DIRECT
+  - PROCESS-NAME,fdm,DIRECT
+  - PROCESS-NAME,fdm.exe,DIRECT
+  - PROCESS-NAME,Motrix,DIRECT
+  - PROCESS-NAME,Motrix.exe,DIRECT
+  - PROCESS-NAME,NetTransport,DIRECT
+  - PROCESS-NAME,NetTransport.exe,DIRECT
+  - PROCESS-NAME,qBitTorrent,DIRECT
+  - PROCESS-NAME,qBitTorrent.exe,DIRECT
+  - PROCESS-NAME,qBitTorrent-nox,DIRECT
+  - PROCESS-NAME,Thunder,DIRECT
+  - PROCESS-NAME,Thunder.exe,DIRECT
+  - PROCESS-NAME,ThunderVIP.exe,DIRECT
+  - PROCESS-NAME,Transmission,DIRECT
+  - PROCESS-NAME,transmission-daemon,DIRECT
+  - PROCESS-NAME,uTorrent,DIRECT
+  - PROCESS-NAME,uTorrent.exe,DIRECT
+  - PROCESS-NAME,WebTorrent,DIRECT
+  - PROCESS-NAME,WebTorrent.exe,DIRECT
+
+  # Local Network and Reserved Address
+  - IP-CIDR,0.0.0.0/8,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - IP-CIDR,100.64.0.0/10,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,169.254.0.0/16,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,192.0.0.0/24,DIRECT
+  - IP-CIDR,192.0.2.0/24,DIRECT
+  - IP-CIDR,192.88.99.0/24,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,198.18.0.0/15,DIRECT
+  - IP-CIDR,198.51.100.0/24,DIRECT
+  - IP-CIDR,203.0.113.0/24,DIRECT
+  - IP-CIDR,224.0.0.0/3,DIRECT
+  - IP-CIDR,::/127,DIRECT
+  - IP-CIDR,fc00::/7,DIRECT
+  - IP-CIDR,fe80::/10,DIRECT
+  - IP-CIDR,ff00::/8,DIRECT
+
+  # Others
+  - GEOIP,CN,DIRECT
+  - MATCH,Proxy
