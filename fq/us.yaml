@@ -32,7 +32,7 @@ dns:
 proxies:
 - name: BGP智能路由-美国01-流媒体AI-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35006
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -41,7 +41,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国02-流媒体AI-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35007
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -50,7 +50,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国03-流媒体AI-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35008
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -59,7 +59,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国04-流媒体AI-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35009
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -68,7 +68,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国05-流媒体AI-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35010
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -77,7 +77,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国06-家宽-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35017
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -86,7 +86,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国07-家宽-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35022
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -95,7 +95,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国08-家宽-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35023
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -104,7 +104,7 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国09-家宽-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35049
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
@@ -113,16 +113,86 @@ proxies:
   udp-over-tcp-version: 2
 - name: BGP智能路由-美国10-家宽-ss-x2
   type: ss
-  server: zhihu-yun.newblossom.cn
+  server: iqiyi-jiangsu.newblossom.cn
   port: 35050
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: VLESS-美国1-三网优化-x2
+- name: IX精品专线-美国01-禁止大流量-x10
   type: vless
-  server: meituan-yun.newblossom.cn
+  server: zhuoyue-ali.newblossom.cn
+  port: 29400
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-美国02-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29401
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-美国03-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29402
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-美国04-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29403
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-美国05-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29404
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: VLESS-美国1-三网优化-x1
+  type: vless
+  server: wangzherongyao.newblossom.cn
   port: 34400
   uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
@@ -131,12 +201,12 @@ proxies:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
   skip-cert-verify: true
-  servername: www.microsoft.com
+  servername: www.npmjs.com
   network: tcp
   client-fingerprint: firefox
-- name: VLESS-美国2-三网优化-x2
+- name: VLESS-美国2-三网优化-x1
   type: vless
-  server: meituan-yun.newblossom.cn
+  server: wangzherongyao.newblossom.cn
   port: 34401
   uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
@@ -145,12 +215,12 @@ proxies:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
   skip-cert-verify: true
-  servername: www.microsoft.com
+  servername: www.npmjs.com
   network: tcp
   client-fingerprint: firefox
-- name: VLESS-美国3-三网优化-x2
+- name: VLESS-美国3-三网优化-x1
   type: vless
-  server: meituan-yun.newblossom.cn
+  server: wangzherongyao.newblossom.cn
   port: 34402
   uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
@@ -159,7 +229,7 @@ proxies:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
   skip-cert-verify: true
-  servername: www.microsoft.com
+  servername: www.npmjs.com
   network: tcp
   client-fingerprint: firefox
 proxy-groups:
@@ -176,15 +246,23 @@ proxy-groups:
   - BGP智能路由-美国08-家宽-ss-x2
   - BGP智能路由-美国09-家宽-ss-x2
   - BGP智能路由-美国10-家宽-ss-x2
-  - VLESS-美国1-三网优化-x2
-  - VLESS-美国2-三网优化-x2
-  - VLESS-美国3-三网优化-x2
+  - IX精品专线-美国01-禁止大流量-x10
+  - IX精品专线-美国02-禁止大流量-x10
+  - IX精品专线-美国03-禁止大流量-x10
+  - IX精品专线-美国04-禁止大流量-x10
+  - IX精品专线-美国05-禁止大流量-x10
+  - VLESS-美国1-三网优化-x1
+  - VLESS-美国2-三网优化-x1
+  - VLESS-美国3-三网优化-x1
 - name: Steam
   type: select
   proxies:
   - DIRECT
   - Proxy
 rules:
+- DOMAIN-SUFFIX,adobe.com,REJECT
+- DOMAIN-SUFFIX,adobe.io,REJECT
+- DOMAIN-SUFFIX,adobestats.io,REJECT
 - DOMAIN-SUFFIX,360.cn,DIRECT
 - DOMAIN-SUFFIX,360.com,DIRECT
 - DOMAIN-SUFFIX,360.net,DIRECT
@@ -1128,4 +1206,6 @@ rules:
 - IP-CIDR,fe80::/10,DIRECT
 - IP-CIDR,ff00::/8,DIRECT
 - GEOIP,CN,DIRECT
+- IP-CIDR,192.192.10.0/24,DIRECT
+- IP-CIDR,192.192.192.0/24,DIRECT
 - MATCH,Proxy

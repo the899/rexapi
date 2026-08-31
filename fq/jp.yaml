@@ -30,55 +30,170 @@ dns:
     - +.facebook.com
     - +.youtube.com
 proxies:
-- name: BGP智能路由-台湾01-ss-x2
+- name: BGP智能路由-日本01-流媒体AI-ss-x2
   type: ss
   server: iqiyi-jiangsu.newblossom.cn
-  port: 35011
+  port: 35001
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: BGP智能路由-台湾02-ss-x2
+- name: BGP智能路由-日本02-流媒体AI-ss-x2
   type: ss
   server: iqiyi-jiangsu.newblossom.cn
-  port: 35012
+  port: 35002
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: BGP智能路由-台湾03-ss-x2
+- name: BGP智能路由-日本03-流媒体AI-ss-x2
   type: ss
   server: iqiyi-jiangsu.newblossom.cn
-  port: 35015
+  port: 35003
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: BGP智能路由-台湾04-ss-x2
+- name: BGP智能路由-日本04-流媒体AI-ss-x2
   type: ss
   server: iqiyi-jiangsu.newblossom.cn
-  port: 35016
+  port: 35004
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: BGP智能路由-台湾05-ss-x2
+- name: BGP智能路由-日本05-流媒体AI-ss-x2
   type: ss
   server: iqiyi-jiangsu.newblossom.cn
-  port: 35048
+  port: 35005
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
   udp: true
   udp-over-tcp: true
   udp-over-tcp-version: 2
-- name: VLESS-台湾1-三网优化-低倍率-x1
+- name: BGP智能路由-日本06-流媒体AI-ss-x2
+  type: ss
+  server: iqiyi-jiangsu.newblossom.cn
+  port: 35013
+  password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
+  cipher: 2022-blake3-aes-128-gcm
+  udp: true
+  udp-over-tcp: true
+  udp-over-tcp-version: 2
+- name: BGP智能路由-日本07-流媒体AI-ss-x2
+  type: ss
+  server: iqiyi-jiangsu.newblossom.cn
+  port: 35014
+  password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
+  cipher: 2022-blake3-aes-128-gcm
+  udp: true
+  udp-over-tcp: true
+  udp-over-tcp-version: 2
+- name: BGP智能路由-日本08-流媒体AI-ss-x2
+  type: ss
+  server: iqiyi-jiangsu.newblossom.cn
+  port: 35033
+  password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
+  cipher: 2022-blake3-aes-128-gcm
+  udp: true
+  udp-over-tcp: true
+  udp-over-tcp-version: 2
+- name: BGP智能路由-日本09-流媒体AI-ss-x2
+  type: ss
+  server: iqiyi-jiangsu.newblossom.cn
+  port: 35054
+  password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
+  cipher: 2022-blake3-aes-128-gcm
+  udp: true
+  udp-over-tcp: true
+  udp-over-tcp-version: 2
+- name: BGP智能路由-日本10-流媒体AI-ss-x2
+  type: ss
+  server: iqiyi-jiangsu.newblossom.cn
+  port: 35055
+  password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
+  cipher: 2022-blake3-aes-128-gcm
+  udp: true
+  udp-over-tcp: true
+  udp-over-tcp-version: 2
+- name: IX精品专线-日本01-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29255
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-日本02-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29256
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-日本03-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29257
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-日本04-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29258
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: IX精品专线-日本05-禁止大流量-x10
+  type: vless
+  server: zhuoyue-ali.newblossom.cn
+  port: 29259
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.jd.com
+  network: tcp
+  client-fingerprint: firefox
+- name: VLESS-日本1-三网优化-x1
   type: vless
   server: wangzherongyao.newblossom.cn
-  port: 34350
+  port: 34250
   uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
   tls: true
@@ -89,10 +204,24 @@ proxies:
   servername: www.npmjs.com
   network: tcp
   client-fingerprint: firefox
-- name: VLESS-台湾2-三网优化-低倍率-x1
+- name: VLESS-日本2-三网优化-x1
   type: vless
   server: wangzherongyao.newblossom.cn
-  port: 34351
+  port: 34251
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
+  udp: true
+  tls: true
+  reality-opts:
+    public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
+    short-id: 8352e4aa
+  skip-cert-verify: true
+  servername: www.npmjs.com
+  network: tcp
+  client-fingerprint: firefox
+- name: VLESS-日本3-三网优化-x1
+  type: vless
+  server: wangzherongyao.newblossom.cn
+  port: 34252
   uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
   tls: true
@@ -107,13 +236,24 @@ proxy-groups:
 - name: Proxy
   type: select
   proxies:
-  - BGP智能路由-台湾01-ss-x2
-  - BGP智能路由-台湾02-ss-x2
-  - BGP智能路由-台湾03-ss-x2
-  - BGP智能路由-台湾04-ss-x2
-  - BGP智能路由-台湾05-ss-x2
-  - VLESS-台湾1-三网优化-低倍率-x1
-  - VLESS-台湾2-三网优化-低倍率-x1
+  - BGP智能路由-日本01-流媒体AI-ss-x2
+  - BGP智能路由-日本02-流媒体AI-ss-x2
+  - BGP智能路由-日本03-流媒体AI-ss-x2
+  - BGP智能路由-日本04-流媒体AI-ss-x2
+  - BGP智能路由-日本05-流媒体AI-ss-x2
+  - BGP智能路由-日本06-流媒体AI-ss-x2
+  - BGP智能路由-日本07-流媒体AI-ss-x2
+  - BGP智能路由-日本08-流媒体AI-ss-x2
+  - BGP智能路由-日本09-流媒体AI-ss-x2
+  - BGP智能路由-日本10-流媒体AI-ss-x2
+  - IX精品专线-日本01-禁止大流量-x10
+  - IX精品专线-日本02-禁止大流量-x10
+  - IX精品专线-日本03-禁止大流量-x10
+  - IX精品专线-日本04-禁止大流量-x10
+  - IX精品专线-日本05-禁止大流量-x10
+  - VLESS-日本1-三网优化-x1
+  - VLESS-日本2-三网优化-x1
+  - VLESS-日本3-三网优化-x1
 - name: Steam
   type: select
   proxies:
