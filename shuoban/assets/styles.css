@@ -144,3 +144,15 @@ input.typed {
 
 .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
 main h2 { font-weight: 700; }
+
+.prep-inline { margin: 12px 0 8px; }
+.prep-inline p, .prep-overlay p { font-size: 13px; color: var(--muted); text-align: center; margin-top: 8px; }
+.prep-track { height: 8px; background: #eee8de; border-radius: 99px; overflow: hidden; }
+.prep-track i { display: block; height: 100%; background: var(--teal); width: 0; transition: width .25s ease; }
+.prep-overlay {
+  position: absolute; inset: 0; z-index: 6;
+  background: rgba(255,250,243,.94);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 32px;
+}
+.prep-overlay .prep-track { width: 72%; }

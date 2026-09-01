@@ -42,6 +42,10 @@ function App() {
   const [typed, setTyped] = useState("");
   const [showFull, setShowFull] = useState(true);
   const asrPromise = useRef(null);
+  const warmRef = useRef(null);
+  const prepReady = useRef(false);
+  const [prep, setPrep] = useState({ done: 0, total: 0, ready: false });
+  const [waiting, setWaiting] = useState(false);
   const n = assignment.n || 2;
 
   useEffect(() => {
@@ -58,6 +62,15 @@ function App() {
     setTimeout(() => setToast(""), 1600);
   }
 
+  function linesOf(t) {
+    var nn = assignment.n || 2;
+    var out = [];
+    (t.pairs || []).slice(0, nn).forEach(function (p) {
+      [p.a, p.b, p.c1, p.c2].forEach(function (s) { if (s) out.push(s); });
+    });
+    return out;
+  }
+
   function openTheme(t) {
     setTheme(t);
     setI(0);
@@ -70,6 +83,13 @@ function App() {
     setPadded(false);
     setLineMarks([]);
     setShowFull(!((runs[t.id] || 0) >= 2));
+    setWaiting(false);
+    prepReady.current = false;
+    setPrep({ done: 0, total: 0, ready: false });
+    warmRef.current = ShuobanTTS.prefetch(linesOf(t), function (d, tot) {
+      prepReady.current = tot > 0 && d >= tot;
+      setPrep({ done: d, total: tot, ready: tot > 0 && d >= tot });
+    });
     setView("intro");
   }
 
@@ -79,10 +99,17 @@ function App() {
     ShuobanTTS.speak(pair.a).then(() => setPhase("b"));
   }
 
-  function startTalk() {
-    ShuobanTTS.unlock();
+  function goTalk() {
+    setWaiting(false);
     setView("talk");
     setTimeout(playA, 200);
+  }
+
+  function startTalk() {
+    ShuobanTTS.unlock();
+    if (prepReady.current) { goTalk(); return; }
+    setWaiting(true);
+    (warmRef.current || Promise.resolve()).then(goTalk).catch(goTalk);
   }
 
   function finishTheme(marks, flags) {
@@ -311,8 +338,20 @@ function App() {
           <div className="who you"><div className="avatar b">B</div><h3>你</h3><p>接话</p></div>
         </div>
         <p className="hint" style=${{ textAlign: "center" }}>开口 ${n} 次 · 目标 ${assignment.target}</p>
-        <div style=${{ marginTop: "auto" }}><button className="btn primary" onClick=${startTalk}>开始</button></div>
+        ${!prep.ready && prep.total > 0 && !waiting && html`
+          <div className="prep-inline">
+            <div className="prep-track"><i style=${{ width: ((prep.done / prep.total) * 100) + "%" }}></i></div>
+            <p>正在准备声音 ${prep.done}/${prep.total}</p>
+          </div>
+        `}
+        <div style=${{ marginTop: "auto" }}><button className="btn primary" onClick=${startTalk} disabled=${waiting}>${waiting ? "准备中…" : "开始"}</button></div>
       </main>
+      ${waiting && html`
+        <div className="prep-overlay">
+          <div className="prep-track"><i style=${{ width: (prep.total ? (prep.done / prep.total) * 100 : 0) + "%" }}></i></div>
+          <p>正在准备声音 ${prep.done}/${prep.total || "…"}</p>
+        </div>
+      `}
     </div>`;
   }
 
