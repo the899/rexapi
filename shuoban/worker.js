@@ -1,12 +1,14 @@
 // 说伴 TTS + ASR。密钥：Worker 加密变量 DASHSCOPE_API_KEY、SHUOBAN_GATE
 // 请求头 X-Shuoban-Key 必须等于 SHUOBAN_GATE；仅允许 Origin https://a.a1b2.cc
-// POST / 或 /tts  {text, rate} → audio/mpeg
+// POST / 或 /tts  {text} → audio/mpeg；语速音量用 TTS_RATE / TTS_VOLUME
 // POST /asr       原始音频 → {text}
 
 const LIMIT_PER_MIN = 40;
 const MAX_TTS_CHARS = 400;
 const MAX_ASR_BYTES = 2 * 1024 * 1024;
 const ALLOW_ORIGIN = "https://a.a1b2.cc";
+const TTS_RATE = 1;
+const TTS_VOLUME = 50;
 
 function fromShuoban(req) {
   // 跨域时浏览器只给 Origin，Referer 常被裁成 https://a.a1b2.cc/ ，不能拿路径当门禁
@@ -60,10 +62,9 @@ async function overLimit(req) {
 }
 
 async function tts(req, key, cors, json) {
-  const { text, rate } = await req.json();
+  const { text } = await req.json();
   if (!text) return new Response("no text", { status: 400, headers: cors });
   if (String(text).length > MAX_TTS_CHARS) return json({ error: "too long" }, 413);
-  const speed = Math.min(2, Math.max(0.5, Number(rate) || 1));
   const ali = await fetch(
     "https://dashscope.aliyuncs.com/api/v1/services/audio/tts/SpeechSynthesizer",
     {
@@ -78,7 +79,8 @@ async function tts(req, key, cors, json) {
           text,
           voice: "loongluna_v3",
           format: "mp3",
-          rate: speed,
+          rate: TTS_RATE,
+          volume: TTS_VOLUME,
           language_hints: ["en"],
         },
       }),
