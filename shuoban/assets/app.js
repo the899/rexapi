@@ -36,7 +36,8 @@ function App() {
   const [hadClose, setHadClose] = useState(false);
   const [padded, setPadded] = useState(false);
   const [lineMarks, setLineMarks] = useState([]);
-  const [holding, setHolding] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [asrBusy, setAsrBusy] = useState(false);
   const [toast, setToast] = useState("");
   const [typed, setTyped] = useState("");
   const [showFull, setShowFull] = useState(true);
@@ -180,21 +181,27 @@ function App() {
     ShuobanTTS.speak(pair.b);
   }
 
-  function holdStart(ev) {
+  function tapTalk(ev) {
     ev.preventDefault();
-    if (holding) return;
-    setHolding(true);
-    if (ShuobanASR.available()) {
-      asrPromise.current = ShuobanASR.startHold();
+    if (asrBusy) return;
+    if (!listening) {
+      setListening(true);
+      if (ShuobanASR.available()) {
+        asrPromise.current = ShuobanASR.startHold();
+      }
+      return;
     }
-  }
-  function holdEnd(ev) {
-    ev.preventDefault();
-    if (!holding) return;
-    setHolding(false);
+    setListening(false);
     if (ShuobanASR.available()) {
+      setAsrBusy(true);
       ShuobanASR.stopHold();
-      (asrPromise.current || Promise.resolve("")).then(onSaid).catch(function () { onSaid(""); });
+      (asrPromise.current || Promise.resolve("")).then(function (text) {
+        setAsrBusy(false);
+        onSaid(text);
+      }).catch(function () {
+        setAsrBusy(false);
+        onSaid("");
+      });
     } else if (typed) {
       onSaid(typed);
       setTyped("");
@@ -336,12 +343,11 @@ function App() {
         `}
         <div className="hold-wrap">
           ${!ShuobanASR.available() && html`<input className="typed" placeholder="设备不能听时，打出你说的句子" value=${typed} onInput=${(e) => setTyped(e.target.value)} />`}
-          <button className=${"btn hold" + (holding ? " rec" : "")}
-            onMouseDown=${holdStart} onMouseUp=${holdEnd} onMouseLeave=${holding ? holdEnd : undefined}
-            onTouchStart=${holdStart} onTouchEnd=${holdEnd}
-            disabled=${phase === "a" || (teach && teachStep === 1)}
-          >${holding ? "松开" : "按住\n说话"}</button>
-          <small>松开就停 · 对话中不弹档</small>
+          <button className=${"btn hold" + (listening ? " rec" : "") + (asrBusy ? " busy" : "")}
+            onClick=${tapTalk}
+            disabled=${asrBusy || phase === "a" || (teach && teachStep === 1)}
+          >${asrBusy ? html`<i className="spin"></i>` : (listening ? "点击停止" : "点击说话")}</button>
+          <small>${asrBusy ? "正在听写…" : (listening ? "再点一下停止" : "点一下开始 · 再点停止")}</small>
         </div>
       </main>
       ${toast && html`<div className="toast">${toast}</div>`}

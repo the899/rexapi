@@ -4,11 +4,13 @@ window.ShuobanASR = {
   rec: null,
   chunks: null,
   mime: "audio/webm",
+  wantStop: false,
   available: function () {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
   },
   startHold: function () {
     var self = this;
+    this.wantStop = false;
     return new Promise(function (resolve, reject) {
       navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
         var mime = "";
@@ -36,10 +38,12 @@ window.ShuobanASR = {
             .catch(function () { resolve(""); });
         };
         rec.start();
+        if (self.wantStop && rec.state === "recording") rec.stop();
       }).catch(reject);
     });
   },
   stopHold: function () {
+    this.wantStop = true;
     try {
       if (this.rec && this.rec.state === "recording") this.rec.stop();
     } catch (e) {}

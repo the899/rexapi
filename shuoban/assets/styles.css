@@ -75,8 +75,18 @@ main { flex: 1; overflow: auto; padding: 0 18px 18px; display: flex; flex-direct
 .btn.hold {
   width: 92px; height: 92px; border-radius: 50%; background: var(--teal); color: #fff;
   font-size: 13px; box-shadow: 0 10px 24px rgba(15,122,114,.35);
+  white-space: pre-line; line-height: 1.2;
+  display: grid; place-items: center;
 }
 .btn.hold.rec { background: #b42318; }
+.btn.hold.busy { opacity: 0.85; cursor: default; }
+.btn.hold:disabled { opacity: 0.55; }
+.btn.hold .spin {
+  width: 28px; height: 28px; border: 3px solid rgba(255,255,255,.35);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 .btn.ghost { background: none; color: var(--muted); font-size: 13px; padding: 8px; }
 .cast { display: flex; gap: 12px; margin: 16px 0; }
 .who { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px 12px; text-align: center; }
