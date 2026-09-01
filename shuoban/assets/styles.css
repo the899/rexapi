@@ -3,10 +3,10 @@
   --teal: #0f7a72; --teal-soft: #d7efeb; --amber: #c47a12; --amber-soft: #fdecc8;
   --rose: #b42318; --rose-soft: #fde8e6;
   --frame-h: 16;
-  --frame-w: 9;
+  --frame-w: 10;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; }
+html, body, #root { height: 100%; width: 100%; }
 body {
   font-family: "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
   background: #cfc6b8;
@@ -22,15 +22,20 @@ body {
   justify-content: center;
   align-items: center;
 }
-/* 所有页面同一 #app：高铺满。宽最多 9/16（竖16横9），再宽就裁。窗口已是竖屏则撑满，和手机一样。 */
+/* 所有页面同一 #app。手机 / 窄窗：撑满。电脑宽窗：高度铺满，宽度最多 10/16（竖16横10）。 */
 #app {
   height: 100%;
-  width: min(100%, calc(100dvh * var(--frame-w) / var(--frame-h)));
+  width: 100%;
   background: var(--paper);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+}
+@media (min-width: 600px) {
+  #app {
+    width: min(100%, calc(100dvh * var(--frame-w) / var(--frame-h)));
+  }
 }
 header.bar {
   display: flex; align-items: center; justify-content: space-between;
