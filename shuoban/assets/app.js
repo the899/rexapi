@@ -75,7 +75,7 @@ function App() {
   function playA() {
     if (!pair) return;
     setPhase("a");
-    ShuobanTTS.speak(pair.a, { rate: 1 }).then(() => setPhase("b"));
+    ShuobanTTS.speak(pair.a).then(() => setPhase("b"));
   }
 
   function startTalk() {
@@ -122,7 +122,7 @@ function App() {
       setPhase("a");
       setTimeout(() => {
         const nxt = pairs[i + 1];
-        ShuobanTTS.speak(nxt.a, { rate: 1 }).then(() => setPhase("b"));
+        ShuobanTTS.speak(nxt.a).then(() => setPhase("b"));
       }, 250);
     }
   }
@@ -133,7 +133,7 @@ function App() {
       const c = silenceN + 1;
       setSilenceN(c);
       ping(c >= 3 ? "先听这一截" : "没听清，再说一次");
-      if (c >= 3) ShuobanTTS.speak(pair.c1, { rate: 0.85 });
+      if (c >= 3) ShuobanTTS.speak(pair.c1);
       setPhase("b");
       return;
     }
@@ -143,7 +143,7 @@ function App() {
     }
     if (phase === "teach" && teachStep === 3) {
       setTeachStep(4);
-      ShuobanTTS.speak(pair.a, { rate: 1 });
+      ShuobanTTS.speak(pair.a);
       return;
     }
     if (g === "pass") {
@@ -163,13 +163,13 @@ function App() {
       setUsedTeach(true);
       if (rounds >= 2) {
         ping("这句先带过去");
-        ShuobanTTS.speak(pair.b, { rate: 0.9 });
+        ShuobanTTS.speak(pair.b);
         nextLine("再练", { usedTeach: true, hadClose: false, padded: true });
       } else {
         ping("再跟我读");
         setTeachStep(1);
         setPhase("teach");
-        ShuobanTTS.speak(pair.b, { rate: 0.8 });
+        ShuobanTTS.speak(pair.b);
       }
       return;
     }
@@ -177,7 +177,7 @@ function App() {
     setPhase("teach");
     setTeachStep(1);
     ping("听我的");
-    ShuobanTTS.speak(pair.b, { rate: 0.8 });
+    ShuobanTTS.speak(pair.b);
   }
 
   function holdStart(ev) {
@@ -204,7 +204,7 @@ function App() {
   }
 
   function skipTeach() {
-    ShuobanTTS.speak(pair.b, { rate: 0.9 });
+    ShuobanTTS.speak(pair.b);
     nextLine("再练", { usedTeach: true, hadClose: false, padded: true });
   }
 

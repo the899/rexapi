@@ -2,25 +2,34 @@
   --paper: #fffaf3; --ink: #1c1916; --muted: #6f675e; --line: #e6ddd0;
   --teal: #0f7a72; --teal-soft: #d7efeb; --amber: #c47a12; --amber-soft: #fdecc8;
   --rose: #b42318; --rose-soft: #fde8e6;
+  --frame-h: 16;
+  --frame-w: 9;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+html, body, #root { height: 100%; }
 body {
   font-family: "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
   background: #cfc6b8;
   color: var(--ink);
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #app {
-  width: 100%;
-  max-width: 430px;
-  height: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
+  width: min(100vw, calc(100dvh * var(--frame-w) / var(--frame-h)));
   background: var(--paper);
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
 }
 header.bar {
   display: flex; align-items: center; justify-content: space-between;

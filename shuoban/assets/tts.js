@@ -1,5 +1,7 @@
 window.ShuobanGate = window.ShuobanGate || "oJaVRr2PPOGGsdYk98P2YrD4qMXY0o-p";
 window.ShuobanTTS = {
+  volume: 1,
+  rate: 1,
   audio: null,
   currentUrl: null,
   unlocked: false,
@@ -9,6 +11,7 @@ window.ShuobanTTS = {
       this.audio.setAttribute("playsinline", "true");
       this.audio.preload = "auto";
     }
+    this.audio.volume = Math.max(0, Math.min(1, this.volume));
     return this.audio;
   },
   unlock: function () {
@@ -36,13 +39,16 @@ window.ShuobanTTS = {
       || voices.find(function (v) { return /^en(-|_|$)/i.test(v.lang); })
       || null;
   },
-  browserSpeak: function (text, rate) {
+  browserSpeak: function (text) {
     var self = this;
+    var rate = this.rate;
+    var vol = Math.max(0, Math.min(1, this.volume));
     return new Promise(function (resolve) {
       self.stop();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = "en-US";
-      u.rate = rate || 1;
+      u.rate = rate;
+      u.volume = vol;
       var voice = self.pickEnglishVoice();
       if (voice) u.voice = voice;
       u.onend = function () { resolve("browser"); };
@@ -57,6 +63,7 @@ window.ShuobanTTS = {
       try { URL.revokeObjectURL(this.currentUrl); } catch (e) {}
     }
     this.currentUrl = URL.createObjectURL(blob);
+    a.volume = Math.max(0, Math.min(1, this.volume));
     a.src = this.currentUrl;
     return a.play().then(function () {
       return new Promise(function (resolve, reject) {
@@ -65,10 +72,10 @@ window.ShuobanTTS = {
       });
     });
   },
-  speak: function (text, opts) {
-    opts = opts || {};
-    var rate = opts.rate == null ? 1 : opts.rate;
+  speak: function (text) {
     var self = this;
+    var rate = this.rate;
+    try { localStorage.removeItem("shuoban_tts_url"); } catch (e) {}
     this.ensure();
     return fetch("https://tts.a1b2.cc", {
       method: "POST",
@@ -83,7 +90,7 @@ window.ShuobanTTS = {
         return self.playBlob(blob);
       });
     }).catch(function () {
-      return self.browserSpeak(text, rate);
+      return self.browserSpeak(text);
     });
   }
 };
