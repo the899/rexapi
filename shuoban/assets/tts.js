@@ -1,3 +1,4 @@
+window.ShuobanGate = window.ShuobanGate || "oJaVRr2PPOGGsdYk98P2YrD4qMXY0o-p";
 window.ShuobanTTS = {
   stop: function () {
     try { speechSynthesis.cancel(); } catch (e) {}
@@ -25,12 +26,10 @@ window.ShuobanTTS = {
   speak: function (text, opts) {
     opts = opts || {};
     var rate = opts.rate == null ? 1 : opts.rate;
-    var endpoint = localStorage.getItem("shuoban_tts_url") || "";
     var self = this;
-    if (!endpoint) return this.browserSpeak(text, rate);
-    return fetch(endpoint, {
+    return fetch("https://tts.a1b2.cc", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Shuoban-Key": window.ShuobanGate },
       body: JSON.stringify({ text: text, rate: rate })
     }).then(function (r) {
       if (!r.ok) throw new Error("tts-http");

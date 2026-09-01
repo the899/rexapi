@@ -1,39 +1,48 @@
+window.ShuobanGate = window.ShuobanGate || "oJaVRr2PPOGGsdYk98P2YrD4qMXY0o-p";
 window.ShuobanASR = {
-  Recognition: window.SpeechRecognition || window.webkitSpeechRecognition,
-  available: function () {
-    return !!this.Recognition;
-  },
+  endpoint: "https://tts.a1b2.cc/asr",
   rec: null,
+  chunks: null,
+  mime: "audio/webm",
+  available: function () {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  },
   startHold: function () {
     var self = this;
     return new Promise(function (resolve, reject) {
-      if (!self.Recognition) {
-        reject(new Error("no-asr"));
-        return;
-      }
-      try { if (self.rec) self.rec.abort(); } catch (e) {}
-      var rec = new self.Recognition();
-      self.rec = rec;
-      rec.lang = "en-US";
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      rec.continuous = false;
-      var got = "";
-      rec.onresult = function (e) {
-        if (e.results && e.results[0] && e.results[0][0]) {
-          got = e.results[0][0].transcript || "";
-        }
-      };
-      rec.onerror = function (e) {
-        if (e.error === "no-speech" || e.error === "aborted") resolve("");
-        else reject(e);
-      };
-      rec.onend = function () { resolve(got); };
-      try { rec.start(); } catch (err) { reject(err); }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+        var mime = "";
+        ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].forEach(function (m) {
+          if (!mime && MediaRecorder.isTypeSupported(m)) mime = m;
+        });
+        self.mime = mime || "audio/webm";
+        self.chunks = [];
+        var rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+        self.rec = rec;
+        rec.ondataavailable = function (e) {
+          if (e.data && e.data.size) self.chunks.push(e.data);
+        };
+        rec.onerror = function () {
+          stream.getTracks().forEach(function (t) { t.stop(); });
+          resolve("");
+        };
+        rec.onstop = function () {
+          stream.getTracks().forEach(function (t) { t.stop(); });
+          var blob = new Blob(self.chunks, { type: self.mime });
+          if (blob.size < 200) { resolve(""); return; }
+          fetch(self.endpoint, { method: "POST", headers: { "Content-Type": self.mime, "X-Shuoban-Key": window.ShuobanGate }, body: blob })
+            .then(function (r) { return r.json(); })
+            .then(function (d) { resolve((d && d.text) || ""); })
+            .catch(function () { resolve(""); });
+        };
+        rec.start();
+      }).catch(reject);
     });
   },
   stopHold: function () {
-    try { if (this.rec) this.rec.stop(); } catch (e) {}
+    try {
+      if (this.rec && this.rec.state === "recording") this.rec.stop();
+    } catch (e) {}
   }
 };
 

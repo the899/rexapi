@@ -21,7 +21,6 @@ function App() {
   });
   const [best, setBest] = useState(store0.best || {});
   const [runs, setRuns] = useState(store0.runs || {});
-  const [ttsUrl, setTtsUrl] = useState(store0.ttsUrl || "");
   const [theme, setTheme] = useState(null);
   const [i, setI] = useState(0);
   const [phase, setPhase] = useState("a");
@@ -40,10 +39,8 @@ function App() {
   const n = assignment.n || 2;
 
   useEffect(() => {
-    save({ assignment, best, runs, ttsUrl });
-    if (ttsUrl) localStorage.setItem("shuoban_tts_url", ttsUrl);
-    else localStorage.removeItem("shuoban_tts_url");
-  }, [assignment, best, runs, ttsUrl]);
+    save({ assignment, best, runs });
+  }, [assignment, best, runs]);
 
   const themes = (window.SHUOBAN_THEMES || []).filter((t) => t.unit === "U1");
   const pairs = theme ? theme.pairs.slice(0, n) : [];
@@ -280,11 +277,6 @@ function App() {
             <button className=${d.target === "还生" ? "on" : ""} onClick=${() => setAssignDraft(Object.assign({}, d, { target: "还生" }))}>还生</button>
             <button className=${d.target === "会说" ? "on" : ""} onClick=${() => setAssignDraft(Object.assign({}, d, { target: "会说" }))}>会说</button>
           </div>
-        </div>
-        <div className="field">
-          <div className="k">云端 TTS 地址（可空，空则用浏览器朗读）</div>
-          <input className="typed" placeholder="https://xxx.workers.dev/tts" value=${ttsUrl}
-            onInput=${(e) => setTtsUrl(e.target.value.trim())} />
         </div>
         <p className="hint">会说 = 一次说对、没被教。还生 = 能演完即可。</p>
         <div style=${{ marginTop: "auto" }}>
