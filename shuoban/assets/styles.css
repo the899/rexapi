@@ -22,9 +22,10 @@ body {
   justify-content: center;
   align-items: center;
 }
+/* 所有页面同一 #app：高铺满。宽最多 9/16（竖16横9），再宽就裁。窗口已是竖屏则撑满，和手机一样。 */
 #app {
-  height: 100dvh;
-  width: min(100vw, calc(100dvh * var(--frame-w) / var(--frame-h)));
+  height: 100%;
+  width: min(100%, calc(100dvh * var(--frame-w) / var(--frame-h)));
   background: var(--paper);
   display: flex;
   flex-direction: column;
