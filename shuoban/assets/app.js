@@ -2,7 +2,12 @@ const html = htm.bind(React.createElement);
 const { useState, useEffect, useRef } = React;
 
 function load() {
-  try { return JSON.parse(localStorage.getItem("shuoban") || "{}"); } catch (e) { return {}; }
+  try {
+    localStorage.removeItem("shuoban_tts_url");
+    var s = JSON.parse(localStorage.getItem("shuoban") || "{}");
+    delete s.ttsUrl;
+    return s;
+  } catch (e) { return {}; }
 }
 function save(s) { localStorage.setItem("shuoban", JSON.stringify(s)); }
 
@@ -74,6 +79,7 @@ function App() {
   }
 
   function startTalk() {
+    ShuobanTTS.unlock();
     setView("talk");
     setTimeout(playA, 200);
   }

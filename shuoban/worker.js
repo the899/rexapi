@@ -1,24 +1,32 @@
 // 说伴 TTS + ASR。密钥：Worker 加密变量 DASHSCOPE_API_KEY、SHUOBAN_GATE
-// 请求头 X-Shuoban-Key 必须等于 SHUOBAN_GATE
+// 请求头 X-Shuoban-Key 必须等于 SHUOBAN_GATE；仅允许 Origin https://a.a1b2.cc
 // POST / 或 /tts  {text, rate} → audio/mpeg
 // POST /asr       原始音频 → {text}
 
 const LIMIT_PER_MIN = 40;
 const MAX_TTS_CHARS = 400;
 const MAX_ASR_BYTES = 2 * 1024 * 1024;
+const ALLOW_ORIGIN = "https://a.a1b2.cc";
+
+function fromShuoban(req) {
+  // 跨域时浏览器只给 Origin，Referer 常被裁成 https://a.a1b2.cc/ ，不能拿路径当门禁
+  return (req.headers.get("Origin") || "") === ALLOW_ORIGIN;
+}
 
 export default {
   async fetch(req, env) {
     const cors = {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": ALLOW_ORIGIN,
       "Access-Control-Allow-Headers": "Content-Type, X-Shuoban-Key",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
+      Vary: "Origin",
     };
     const json = (obj, status) =>
       new Response(JSON.stringify(obj), {
         status: status || 200,
         headers: { ...cors, "Content-Type": "application/json" },
       });
+    if (!fromShuoban(req)) return json({ error: "origin" }, 403);
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     if (req.method !== "POST") return new Response("POST only", { status: 405, headers: cors });
 
