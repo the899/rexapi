@@ -87,8 +87,9 @@ function App() {
     prepReady.current = false;
     setPrep({ done: 0, total: 0, ready: false });
     warmRef.current = ShuobanTTS.prefetch(linesOf(t), function (d, tot) {
-      prepReady.current = tot > 0 && d >= tot;
-      setPrep({ done: d, total: tot, ready: tot > 0 && d >= tot });
+      var ok = tot === 0 || d >= tot;
+      prepReady.current = ok;
+      setPrep({ done: d, total: tot, ready: ok });
     });
     setView("intro");
   }

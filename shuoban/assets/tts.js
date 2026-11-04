@@ -214,21 +214,36 @@ window.ShuobanTTS = {
     (texts || []).forEach(function (t) {
       if (t && !seen[t]) { seen[t] = 1; list.push(t); }
     });
-    var total = list.length;
-    var done = 0;
-    if (onProgress) onProgress(0, total);
-    if (!total) return Promise.resolve();
-    var i = 0;
-    function next() {
-      if (i >= list.length) return Promise.resolve();
-      var t = list[i++];
-      return self.fetchClip(t).catch(function () { return null; }).then(function () {
-        done += 1;
-        if (onProgress) onProgress(done, total);
-        return next();
+    if (!list.length) {
+      if (onProgress) onProgress(0, 0);
+      return Promise.resolve();
+    }
+    function missing(t) {
+      var key = self.keyOf(t);
+      if (self.mem[key]) return Promise.resolve(null);
+      return self.idbGet(key).then(function (hit) {
+        if (hit) { self.mem[key] = hit; return null; }
+        return t;
       });
     }
-    return Promise.all([next(), next()]);
+    return Promise.all(list.map(missing)).then(function (rows) {
+      var need = rows.filter(Boolean);
+      var total = need.length;
+      var done = 0;
+      if (onProgress) onProgress(0, total);
+      if (!total) return;
+      var i = 0;
+      function next() {
+        if (i >= need.length) return Promise.resolve();
+        var t = need[i++];
+        return self.fetchClip(t).catch(function () { return null; }).then(function () {
+          done += 1;
+          if (onProgress) onProgress(done, total);
+          return next();
+        });
+      }
+      return Promise.all([next(), next()]);
+    });
   },
   speak: function (text) {
     var self = this;
