@@ -1,108 +1,84 @@
-allow-lan: true
-mode: Rule
+mixed-port: 7890
+allow-lan: false
+mode: rule
 log-level: silent
-external-controller: 0.0.0.0:9090
+ipv6: true
 dns:
   enable: true
   ipv6: true
-  default-nameserver:
-  - 223.5.5.5
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-  fake-ip-filter-mode: blacklist
   fake-ip-filter:
   - '*.lan'
+  default-nameserver:
+  - 223.5.5.5
   nameserver:
   - https://doh.pub/dns-query
   - https://dns.alidns.com/dns-query
-  fallback:
-  - tls://8.8.4.4
-  - tls://1.1.1.1
   proxy-server-nameserver:
   - https://doh.pub/dns-query
-  fallback-filter:
-    geoip: true
-    geoip-code: CN
-    ipcidr:
-    - 240.0.0.0/4
-    domain:
-    - +.google.com
-    - +.facebook.com
-    - +.youtube.com
 proxies:
 - name: BGP智能路由-台湾01-ss-x2
   type: ss
-  server: iqiyi-jiangsu.newblossom.cn
+  server: waizhigongwang.newblossom.cn
   port: 35011
+  udp: true
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
-  udp: true
-  udp-over-tcp: true
-  udp-over-tcp-version: 2
 - name: BGP智能路由-台湾02-ss-x2
   type: ss
-  server: iqiyi-jiangsu.newblossom.cn
+  server: waizhigongwang.newblossom.cn
   port: 35012
+  udp: true
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
-  udp: true
-  udp-over-tcp: true
-  udp-over-tcp-version: 2
 - name: BGP智能路由-台湾03-ss-x2
   type: ss
-  server: iqiyi-jiangsu.newblossom.cn
+  server: waizhigongwang.newblossom.cn
   port: 35015
+  udp: true
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
-  udp: true
-  udp-over-tcp: true
-  udp-over-tcp-version: 2
 - name: BGP智能路由-台湾04-ss-x2
   type: ss
-  server: iqiyi-jiangsu.newblossom.cn
+  server: waizhigongwang.newblossom.cn
   port: 35016
+  udp: true
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
-  udp: true
-  udp-over-tcp: true
-  udp-over-tcp-version: 2
 - name: BGP智能路由-台湾05-ss-x2
   type: ss
-  server: iqiyi-jiangsu.newblossom.cn
+  server: waizhigongwang.newblossom.cn
   port: 35048
+  udp: true
   password: leD92uEJsHmAHlxIz8I0Tg==:NTc0ODh8OTRiMjNiNTAtOA==
   cipher: 2022-blake3-aes-128-gcm
-  udp: true
-  udp-over-tcp: true
-  udp-over-tcp-version: 2
 - name: VLESS-台湾1-三网优化-低倍率-x1
   type: vless
   server: wangzherongyao.newblossom.cn
   port: 34350
-  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   tls: true
+  servername: www.npmjs.com
+  client-fingerprint: firefox
+  skip-cert-verify: true
   reality-opts:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
-  skip-cert-verify: true
-  servername: www.npmjs.com
-  network: tcp
-  client-fingerprint: firefox
 - name: VLESS-台湾2-三网优化-低倍率-x1
   type: vless
   server: wangzherongyao.newblossom.cn
   port: 34351
-  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   udp: true
+  uuid: 94b23b50-8180-37de-8bf1-7825a3e68ba1
   tls: true
+  servername: www.npmjs.com
+  client-fingerprint: firefox
+  skip-cert-verify: true
   reality-opts:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
-  skip-cert-verify: true
-  servername: www.npmjs.com
-  network: tcp
-  client-fingerprint: firefox
 proxy-groups:
 - name: Proxy
   type: select
@@ -613,7 +589,6 @@ rules:
 - DOMAIN-SUFFIX,moegirl.org.cn,Proxy
 - DOMAIN-SUFFIX,moegirl.tw,Proxy
 - DOMAIN-SUFFIX,moegirl.uk,Proxy
-- null
 - DOMAIN-SUFFIX,moji.com,DIRECT
 - DOMAIN-SUFFIX,mojicb.com,DIRECT
 - DOMAIN-SUFFIX,firefox.com,Proxy
@@ -1061,10 +1036,10 @@ rules:
 - IP-CIDR,198.51.100.0/24,DIRECT
 - IP-CIDR,203.0.113.0/24,DIRECT
 - IP-CIDR,224.0.0.0/3,DIRECT
-- IP-CIDR,::/127,DIRECT
-- IP-CIDR,fc00::/7,DIRECT
-- IP-CIDR,fe80::/10,DIRECT
-- IP-CIDR,ff00::/8,DIRECT
+- IP-CIDR6,::/127,DIRECT
+- IP-CIDR6,fc00::/7,DIRECT
+- IP-CIDR6,fe80::/10,DIRECT
+- IP-CIDR6,ff00::/8,DIRECT
 - GEOIP,CN,DIRECT
 - IP-CIDR,192.192.10.0/24,DIRECT
 - IP-CIDR,192.192.192.0/24,DIRECT
