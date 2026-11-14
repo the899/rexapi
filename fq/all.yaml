@@ -638,10 +638,37 @@ proxies:
   reality-opts:
     public-key: 224Fv0MBBDW9qwPSQ7kdeegOm6Z3s7bSVrFkzaphDmY
     short-id: 8352e4aa
+- name: BGP智能路由-美国-tx99-us-x2
+  type: anytls
+  server: tx99us.a1b2c.com
+  port: 8443
+  password: 1fh4ovz1LLbvR8d4ztS1cBtkNiLx1exg
+  sni: tx99us.a1b2c.com
+  skip-cert-verify: false
+  udp: true
+- name: BGP智能路由-台湾-czm0-tw-x2
+  type: anytls
+  server: litom2.asuscomm.com
+  port: 26393
+  password: kdgYI902371
+  sni: litom2.asuscomm.com
+  skip-cert-verify: true
+  udp: true
+- name: BGP智能路由-韩国-hh00-kr-x2
+  type: anytls
+  server: 85.155.176.44
+  port: 443
+  password: "79995dc2f986d4be9c3a2153385ba7a7"
+  sni: 85.155.176.44
+  skip-cert-verify: true
+  udp: true
 proxy-groups:
 - name: Proxy
   type: select
   proxies:
+  - BGP智能路由-美国-tx99-us-x2
+  - BGP智能路由-台湾-czm0-tw-x2
+  - BGP智能路由-韩国-hh00-kr-x2
   - BGP智能路由-香港01-大带宽-ss-x2
   - BGP智能路由-香港02-ss-x2
   - BGP智能路由-香港03-ss-x2
