@@ -20,7 +20,7 @@ dns:
     - 'https://doh.pub/dns-query'
 proxies:
   -
-    name: anytls-tw-czm
+    name: anytls-tw-c
     type: anytls
     server: litom2.asuscomm.com
     port: 26393
@@ -28,7 +28,7 @@ proxies:
     udp: true
     skip-cert-verify: true
   -
-    name: anytls-hh-k
+    name: BGP基础路由-韩国01-ss-x8
     type: anytls
     server: 85.155.176.44
     port: 443
@@ -36,7 +36,7 @@ proxies:
     udp: true
     skip-cert-verify: true
   -
-    name: anytls-hh-j
+    name: BGP基础路由-日本01-ss-x8
     type: anytls
     server: 167.104.167.220
     port: 443
@@ -505,9 +505,9 @@ proxy-groups:
     name: Proxy
     type: select
     proxies:
-      - anytls-tw-czm
-      - anytls-hh-k
-      - anytls-hh-j
+      - anytls-tw-c
+      - BGP基础路由-韩国01-ss-x8
+      - BGP基础路由-日本01-ss-x8
       - BGP智能路由-香港01-大带宽-ss-x2
       - BGP智能路由-香港02-ss-x2
       - BGP智能路由-香港03-ss-x2
