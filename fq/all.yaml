@@ -20,7 +20,7 @@ dns:
     - 'https://doh.pub/dns-query'
 proxies:
   -
-    name: anytls-tw-c
+    name: BGP基础路由-台湾01-ss-x8
     type: anytls
     server: litom2.asuscomm.com
     port: 26393
@@ -505,7 +505,7 @@ proxy-groups:
     name: Proxy
     type: select
     proxies:
-      - anytls-tw-c
+      - BGP基础路由-台湾01-ss-x8
       - BGP基础路由-韩国01-ss-x8
       - BGP基础路由-日本01-ss-x8
       - BGP智能路由-香港01-大带宽-ss-x2
